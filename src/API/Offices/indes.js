@@ -1,0 +1,64 @@
+import {dummyOffices} from '../../assets/dummy_data';
+
+export const getOffices = async propertyID => {
+  // Todo: add API call to get offices from server
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(formatOfficeResponse(dummyOffices));
+    }, 3000);
+  });
+};
+
+const formatOfficeResponse = offices => {
+  let formattedByWing = {};
+
+  if (offices && Array.isArray(offices)) {
+    offices.map(office => {
+      if (Array.isArray(formattedByWing[office.wing])) {
+        formattedByWing[office.wing] = [
+          ...formattedByWing[office.wing],
+          office,
+        ];
+      } else {
+        formattedByWing[office.wing] = [office];
+      }
+    });
+  }
+
+  Object.entries(formattedByWing).map(([wing, offices]) => {
+    formattedByWing[wing] = formatOfficeResponseByFloor(offices);
+  });
+
+  return formattedByWing;
+};
+
+const formatOfficeResponseByFloor = wingOffices => {
+  let formattedByFloor = [];
+
+  if (Array.isArray(wingOffices)) {
+    let tempObj = {};
+
+    wingOffices.map(office => {
+      const floorKey = `Floor_${office.floor_number}`;
+
+      if (
+        tempObj.hasOwnProperty(floorKey) &&
+        Array.isArray(tempObj[floorKey])
+      ) {
+        tempObj[floorKey] = [...tempObj[floorKey], office];
+      } else {
+        tempObj[floorKey] = [office];
+      }
+    });
+
+    Object.keys(tempObj).map(floor => {
+      formattedByFloor.push({
+        title: floor.replace('_', ' '),
+        data: tempObj[floor],
+      });
+    });
+  }
+
+  return formattedByFloor;
+};

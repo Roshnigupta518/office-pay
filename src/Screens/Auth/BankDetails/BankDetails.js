@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import {Pressable, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 
-import AvatarImage from '../../../Components/Component-Parts/AddAvatarImage';
-
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
@@ -13,7 +11,7 @@ import {styles} from './styles';
 
 import {globalStyles} from '../../../global/Styles';
 
-const BankDetailsForm = () => {
+const BankDetailsForm = ({onNextPress}) => {
   return (
     <View style={styles.detailsFormCont}>
       <Input
@@ -31,14 +29,17 @@ const BankDetailsForm = () => {
       <Input style={globalStyles.textDefault} placeholder={'Enter IFSC Code'} />
       <Button
         titleStyle={globalStyles.headingWhite}
-        onPress={() => console.log('Todo: Handle Bank details next')}
+        onPress={() => {
+          console.log('Todo: Handle Bank details next');
+          onNextPress();
+        }}
         title={'Next'}
       />
     </View>
   );
 };
 
-const BankDetails = () => {
+const BankDetails = ({navigation}) => {
   return (
     <View style={styles.view}>
       <AuthBgImage />
@@ -57,7 +58,11 @@ const BankDetails = () => {
         <View style={styles.pageTitle}>
           <Text style={globalStyles.heading}>Add your Bank Detail</Text>
         </View>
-        <BankDetailsForm />
+        <BankDetailsForm
+          onNextPress={() => {
+            navigation.navigate('dashboard');
+          }}
+        />
       </ScrollView>
     </View>
   );

@@ -5,10 +5,13 @@ import Login from '../../../Screens/Auth/Login/Login';
 import SignUp from '../../../Screens/Auth/SignUp/SignUp';
 import BuildingDetails from '../../../Screens/Auth/BuildingDetails/BuildingDetails';
 import BankDetails from '../../../Screens/Auth/BankDetails/BankDetails';
+import Dashboard from '../../../Screens/Main/Dashboard/Dashboard';
+import MyProperty from '../../../Screens/MyProperty/TabScreens/Home/Home';
+import AddOffice from '../../../Screens/MyProperty/TabScreens/AddOffice/AddOffice';
 
 const Stack = createNativeStackNavigator();
 
-const AuthStack = () => {
+const RootStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -39,8 +42,30 @@ const AuthStack = () => {
         }}
         component={BankDetails}
       />
+      {/* Main */}
+      <Stack.Screen
+        name="dashboard"
+        options={{
+          headerShown: false,
+        }}
+        component={Dashboard}
+      />
+      <Stack.Screen
+        name="my-property"
+        options={{
+          headerShown: false,
+        }}
+        component={MyProperty}
+      />
+      <Stack.Screen
+        name="add-office"
+        options={{
+          headerShown: false,
+        }}
+        component={AddOffice}
+      />
     </Stack.Navigator>
   );
 };
 
-export default AuthStack;
+export default RootStack;

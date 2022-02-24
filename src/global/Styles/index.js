@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 import {fonts} from '../fonts';
+import {lightTheme} from '../Theme';
 
 export const globalStyles = StyleSheet.create({
   flexRow: {
@@ -19,8 +20,18 @@ export const globalStyles = StyleSheet.create({
     fontFamily: fonts.family.fontRegular,
     fontSize: fonts.fontSize.regular,
   },
+  textSmallSecondary: {
+    color: fonts.fontColor.grey,
+    fontFamily: fonts.family.fontRegular,
+    fontSize: fonts.fontSize.small,
+  },
   heading: {
     color: fonts.fontColor.dark,
+    fontFamily: fonts.family.fontSemiBold,
+    fontSize: fonts.fontSize.semiLarge,
+  },
+  accentHeading: {
+    color: fonts.fontColor.primary,
     fontFamily: fonts.family.fontSemiBold,
     fontSize: fonts.fontSize.semiLarge,
   },
@@ -29,6 +40,11 @@ export const globalStyles = StyleSheet.create({
     fontFamily: fonts.family.fontSemiBold,
     fontSize: fonts.fontSize.semiLarge,
   },
+
+  textDanger: {
+    color: lightTheme.DANGER,
+  },
+
   fontDefault: {
     fontFamily: fonts.family.fontRegular,
   },
@@ -42,5 +58,12 @@ export const globalStyles = StyleSheet.create({
   },
   touchable: {
     padding: 10,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  textAlignCenter: {
+    textAlign: 'center',
   },
 });

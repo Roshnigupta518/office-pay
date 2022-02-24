@@ -11,7 +11,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-import AuthStack from './src/Navigation/Stack/authStack/authStack';
+import RootStack from './src/Navigation/Stack/rootStack/rootStack';
 
 const App = () => {
   // const isDarkMode = useColorScheme() === 'dark';
@@ -19,7 +19,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <SafeAreaProvider>
-        <AuthStack />
+        <RootStack />
       </SafeAreaProvider>
     </NavigationContainer>
   );
