@@ -1,19 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 
-import CustomStackHeader from '../../../../Components/Component-Parts/CustomStackHeader';
-import Text from '../../../../Components/UI/Text';
-import Button from '../../../../Components/UI/Button';
+import CustomStackHeader from '../../Components/Component-Parts/CustomStackHeader';
+import Text from '../../Components/UI/Text';
+import Button from '../../Components/UI/Button';
 
-import {globalStyles} from '../../../../global/Styles';
+import {globalStyles} from '../../global/Styles';
 import {styles} from './styles';
-import {
-  getObjPropertyValue,
-  prettyPrint,
-} from '../../../../global/utils/helperFunctions';
-import {getOffices} from '../../../../API/Offices/indes';
-import {TopTabs} from '../../../../Components/UI/TopTabs';
-import {lightTheme} from '../../../../global/Theme';
+import {getObjPropertyValue} from '../../global/utils/helperFunctions';
+import {getOffices} from '../../API/Offices/indes';
+import {TopTabs} from '../../Components/UI/TopTabs';
+import {lightTheme} from '../../global/Theme';
 import OfficeListing from './OfficeListing';
 
 const useGetOffices = propertyID => {
@@ -99,7 +96,7 @@ const RenderWingsTab = ({offices}) => {
   );
 };
 
-const RenderBody = ({offices, noOffice, onAddOfficeClick}) => {
+const RenderBody = ({offices, noOffice, onAddOfficeClick, onOfficeClick}) => {
   // prettyPrint({offices});
 
   if (!offices) {
@@ -137,11 +134,10 @@ const RenderBody = ({offices, noOffice, onAddOfficeClick}) => {
     );
   }
 
-  // Todo: handle office listing
-  return <OfficeListing offices={offices} />;
+  return <OfficeListing onOfficeClick={onOfficeClick} offices={offices} />;
 };
 
-const Home = ({route, navigation}) => {
+const MyProperty = ({route, navigation}) => {
   const {property} = getObjPropertyValue(route.params, 'params');
 
   // const noOffice = property ? !property.occupied_offices : true;
@@ -160,9 +156,14 @@ const Home = ({route, navigation}) => {
         noOffice={noOffice}
         offices={offices}
         onAddOfficeClick={() => navigation.navigate('add-office')}
+        onOfficeClick={officeDetails =>
+          navigation.navigate('property-details', {
+            office: officeDetails,
+          })
+        }
       />
     </View>
   );
 };
 
-export default Home;
+export default MyProperty;

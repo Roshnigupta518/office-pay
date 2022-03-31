@@ -22,5 +22,6 @@ export const fonts = {
     text: '#494949',
     primary: lightTheme.PRIMARY_COLOR,
     white: '#fff',
+    warning: '#ffb800',
   },
 };

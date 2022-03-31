@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {lightTheme} from '../../../../global/Theme';
+import {lightTheme} from '../../global/Theme';
 
 export const styles = StyleSheet.create({
   view: {

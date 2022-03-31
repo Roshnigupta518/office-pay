@@ -1,19 +1,37 @@
 import * as React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import Intro from '../../../Screens/Intro/Intro';
 import Login from '../../../Screens/Auth/Login/Login';
 import SignUp from '../../../Screens/Auth/SignUp/SignUp';
 import BuildingDetails from '../../../Screens/Auth/BuildingDetails/BuildingDetails';
 import BankDetails from '../../../Screens/Auth/BankDetails/BankDetails';
 import Dashboard from '../../../Screens/Main/Dashboard/Dashboard';
-import MyProperty from '../../../Screens/MyProperty/TabScreens/Home/Home';
-import AddOffice from '../../../Screens/MyProperty/TabScreens/AddOffice/AddOffice';
+import MyProperty from '../../../Screens/MyProperty/MyProperty';
+import AddOffice from '../../../Screens/AddOffice/AddOffice';
+import PropertyDetails from '../../../Screens/PropertyDetails';
+import CreateInvoice from '../../../Screens/CreateInvoice/CreateInvoice';
+import SelectLanguage from '../../../Screens/SelectLanguage/SelectLanguage';
 
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="lang"
+        options={{
+          headerShown: false,
+        }}
+        component={SelectLanguage}
+      />
+      <Stack.Screen
+        name="intro"
+        options={{
+          headerShown: false,
+        }}
+        component={Intro}
+      />
       <Stack.Screen
         name="login"
         options={{
@@ -63,6 +81,20 @@ const RootStack = () => {
           headerShown: false,
         }}
         component={AddOffice}
+      />
+      <Stack.Screen
+        name="property-details"
+        options={{
+          headerShown: false,
+        }}
+        component={PropertyDetails}
+      />
+      <Stack.Screen
+        name="create-invoice"
+        options={{
+          headerShown: false,
+        }}
+        component={CreateInvoice}
       />
     </Stack.Navigator>
   );

@@ -10,6 +10,9 @@ import {TopTabs} from '../../../Components/UI/TopTabs';
 import {styles} from './styles';
 
 import {lightTheme} from '../../../global/Theme';
+import InvoiceItem from './Invoice/InvoiceItem';
+import {dummyInvoiceDashboard} from '../../../assets/dummy_data';
+import Invoice from './Invoice/Invoice';
 
 const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
   return (
@@ -65,7 +68,7 @@ const RenderDashboardTabs = ({onPropertyItemClick}) => {
     ],
     tabPages: [
       <Property onPropertyItemClick={onPropertyItemClick} />,
-      <Text>Favorite</Text>,
+      <Invoice />,
       <Text>Cart</Text>,
     ],
   };

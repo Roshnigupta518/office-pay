@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     elevation: 10,
     backgroundColor: lightTheme.THEME,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 
   headerCenter: {

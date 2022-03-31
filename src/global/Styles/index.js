@@ -8,6 +8,9 @@ export const globalStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  spaceBetween: {
+    justifyContent: 'space-between',
+  },
   flexEnd: {
     alignItems: 'flex-end',
   },

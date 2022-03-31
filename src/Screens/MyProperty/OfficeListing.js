@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {Dimensions, FlatList, Pressable, StyleSheet, View} from 'react-native';
 
-import Text from '../../../../Components/UI/Text';
+import Text from '../../Components/UI/Text';
 
-import {isJSObj} from '../../../../global/utils/helperFunctions';
-import {globalStyles} from '../../../../global/Styles';
-import {lightTheme} from '../../../../global/Theme';
-import {fonts} from '../../../../global/fonts';
+import {isJSObj} from '../../global/utils/helperFunctions';
+import {globalStyles} from '../../global/Styles';
+import {lightTheme} from '../../global/Theme';
+import {fonts} from '../../global/fonts';
 
 // Todo: add Pending Status
 
@@ -36,7 +36,7 @@ const RenderWingTabs = ({propertyWings, selectWing, selectedWing}) => {
   );
 };
 
-const RenderWingOffices = ({wingOffices}) => {
+const RenderWingOffices = ({wingOffices, onOfficeClick}) => {
   const RenderItem = ({floorOffices}) => {
     const {data} = floorOffices;
 
@@ -46,30 +46,36 @@ const RenderWingOffices = ({wingOffices}) => {
           <Text style={styles.floorName}>{floorOffices.title}</Text>
         </View>
         <View style={styles.officeItemsCont}>
-          {data.map(office => {
+          {data.map((office, index) => {
             if (office.status) {
               return (
-                <View style={[styles.officeItem, styles.occupied]}>
-                  <View
-                    style={[
-                      styles.statusCont,
-                      office.payment_status ? styles.paid : styles.overdue,
-                    ]}>
-                    <Text style={styles.paymentStatus}>
-                      {office.payment_status ? 'Paid' : 'Overdue'}
-                    </Text>
+                <Pressable
+                  key={index}
+                  onPress={() => {
+                    onOfficeClick(office);
+                  }}>
+                  <View style={[styles.officeItem, styles.occupied]}>
+                    <View
+                      style={[
+                        styles.statusCont,
+                        office.payment_status ? styles.paid : styles.overdue,
+                      ]}>
+                      <Text style={styles.paymentStatus}>
+                        {office.payment_status ? 'Paid' : 'Overdue'}
+                      </Text>
+                    </View>
+                    <View style={globalStyles.placeCenter}>
+                      <Text style={styles.officeItemText}>
+                        {office.office_number}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={[styles.officeItemText, styles.officeItemName]}>
+                        {office.office_name}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={globalStyles.placeCenter}>
-                    <Text style={styles.officeItemText}>
-                      {office.office_number}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={[styles.officeItemText, styles.officeItemName]}>
-                      {office.office_name}
-                    </Text>
-                  </View>
-                </View>
+                </Pressable>
               );
             }
 
@@ -97,7 +103,7 @@ const RenderWingOffices = ({wingOffices}) => {
   );
 };
 
-const OfficeListing = ({offices}) => {
+const OfficeListing = ({offices, onOfficeClick}) => {
   const propertyWings = isJSObj(offices) ? Object.keys(offices) : [null];
 
   const [selectedWing, setSelectedWing] = useState(propertyWings[0]);
@@ -111,7 +117,10 @@ const OfficeListing = ({offices}) => {
         propertyWings={propertyWings}
         selectWing={setSelectedWing}
       />
-      <RenderWingOffices wingOffices={wingOffices} />
+      <RenderWingOffices
+        wingOffices={wingOffices}
+        onOfficeClick={onOfficeClick}
+      />
     </View>
   );
 };
@@ -174,6 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 10,
     overflow: 'hidden',
+    elevation: 7,
   },
 
   occupied: {

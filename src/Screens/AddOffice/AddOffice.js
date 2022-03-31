@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {View, ScrollView} from 'react-native';
 
-import CustomStackHeader from '../../../../Components/Component-Parts/CustomStackHeader';
-import Text from '../../../../Components/UI/Text';
-import Input from '../../../../Components/UI/Input';
-import Button from '../../../../Components/UI/Button';
+import CustomStackHeader from '../../Components/Component-Parts/CustomStackHeader';
+import Text from '../../Components/UI/Text';
+import Input from '../../Components/UI/Input';
+import Button from '../../Components/UI/Button';
 
-import {globalStyles} from '../../../../global/Styles';
+import {globalStyles} from '../../global/Styles';
 import {styles} from './styles';
 
 const RenderOfficeDetailsform = () => {

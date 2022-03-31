@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Pressable, ScrollView, StatusBar, View} from 'react-native';
 import {Icon} from 'react-native-elements';
+import {connect} from 'react-redux';
 
 import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
 
@@ -13,8 +14,10 @@ import {styles} from './styles';
 import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
+import {loginUser} from '../../../store/actions/AuthActions';
+import {prettyPrint} from '../../../global/utils/helperFunctions';
 
-const LoginForm = () => {
+const LoginForm = ({onSubmit}) => {
   const [secure, setSecure] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,7 +82,10 @@ const LoginForm = () => {
       <View style={styles.loginBtnCont}>
         <Button
           titleStyle={styles.loginBtn}
-          onPress={() => console.log('Todo: Handle login')}
+          onPress={() => {
+            console.log('Todo: Handle login');
+            onSubmit({email, password});
+          }}
           title={'Login'}
         />
       </View>
@@ -87,7 +93,7 @@ const LoginForm = () => {
   );
 };
 
-const Login = ({navigation}) => {
+const Login = ({navigation, doUserLogin}) => {
   return (
     <>
       <AuthBgImage />
@@ -96,7 +102,7 @@ const Login = ({navigation}) => {
           title={'Log In'}
           desc={'Please Sign In to your Account to Continue with App.'}
         />
-        <LoginForm />
+        <LoginForm onSubmit={doUserLogin} />
         <View style={styles.secondaryMsg}>
           <Text>Don’t have an account?</Text>
           <View style={globalStyles.leftSeperator}>
@@ -113,4 +119,19 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+const mapStateToProps = state => {
+  const {auth} = state;
+
+  prettyPrint({auth});
+
+  return {
+    auth,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  doUserLogin: data =>
+    dispatch(innerdispatch => loginUser(innerdispatch, data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

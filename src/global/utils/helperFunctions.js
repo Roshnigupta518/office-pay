@@ -16,6 +16,16 @@ export const getObjPropertyValue = (obj, property) => {
     : {[property]: null};
 };
 
+export const getShadowProperties = (elevation, width, height, radius) => {
+  return {
+    shadowColor: '#000',
+    shadowOffset: {width: width || 0, height: height || 3},
+    shadowOpacity: 0.8,
+    shadowRadius: radius || 5,
+    elevation: elevation || 5,
+  };
+};
+
 // * office listing ===================
 
 export const sortOfficeDetails = offices => {

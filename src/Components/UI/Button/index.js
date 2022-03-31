@@ -8,7 +8,7 @@ import {lightTheme} from '../../../global/Theme';
 const DefaultButton = ({...props}) => {
   return (
     <Button
-      buttonStyle={[styles.btn]}
+      buttonStyle={[styles.btn, props.btnStyle]}
       titleProps={{enableFontScaling: false}}
       titleStyle={styles.btnTitleStyle}
       containerStyle={styles.btnCont}

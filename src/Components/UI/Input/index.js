@@ -5,11 +5,11 @@ import {lightTheme} from '../../../global/Theme';
 
 const DefaultInput = props => (
   <Input
-    {...props}
     allowFontScaling={false}
     containerStyle={styles.inputCont}
     selectionColor={lightTheme.PRIMARY_COLOR}
     style={[styles.input, props.style]}
+    {...props}
   />
 );
 

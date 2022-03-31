@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
-import {fonts} from '../../../../global/fonts';
-import {globalStyles} from '../../../../global/Styles';
-import {lightTheme} from '../../../../global/Theme';
+import {fonts} from '../../global/fonts';
+import {globalStyles} from '../../global/Styles';
+import {lightTheme} from '../../global/Theme';
 
 export const styles = StyleSheet.create({
   view: {
