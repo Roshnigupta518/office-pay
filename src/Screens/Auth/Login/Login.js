@@ -17,10 +17,32 @@ import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import {loginUser} from '../../../store/actions/AuthActions';
 import {prettyPrint} from '../../../global/utils/helperFunctions';
 
-const LoginForm = ({onSubmit}) => {
+const LoginForm = ({onSubmit, continueToProfileDetails}) => {
   const [secure, setSecure] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+
+    let error = false;
+
+    await onSubmit({email, password}).catch(err => {
+      // Todo: show error to user
+      prettyPrint({
+        msg: 'Error: in login user',
+        err,
+      });
+
+      error = true;
+    });
+
+    setLoading(false);
+    if (!error) {
+      continueToProfileDetails();
+    }
+  };
 
   return (
     <View style={styles.form}>
@@ -29,6 +51,7 @@ const LoginForm = ({onSubmit}) => {
         value={email}
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
+        disabled={loading}
         leftIcon={
           <Icon
             name="mail"
@@ -45,6 +68,7 @@ const LoginForm = ({onSubmit}) => {
         onChangeText={setPassword}
         inputStyle={globalStyles.fontDefault}
         secureTextEntry={secure}
+        disabled={loading}
         leftIcon={
           <Icon
             name="locked"
@@ -82,11 +106,10 @@ const LoginForm = ({onSubmit}) => {
       <View style={styles.loginBtnCont}>
         <Button
           titleStyle={styles.loginBtn}
-          onPress={() => {
-            console.log('Todo: Handle login');
-            onSubmit({email, password});
-          }}
+          onPress={handleLogin}
           title={'Login'}
+          loading={loading}
+          loadingProps={{size: 'large'}}
         />
       </View>
     </View>
@@ -102,7 +125,12 @@ const Login = ({navigation, doUserLogin}) => {
           title={'Log In'}
           desc={'Please Sign In to your Account to Continue with App.'}
         />
-        <LoginForm onSubmit={doUserLogin} />
+        <LoginForm
+          onSubmit={doUserLogin}
+          continueToProfileDetails={() => {
+            navigation.navigate('building-details');
+          }}
+        />
         <View style={styles.secondaryMsg}>
           <Text>Don’t have an account?</Text>
           <View style={globalStyles.leftSeperator}>
@@ -131,7 +159,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   doUserLogin: data =>
-    dispatch(innerdispatch => loginUser(innerdispatch, data)),
+    dispatch(async innerdispatch => {
+      await loginUser(innerdispatch, data);
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

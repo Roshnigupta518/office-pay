@@ -10,8 +10,6 @@ import {TopTabs} from '../../../Components/UI/TopTabs';
 import {styles} from './styles';
 
 import {lightTheme} from '../../../global/Theme';
-import InvoiceItem from './Invoice/InvoiceItem';
-import {dummyInvoiceDashboard} from '../../../assets/dummy_data';
 import Invoice from './Invoice/Invoice';
 
 const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
@@ -69,7 +67,7 @@ const RenderDashboardTabs = ({onPropertyItemClick}) => {
     tabPages: [
       <Property onPropertyItemClick={onPropertyItemClick} />,
       <Invoice />,
-      <Text>Cart</Text>,
+      <Text>Notif</Text>,
     ],
   };
 
@@ -77,8 +75,6 @@ const RenderDashboardTabs = ({onPropertyItemClick}) => {
 };
 
 const Dashboard = ({navigation}) => {
-  // Todo: made dynamic with API
-  // const [pageData, setPageData] = useState();
 
   const onPropertyItemClick = property => {
     navigation.navigate('my-property', {

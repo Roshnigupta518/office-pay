@@ -14,6 +14,7 @@ import {styles} from './styles';
 import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
+import {signUp} from '../../../API/Auth';
 
 const SignUpForm = ({continueSignup}) => {
   const [secure, setSecure] = useState(true);
@@ -22,6 +23,39 @@ const SignUpForm = ({continueSignup}) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [building, setBuilding] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async () => {
+    setLoading(true);
+
+    const registerData = {
+      // ! ==========
+      // name: required in API req but there's no name field
+      // ! ==========
+
+      email,
+      password,
+      password_confirmation: confirmPassword,
+      role_id: building ? 1 : 0, // * assuming 1 is for building...do confirm
+    };
+    let error = false;
+
+    await signUp(registerData).catch(err => {
+      // Todo: show error to user
+      prettyPrint({
+        msg: 'Error: in registering user',
+        err,
+      });
+      error = true;
+    });
+
+    setLoading(false);
+
+    if (!error) {
+      continueSignup();
+    }
+  };
 
   return (
     <View style={styles.form}>
@@ -76,6 +110,7 @@ const SignUpForm = ({continueSignup}) => {
         value={email}
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
+        disabled={loading}
         leftIcon={
           <Icon
             name="mail"
@@ -92,6 +127,7 @@ const SignUpForm = ({continueSignup}) => {
         onChangeText={setPassword}
         inputStyle={globalStyles.fontDefault}
         secureTextEntry={secure}
+        disabled={loading}
         leftIcon={
           <Icon
             name="locked"
@@ -108,6 +144,7 @@ const SignUpForm = ({continueSignup}) => {
         onChangeText={setConfirmPassword}
         inputStyle={globalStyles.fontDefault}
         secureTextEntry={secure}
+        disabled={loading}
         leftIcon={
           <Icon
             name="locked"
@@ -123,9 +160,10 @@ const SignUpForm = ({continueSignup}) => {
         <Button
           titleStyle={styles.signUpBtnTitle}
           onPress={() => {
-            console.log('Todo: Handle Singup');
-            continueSignup();
+            handleSignUp();
           }}
+          loading={loading}
+          loadingProps={{size: 'large'}}
           title={'Sign Up'}
         />
       </View>
@@ -180,7 +218,7 @@ const SignUp = ({navigation}) => {
           />
           <SignUpForm
             continueSignup={() => {
-              navigation.navigate('building-details');
+              navigation.navigate('login');
             }}
           />
           <View style={styles.secondaryMsg}>

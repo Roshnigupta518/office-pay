@@ -1,19 +1,13 @@
 import {types} from '../actionTypes';
 
-const {LOGIN_USER} = types;
+const {ADD_BUILDING_DETAILS} = types;
 
-const INITIAL_STATE = {
-  userLogin: false,
-};
+const INITIAL_STATE = {};
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case LOGIN_USER:
-      return {
-        ...state,
-        userLogin: true,
-      };
-
+    case ADD_BUILDING_DETAILS:
+      return action.buildingData;
     default:
       return state;
   }

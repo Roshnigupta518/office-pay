@@ -1,5 +1,5 @@
-import React from 'react';
-import {FlatList, Pressable, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 import {Image} from 'react-native-elements';
 import {dummyProperties} from '../../../../assets/dummy_data';
 
@@ -10,7 +10,23 @@ import {styles} from './styles';
 
 import {getImageSrc} from '../../../../global/utils/helperFunctions';
 import {globalStyles} from '../../../../global/Styles';
+
+import {getBuidlings} from '../../../../API/Building';
 import {lightTheme} from '../../../../global/Theme';
+
+const useGetBuildings = () => {
+  const [buildings, setBuildings] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      setBuildings(null);
+      const item = await getBuidlings();
+      setBuildings(item);
+    })();
+  }, []);
+
+  return buildings;
+};
 
 const RenderPropertyItem = ({item, handleItemClick}) => {
   return (
@@ -44,6 +60,16 @@ const RenderPropertyItem = ({item, handleItemClick}) => {
 };
 
 const Property = ({onPropertyItemClick}) => {
+  const buildings = useGetBuildings();
+
+  if (!buildings) {
+    return (
+      <View style={styles.loaderCont}>
+        <ActivityIndicator color={lightTheme.PRIMARY_COLOR} size={'large'} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.conatiner}>
       <View style={styles.sectionHeader}>
@@ -57,7 +83,7 @@ const Property = ({onPropertyItemClick}) => {
       </View>
       <View style={styles.listCont}>
         {/* Todo: discuss using simple map is safe or not */}
-        {dummyProperties.map((item, index) => {
+        {buildings.map((item, index) => {
           return (
             <RenderPropertyItem
               handleItemClick={onPropertyItemClick}

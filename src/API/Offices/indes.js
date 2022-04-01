@@ -1,6 +1,6 @@
 import {dummyOffices} from '../../assets/dummy_data';
 
-export const getOffices = async propertyID => {
+export const getOffices = async () => {
   // Todo: add API call to get offices from server
 
   return new Promise((resolve, reject) => {

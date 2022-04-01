@@ -10,6 +10,12 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
+  loaderCont: {
+    ...globalStyles.placeCenter,
+    paddingTop: 40,
+    paddingRight: 30,
+  },
+
   sectionHeader: {
     ...globalStyles.flexRow,
     justifyContent: 'space-between',

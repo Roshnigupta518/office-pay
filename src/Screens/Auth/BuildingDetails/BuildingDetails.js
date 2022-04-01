@@ -15,18 +15,57 @@ import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';
 
 const BuildingDetailsForm = ({pushNextScreen}) => {
+  const [buildingDetails, setBuildingDetails] = useState({
+    name: '',
+    address: '',
+    email: '',
+    gst: '',
+    contact: '',
+  });
+
+  handleOnChange = (key, val) => {
+    setBuildingDetails({
+      ...buildingDetails,
+      [key]: val,
+    });
+  };
+
   return (
     <View>
-      <Input style={globalStyles.textDefault} placeholder={'Building Name'} />
-      <Input style={globalStyles.textDefault} placeholder={'Address'} />
-      <Input style={globalStyles.textDefault} placeholder={'Email Id'} />
-      <Input style={globalStyles.textDefault} placeholder={'GST number'} />
-      <Input style={globalStyles.textDefault} placeholder={'Contact Number'} />
+      <Input
+        value={buildingDetails.name}
+        onChangeText={value => handleOnChange('name', value)}
+        style={globalStyles.textDefault}
+        placeholder={'Building Name'}
+      />
+      <Input
+        value={buildingDetails.address}
+        onChangeText={value => handleOnChange('address', value)}
+        style={globalStyles.textDefault}
+        placeholder={'Address'}
+      />
+      <Input
+        value={buildingDetails.email}
+        onChangeText={value => handleOnChange('email', value)}
+        style={globalStyles.textDefault}
+        placeholder={'Email Id'}
+      />
+      <Input
+        value={buildingDetails.gst}
+        onChangeText={value => handleOnChange('gst', value)}
+        style={globalStyles.textDefault}
+        placeholder={'GST number'}
+      />
+      <Input
+        value={buildingDetails.contact}
+        onChangeText={value => handleOnChange('contact', value)}
+        style={globalStyles.textDefault}
+        placeholder={'Contact Number'}
+      />
       <Button
         titleStyle={globalStyles.headingWhite}
         onPress={() => {
-          console.log('Todo: Handle office building next');
-          pushNextScreen();
+          pushNextScreen(buildingDetails);
         }}
         title={'Next'}
       />
@@ -83,8 +122,8 @@ const BuildingDetails = ({navigation}) => {
           />
         </View>
         <BuildingDetailsForm
-          pushNextScreen={() => {
-            navigation.navigate('bank-details');
+          pushNextScreen={buildingDetails => {
+            navigation.navigate('bank-details', {buildingDetails});
           }}
         />
         <UploadPANimageSection />

@@ -1,3 +1,4 @@
 export const types = {
-    LOGIN_USER: "LOGIN_USER",
-}
+  LOGIN_USER: 'LOGIN_USER',
+  ADD_BUILDING_DETAILS: 'ADD_BUILDING_DETAILS',
+};
