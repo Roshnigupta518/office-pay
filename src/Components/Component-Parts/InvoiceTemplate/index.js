@@ -62,39 +62,59 @@ const RenderPropertyDetails = ({buildingDetails}) => {
   );
 };
 
-const RenderBillingForm = () => {
+const RenderBillingForm = ({officeDetails}) => {
   const [building, setBuilding] = useState(null);
 
   return (
     <View>
       <Text style={styles.billingDetailsHeading}>Bill To:</Text>
       <View style={styles.billingDetailsCont}>
-        <View style={styles.billToCont}>
-          <Picker
-            containerStyle={styles.pickerCont}
-            selectedValue={building}
-            onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-            pickerData={DUMMY_BUILDING_DATA}
-          />
-          <Picker
-            containerStyle={styles.pickerCont}
-            selectedValue={building}
-            onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-            pickerData={DUMMY_BUILDING_DATA}
-          />
-          <Picker
-            containerStyle={styles.pickerCont}
-            selectedValue={building}
-            onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-            pickerData={DUMMY_BUILDING_DATA}
-          />
-          <Picker
-            containerStyle={styles.pickerCont}
-            selectedValue={building}
-            onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-            pickerData={DUMMY_BUILDING_DATA}
-          />
-        </View>
+        {officeDetails ? (
+          <View style={styles.billToCont}>
+            <Text style={styles.officeName}>{officeDetails.office_name}</Text>
+            <Text numberOfLines={2} style={styles.officeAddress}>
+              {officeDetails.office_address}
+            </Text>
+            <Text
+              style={
+                styles.officeDetailsText
+              }>{`GST no. ${officeDetails.gst_number}`}</Text>
+            <Text style={styles.officeDetailsText}>
+              {`+91 - ${officeDetails.contact_number}`}
+            </Text>
+            <Text style={styles.officeDetailsText}>
+              {officeDetails.email_address}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.billToCont}>
+            <Picker
+              containerStyle={styles.pickerCont}
+              selectedValue={building}
+              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
+              pickerData={DUMMY_BUILDING_DATA}
+            />
+            <Picker
+              containerStyle={styles.pickerCont}
+              selectedValue={building}
+              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
+              pickerData={DUMMY_BUILDING_DATA}
+            />
+            <Picker
+              containerStyle={styles.pickerCont}
+              selectedValue={building}
+              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
+              pickerData={DUMMY_BUILDING_DATA}
+            />
+            <Picker
+              containerStyle={styles.pickerCont}
+              selectedValue={building}
+              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
+              pickerData={DUMMY_BUILDING_DATA}
+            />
+          </View>
+        )}
+
         <View>
           <View style={styles.fieldsCont}>
             <Text style={styles.billingDetailsfieldHeading}>
@@ -228,13 +248,13 @@ const RenderSummary = () => {
   );
 };
 
-const InvoiceTemplate = ({buildingDetails}) => {
+const InvoiceTemplate = ({buildingDetails, officeDetails}) => {
   return (
     <View style={styles.container}>
       <RenderHeader buildingDetails={buildingDetails} />
       <RenderPropertyDetails buildingDetails={buildingDetails} />
       <View style={styles.hr} />
-      <RenderBillingForm />
+      <RenderBillingForm officeDetails={officeDetails} />
       <View style={styles.hr} />
       <RenderInvoiceItems />
       <View style={styles.hr} />
@@ -373,8 +393,29 @@ const styles = StyleSheet.create({
   summaryCont: {
     margin: 10,
   },
-  
+
   summaryBankDetails: {
     marginVertical: 10,
+  },
+
+  // ==========================
+
+  officeName: {
+    fontFamily: fonts.family.fontBold,
+    fontSize: fonts.fontSize.small,
+    color: fonts.fontColor.dark,
+  },
+
+  officeAddress: {
+    fontFamily: fonts.family.fontRegular,
+    fontSize: fonts.fontSize.small,
+    color: fonts.fontColor.dark,
+  },
+
+  officeDetailsText: {
+    fontFamily: fonts.family.fontRegular,
+    fontSize: fonts.fontSize.small,
+    color: fonts.fontColor.dark,
+    marginTop: 5,
   },
 });

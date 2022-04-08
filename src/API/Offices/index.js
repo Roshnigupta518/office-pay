@@ -1,4 +1,4 @@
-import {dummyOffices} from '../../assets/dummy_data';
+import {dummyOffices, dummyOfficesDashBoard} from '../../assets/dummy_data';
 
 export const getOffices = async () => {
   // Todo: add API call to get offices from server
@@ -6,6 +6,16 @@ export const getOffices = async () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(formatOfficeResponse(dummyOffices));
+    }, 3000);
+  });
+};
+
+export const getOfficesDashboard = async () => {
+  // Todo: add API call to get offices from server
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(dummyOfficesDashBoard);
     }, 3000);
   });
 };

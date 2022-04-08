@@ -16,14 +16,45 @@ import {globalStyles} from '../../../global/Styles';
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import {loginUser} from '../../../store/actions/AuthActions';
 import {prettyPrint} from '../../../global/utils/helperFunctions';
+import {ValidateMail, ValueEmpty} from '../../../global/utils/Validations';
 
 const LoginForm = ({onSubmit, continueToProfileDetails}) => {
   const [secure, setSecure] = useState(true);
   const [email, setEmail] = useState('');
+  const [emailErr, setEmailErr] = useState('');
   const [password, setPassword] = useState('');
+  const [pwdErr, setPwdErr] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validateLoginData = () => {
+    let result = true;
+
+    const emailResult = ValidateMail(email);
+    const pwdEmpty = ValueEmpty(password);
+
+    console.log({emailResult, pwdEmpty});
+
+    if (emailResult !== 'success') {
+      result = false;
+      setEmailErr(emailResult);
+    } else {
+      setEmailErr('');
+    }
+    if (pwdEmpty) {
+      result = false;
+      setPwdErr('Plase fill your password');
+    } else {
+      setPwdErr('');
+    }
+
+    return result;
+  };
+
   const handleLogin = async () => {
+    if (!validateLoginData()) {
+      return;
+    }
+
     setLoading(true);
 
     let error = false;
@@ -52,6 +83,7 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
         disabled={loading}
+        errorMessage={emailErr}
         leftIcon={
           <Icon
             name="mail"
@@ -69,6 +101,7 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
         inputStyle={globalStyles.fontDefault}
         secureTextEntry={secure}
         disabled={loading}
+        errorMessage={pwdErr}
         leftIcon={
           <Icon
             name="locked"
@@ -158,10 +191,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  doUserLogin: data =>
-    dispatch(async innerdispatch => {
-      await loginUser(innerdispatch, data);
-    }),
+  doUserLogin: data => dispatch(loginUser(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

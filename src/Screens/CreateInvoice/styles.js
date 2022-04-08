@@ -15,12 +15,12 @@ export const styles = StyleSheet.create({
   sendBtnCont: {
     width: '100%',
     position: 'absolute',
-    bottom: 0,
-    top: Dimensions.get('window').height - 65,
+    bottom: 100,
+    // top: Dimensions.get('window').height - 65,
     zIndex: 100,
     backgroundColor: lightTheme.THEME,
-    paddingVertical: 10,
-    ...getShadowProperties(5)
+    paddingVertical: 20,
+    ...getShadowProperties(10)
   },
   pagetitle: {
     fontFamily: fonts.family.fontBold,

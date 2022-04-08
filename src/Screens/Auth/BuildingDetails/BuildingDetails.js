@@ -13,21 +13,103 @@ import {styles} from './styles';
 
 import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';
+import {connect} from 'react-redux';
+import {
+  ValidateMail,
+  ValidateMobile,
+  ValueEmpty,
+} from '../../../global/utils/Validations';
+
+const INITIAL_STATE = {
+  name: '',
+  address: '',
+  email: '',
+  gst: '',
+  contact: '',
+};
 
 const BuildingDetailsForm = ({pushNextScreen}) => {
-  const [buildingDetails, setBuildingDetails] = useState({
-    name: '',
-    address: '',
-    email: '',
-    gst: '',
-    contact: '',
-  });
+  const [buildingDetails, setBuildingDetails] = useState(INITIAL_STATE);
 
-  handleOnChange = (key, val) => {
+  const [buildingDetailsErr, setBuildingDetailsErr] = useState(INITIAL_STATE);
+
+  const validateFields = () => {
+    let result = true;
+
+    const nameError = ValueEmpty(buildingDetails.name);
+    const addressError = ValueEmpty(buildingDetails.address);
+    const gstError = ValueEmpty(buildingDetails.gst);
+    const emailError = ValidateMail(buildingDetails.email);
+    const mobileError = ValidateMobile(buildingDetails.contact);
+
+    console.log({nameError, addressError, gstError, emailError, mobileError});
+
+    let errorObj = {
+      ...buildingDetailsErr,
+    };
+
+    if (nameError) {
+      result = false;
+
+      errorObj['name'] = '*Required';
+    } else {
+      errorObj['name'] = '';
+    }
+
+    if (addressError) {
+      result = false;
+
+      errorObj['address'] = '*Required';
+    } else {
+      errorObj['address'] = '';
+    }
+
+    if (gstError) {
+      result = false;
+
+      errorObj['gst'] = '*Required';
+    } else {
+      errorObj['gst'] = '';
+    }
+
+    if (emailError !== 'success') {
+      result = false;
+
+      errorObj['email'] = emailError;
+    } else {
+      errorObj['email'] = '';
+    }
+
+    if (mobileError !== 'success') {
+      result = false;
+
+      errorObj['contact'] = mobileError;
+    } else {
+      errorObj['contact'] = '';
+    }
+
+    if (result) {
+      setBuildingDetailsErr(INITIAL_STATE);
+    } else {
+      setBuildingDetailsErr(errorObj);
+    }
+
+    return result;
+  };
+
+  const handleOnChange = (key, val) => {
     setBuildingDetails({
       ...buildingDetails,
       [key]: val,
     });
+  };
+
+  const onNextPress = () => {
+    if (!validateFields()) {
+      return;
+    }
+
+    pushNextScreen(buildingDetails);
   };
 
   return (
@@ -36,37 +118,40 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
         value={buildingDetails.name}
         onChangeText={value => handleOnChange('name', value)}
         style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.name}
         placeholder={'Building Name'}
       />
       <Input
         value={buildingDetails.address}
         onChangeText={value => handleOnChange('address', value)}
         style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.address}
         placeholder={'Address'}
       />
       <Input
         value={buildingDetails.email}
         onChangeText={value => handleOnChange('email', value)}
         style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.email}
         placeholder={'Email Id'}
       />
       <Input
         value={buildingDetails.gst}
         onChangeText={value => handleOnChange('gst', value)}
         style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.gst}
         placeholder={'GST number'}
       />
       <Input
         value={buildingDetails.contact}
         onChangeText={value => handleOnChange('contact', value)}
         style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.contact}
         placeholder={'Contact Number'}
       />
       <Button
         titleStyle={globalStyles.headingWhite}
-        onPress={() => {
-          pushNextScreen(buildingDetails);
-        }}
+        onPress={onNextPress}
         title={'Next'}
       />
     </View>
@@ -92,7 +177,7 @@ const UploadPANimageSection = () => {
   );
 };
 
-const BuildingDetails = ({navigation}) => {
+const BuildingDetails = ({navigation, buildingOwner}) => {
   const [officeImage, setOfficeImage] = useState(null);
 
   return (
@@ -120,6 +205,9 @@ const BuildingDetails = ({navigation}) => {
             src={officeImage}
             setAvatar={img => setOfficeImage(img)}
           />
+          <Text style={globalStyles.heading}>{`Add ${
+            buildingOwner ? 'Building' : 'Office'
+          } Image`}</Text>
         </View>
         <BuildingDetailsForm
           pushNextScreen={buildingDetails => {
@@ -132,4 +220,12 @@ const BuildingDetails = ({navigation}) => {
   );
 };
 
-export default BuildingDetails;
+const mapStateToProps = state => {
+  const {buildingOwner} = state.auth;
+
+  return {
+    buildingOwner,
+  };
+};
+
+export default connect(mapStateToProps)(BuildingDetails);

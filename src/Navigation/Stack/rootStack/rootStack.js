@@ -12,6 +12,7 @@ import AddOffice from '../../../Screens/AddOffice/AddOffice';
 import PropertyDetails from '../../../Screens/PropertyDetails';
 import CreateInvoice from '../../../Screens/CreateInvoice/CreateInvoice';
 import SelectLanguage from '../../../Screens/SelectLanguage/SelectLanguage';
+import { RootTab } from '../../Tabs/rootTab';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,11 +63,11 @@ const RootStack = () => {
       />
       {/* Main */}
       <Stack.Screen
-        name="dashboard"
+        name="home"
         options={{
           headerShown: false,
         }}
-        component={Dashboard}
+        component={RootTab}
       />
       <Stack.Screen
         name="my-property"

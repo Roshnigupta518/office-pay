@@ -11,6 +11,8 @@ import {styles} from './styles';
 
 import {lightTheme} from '../../../global/Theme';
 import Invoice from './Invoice/Invoice';
+import Notifications from './Notification/Notifications';
+import {connect} from 'react-redux';
 
 const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
   return (
@@ -33,11 +35,15 @@ const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
   );
 };
 
-const RenderDashboardTabs = ({onPropertyItemClick}) => {
+const RenderDashboardTabs = ({
+  onPropertyItemClick,
+  onOfficeItemClick,
+  buildingOwner,
+}) => {
   const tabConfigs = {
     tabItems: [
       {
-        title: 'My Properties',
+        title: `My ${buildingOwner ? 'Properties' : 'Office'}`,
         icon: {
           name: 'building-o',
           type: 'font-awesome',
@@ -65,20 +71,29 @@ const RenderDashboardTabs = ({onPropertyItemClick}) => {
       },
     ],
     tabPages: [
-      <Property onPropertyItemClick={onPropertyItemClick} />,
-      <Invoice />,
-      <Text>Notif</Text>,
+      <Property
+        buildingOwner={buildingOwner}
+        onPropertyItemClick={onPropertyItemClick}
+        onOfficeItemClick={onOfficeItemClick}
+      />,
+      <Invoice buildingOwner={buildingOwner} />,
+      <Notifications />,
     ],
   };
 
   return <TopTabs tabConfigs={tabConfigs} />;
 };
 
-const Dashboard = ({navigation}) => {
-
+const Dashboard = ({navigation, buildingOwner}) => {
   const onPropertyItemClick = property => {
     navigation.navigate('my-property', {
       params: {property},
+    });
+  };
+
+  const onOfficeItemClick = officeDetails => {
+    navigation.navigate('property-details', {
+      office: officeDetails,
     });
   };
 
@@ -96,10 +111,22 @@ const Dashboard = ({navigation}) => {
           totalPending={1000}
           totalReceived={10000}
         />
-        <RenderDashboardTabs onPropertyItemClick={onPropertyItemClick} />
+        <RenderDashboardTabs
+          buildingOwner={buildingOwner}
+          onPropertyItemClick={onPropertyItemClick}
+          onOfficeItemClick={onOfficeItemClick}
+        />
       </ScrollView>
     </View>
   );
 };
 
-export default Dashboard;
+const mapStateToProps = state => {
+  const {buildingOwner} = state.auth;
+
+  return {
+    buildingOwner,
+  };
+};
+
+export default connect(mapStateToProps)(Dashboard);

@@ -1,11 +1,10 @@
 import React from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {Image, StatusBar, StyleSheet, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {globalStyles} from '../../../global/Styles';
 
 import {lightTheme} from '../../../global/Theme';
-
-import Text from '../../UI/Text';
+import {getImageSrc} from '../../../global/utils/helperFunctions';
 
 const CustomStackHeader = ({goBack}) => {
   return (
@@ -22,7 +21,13 @@ const CustomStackHeader = ({goBack}) => {
       </View>
       <View style={styles.headerCenter}>
         {/* Todo: replace text with logo */}
-        <Text style={globalStyles.accentHeading}>OfficePay</Text>
+        {/* <Text style={globalStyles.accentHeading}>OfficePay</Text> */}
+        <Image
+          source={getImageSrc(
+            require('../../../assets/images/placeholders/imgpsh.png'),
+          )}
+          style={styles.logo}
+        />
       </View>
       <View style={styles.headerRight} />
     </View>
@@ -54,5 +59,10 @@ const styles = StyleSheet.create({
   },
   headerLeft: {
     width: '20%',
+  },
+  logo: {
+    width: '60%',
+    height: 50,
+    resizeMode: 'contain',
   },
 });

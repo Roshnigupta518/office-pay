@@ -145,6 +145,29 @@ export const dummyOffices = [
   },
 ];
 
+export const dummyOfficesDashBoard = [
+  {
+    id: 1,
+    building_id: 1,
+    wing: 'A',
+    office_number: 816,
+    office_image: require('../images/placeholders/office_dashboard.png'),
+    floor_number: 7,
+    office_address: '816, shekhar central',
+    office_name: 'GraffersID',
+    office_owner_name: 'Sidharth Jain',
+    pan_number: 'sdfsdfs',
+    gst_number: 'dsfsdfsdf',
+    email_address: 'sidharth.jain@graffersid.com',
+    contact_number: 123456789,
+    status: 1,
+    payment_status: 1,
+    is_vacant: 1,
+    created_at: '2022-01-19T11:35:03.000000Z',
+    updated_at: '2022-01-19T11:35:03.000000Z',
+  },
+];
+
 export const dummyInvoices = [
   {
     id: 0,
@@ -205,8 +228,9 @@ export const dummyInvoiceDashboard = [
     invoiceSubject: 'Water Bill',
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
-    invoiceStatus: 0,
-  }, {
+    invoiceStatus: 1,
+  },
+  {
     id: 2,
     buildingName: 'Shekher Center',
     officeWing: 'A',
@@ -219,7 +243,8 @@ export const dummyInvoiceDashboard = [
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
     invoiceStatus: 0,
-  }, {
+  },
+  {
     id: 3,
     buildingName: 'Shekher Center',
     officeWing: 'A',
@@ -232,6 +257,45 @@ export const dummyInvoiceDashboard = [
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
     invoiceStatus: 0,
+  },
+];
+
+export const dummyNotifsDashboard = [
+  {
+    id: 0,
+    invoiceNo: 'J-101',
+    propertyName: 'Shekhar Center',
+    wing: 'A',
+    officeNo: 101,
+    OfficeName: 'Codervita',
+    invoiceSubject: 'Rent for December',
+    invoiceAmt: 60000,
+    invoiceStatus: 1,
+    notifReceivedTime: Date.now(),
+  },
+  {
+    id: 1,
+    invoiceNo: 'J-101',
+    propertyName: 'Shekhar Center',
+    wing: 'A',
+    officeNo: 101,
+    OfficeName: 'Codervita',
+    invoiceSubject: 'Rent for December',
+    invoiceAmt: 60000,
+    invoiceStatus: 1,
+    notifReceivedTime: Date.now(),
+  },
+  {
+    id: 1,
+    invoiceNo: 'J-101',
+    propertyName: 'Shekhar Center',
+    wing: 'B',
+    officeNo: 101,
+    OfficeName: 'Codervita',
+    invoiceSubject: 'Rent for December',
+    invoiceAmt: 60000,
+    invoiceStatus: 0,
+    notifReceivedTime: Date.now(),
   },
 ];
 

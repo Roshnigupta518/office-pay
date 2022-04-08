@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Input} from 'react-native-elements';
+import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';
 
 const DefaultInput = props => (
@@ -9,6 +10,7 @@ const DefaultInput = props => (
     containerStyle={styles.inputCont}
     selectionColor={lightTheme.PRIMARY_COLOR}
     style={[styles.input, props.style]}
+    errorStyle={globalStyles.textDanger}
     {...props}
   />
 );

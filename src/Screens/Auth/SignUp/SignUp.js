@@ -15,18 +15,53 @@ import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import {signUp} from '../../../API/Auth';
+import {
+  ValidateMail,
+  ValidatePassword,
+} from '../../../global/utils/Validations';
 
 const SignUpForm = ({continueSignup}) => {
   const [secure, setSecure] = useState(true);
   const [email, setEmail] = useState('');
+  const [emailErr, setEmailErr] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordErr, setPasswordErr] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordErr, setConfirmPasswordErr] = useState('');
 
   const [building, setBuilding] = useState(true);
 
   const [loading, setLoading] = useState(false);
 
+  const validateRegisterData = () => {
+    let result = true;
+
+    const emailResult = ValidateMail(email);
+    const pwdNotMatched = password !== confirmPassword;
+
+    console.log({emailResult, pwdNotMatched});
+
+    if (emailResult !== 'success') {
+      result = false;
+      setEmailErr(emailResult);
+    } else {
+      setEmailErr('');
+    }
+    if (pwdNotMatched) {
+      result = false;
+      setConfirmPasswordErr('Passwords do not match');
+    } else {
+      setConfirmPasswordErr('');
+    }
+
+    return result;
+  };
+
   const handleSignUp = async () => {
+    if (!validateRegisterData()) {
+      return;
+    }
+
     setLoading(true);
 
     const registerData = {
@@ -39,6 +74,7 @@ const SignUpForm = ({continueSignup}) => {
       password_confirmation: confirmPassword,
       role_id: building ? 1 : 0, // * assuming 1 is for building...do confirm
     };
+
     let error = false;
 
     await signUp(registerData).catch(err => {
@@ -55,6 +91,18 @@ const SignUpForm = ({continueSignup}) => {
     if (!error) {
       continueSignup();
     }
+  };
+
+  const handlePwdChange = pwd => {
+    const pwdResult = ValidatePassword(password);
+
+    if (pwdResult !== 'success') {
+      setPasswordErr(pwdResult);
+    } else {
+      setPasswordErr('');
+    }
+
+    setPassword(pwd);
   };
 
   return (
@@ -111,6 +159,7 @@ const SignUpForm = ({continueSignup}) => {
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
         disabled={loading}
+        errorMessage={emailErr}
         leftIcon={
           <Icon
             name="mail"
@@ -124,10 +173,11 @@ const SignUpForm = ({continueSignup}) => {
       <Input
         placeholder="Enter Password"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={handlePwdChange}
         inputStyle={globalStyles.fontDefault}
         secureTextEntry={secure}
         disabled={loading}
+        errorMessage={passwordErr}
         leftIcon={
           <Icon
             name="locked"
@@ -144,6 +194,7 @@ const SignUpForm = ({continueSignup}) => {
         onChangeText={setConfirmPassword}
         inputStyle={globalStyles.fontDefault}
         secureTextEntry={secure}
+        errorMessage={confirmPasswordErr}
         disabled={loading}
         leftIcon={
           <Icon

@@ -9,6 +9,11 @@ export const styles = StyleSheet.create({
   view: {
     backgroundColor: lightTheme.THEME,
   },
+  invoiceCont: {
+    marginHorizontal: 10,
+    marginTop: 15,
+    paddingBottom: 100,
+  },
   officeImgCont: {
     width: '95%',
     height: 200,
@@ -96,5 +101,12 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.family.fontSemiBold,
     fontSize: fonts.fontSize.regular,
     color: fonts.fontColor.white,
+  },
+
+  invoiceHeaderCont: {
+    backgroundColor: lightTheme.PRIMARY_COLOR_LIGHT,
+    width: '100%',
+    height: 40,
+    ...globalStyles.placeCenter,
   },
 });

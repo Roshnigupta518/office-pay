@@ -5,10 +5,13 @@ import {login} from '../../API/Auth';
 const {LOGIN_USER} = types;
 
 // * middleware
-export const loginUser = async (dispatch, loginData) => {
-  await login(loginData);
+export const loginUser = loginData => {
+  return async dispatch => {
+    const buildingOwner = await login(loginData);
 
-  dispatch({
-    type: LOGIN_USER,
-  });
+    dispatch({
+      type: LOGIN_USER,
+      buildingOwner,
+    });
+  };
 };

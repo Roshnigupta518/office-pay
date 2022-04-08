@@ -50,30 +50,15 @@ export const CustomTabBar = ({state, descriptors, navigation}) => {
 
         const tabIcon = () => {
           switch (label.toLowerCase()) {
-            case 'home':
+            case 'dashboard':
               return {
                 name: 'home',
                 pack: 'feather',
               };
-            case 'add office':
+            case 'create-invoice':
               return {
-                name: 'message-plus-outline',
-                pack: 'material-community',
-              };
-            case 'search':
-              return {
-                name: 'search-outline',
-                pack: 'ionicon',
-              };
-            case 'notifications':
-              return {
-                name: 'notifications-outline',
-                pack: 'ionicon',
-              };
-            case 'messages':
-              return {
-                name: 'message-circle',
-                pack: 'feather',
+                name: 'copy1',
+                pack: 'antdesign',
               };
           }
         };

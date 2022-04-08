@@ -7,7 +7,7 @@ import {getImageSrc} from '../../../global/utils/helperFunctions';
 
 const AvatarImage = ({icon, src}) => {
   return (
-    <View>
+    <View style={styles.view}>
       <View style={styles.container}>
         {icon ? (
           <Image style={styles.image} source={getImageSrc(src)} />
@@ -32,6 +32,9 @@ const AvatarImage = ({icon, src}) => {
 export default AvatarImage;
 
 const styles = StyleSheet.create({
+  view: {
+    marginBottom: 20,
+  },
   container: {
     width: 150,
     height: 150,

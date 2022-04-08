@@ -1,11 +1,11 @@
 import React from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View, Image} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {globalStyles} from '../../../global/Styles';
 
 import {lightTheme} from '../../../global/Theme';
+import {getImageSrc} from '../../../global/utils/helperFunctions';
 
-import Text from '../../UI/Text';
 
 const CustomMainHeader = () => {
   return (
@@ -14,7 +14,13 @@ const CustomMainHeader = () => {
       <View style={styles.headerLeft} />
       <View style={styles.headerCenter}>
         {/* Todo: replace text with logo */}
-        <Text style={globalStyles.accentHeading}>OfficePay</Text>
+        {/* <Text style={globalStyles.accentHeading}>OfficePay</Text> */}
+        <Image
+          source={getImageSrc(
+            require('../../../assets/images/placeholders/imgpsh.png'),
+          )}
+          style={styles.logo}
+        />
       </View>
       <View style={styles.headerRight}>
         <Icon
@@ -32,7 +38,7 @@ export default CustomMainHeader;
 
 const styles = StyleSheet.create({
   container: {
-      width: '100%',
+    width: '100%',
     paddingVertical: 20,
     paddingTop: 50,
     borderRadius: 20,
@@ -40,7 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     elevation: 10,
-    backgroundColor: lightTheme.THEME
+    backgroundColor: lightTheme.THEME,
   },
 
   headerCenter: {
@@ -53,5 +59,11 @@ const styles = StyleSheet.create({
   headerLeft: {
     width: '20%',
     backgroundColor: 'green',
+  },
+
+  logo: {
+    width: '60%',
+    height: 50,
+    resizeMode: 'contain'
   },
 });

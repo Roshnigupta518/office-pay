@@ -12,8 +12,8 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userLogin: true,
+        buildingOwner: action.buildingOwner,
       };
-
     default:
       return state;
   }

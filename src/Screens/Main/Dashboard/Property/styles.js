@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
 
   propertyItemCont: {
     width: '98%',
-    height: 130,
+    height: 150,
     backgroundColor: lightTheme.THEME,
     elevation: 7,
     ...globalStyles.flexRow,
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
 
   imgCont: {
     width: '40%',
-    height: 130,
+    height: 150,
   },
   detailsCont: {
     width: '60%',
@@ -69,6 +69,10 @@ export const styles = StyleSheet.create({
   detailsHeadings: {
     ...globalStyles.heading,
     fontSize: fonts.fontSize.semiRegular,
+  },
+  detailsHeadingsSmall: {
+    ...globalStyles.heading,
+    fontSize: fonts.fontSize.small,
   },
   detailsValue: {
     ...globalStyles.heading,

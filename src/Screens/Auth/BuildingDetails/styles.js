@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     marginVertical: 25,
+    ...globalStyles.placeCenter,
   },
   uploadImageBtnCont: {
     marginVertical: 50,

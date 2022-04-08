@@ -5,10 +5,15 @@ export const login = async loginData => {
 
   const {email, password} = loginData;
 
+  // * this value will represent if the user loggin,
+  // * in is an office owner / building owner
+  // Todo: toggle depending on the login response
+  const buildingOwner = true;
+
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       console.log(`Todo: call "login" api with data - ${email}, ${password}`);
-      resolve();
+      resolve(buildingOwner);
     }, 3000);
   });
 };

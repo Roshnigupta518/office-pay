@@ -1,41 +1,47 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-
-import Text from '../../../../Components/UI/Text';
-import {lightTheme} from '../../../../global/Theme';
-import {getShadowProperties} from '../../../../global/utils/helperFunctions';
-import {globalStyles} from '../../../../global/Styles';
-import {fonts} from '../../../../global/fonts';
 import {Icon} from 'react-native-elements';
-import Button from '../../../../Components/UI/Button';
 
-const InvoiceItem = ({invoiceDetails, showPropertyDetails, buildingOwner}) => {
+import Text from '../../../Components/UI/Text';
+import Button from '../../../Components/UI/Button';
+
+import {getShadowProperties} from '../../../global/utils/helperFunctions';
+import {lightTheme} from '../../../global/Theme';
+import {globalStyles} from '../../../global/Styles';
+import {fonts} from '../../../global/fonts';
+
+const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
   return (
     <View style={styles.itemCont}>
-      <View style={styles.row}>
-        <Text style={styles.buildName}>{invoiceDetails.buildingName}</Text>
-        <View style={globalStyles.flexRow}>
-          <View style={styles.wingCont}>
-            <Text style={styles.heading}>Wing</Text>
-            <Text style={styles.value}>{invoiceDetails.officeWing}</Text>
-          </View>
+      {!dontShowProperty && (
+        <View style={styles.row}>
+          <Text style={styles.buildName}>{invoiceDetails.buildingName}</Text>
           <View style={globalStyles.flexRow}>
-            <Text style={styles.heading}>Floor</Text>
-            <Text style={styles.value}>{invoiceDetails.officeFloor}</Text>
+            <View style={styles.wingCont}>
+              <Text style={styles.heading}>Wing</Text>
+              <Text style={styles.value}>{invoiceDetails.officeWing}</Text>
+            </View>
+            <View style={globalStyles.flexRow}>
+              <Text style={styles.heading}>Floor</Text>
+              <Text style={styles.value}>{invoiceDetails.officeFloor}</Text>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.row}>
-        <View style={globalStyles.flexRow}>
-          <Text style={styles.officeNum}>{invoiceDetails.officeNumber}</Text>
-          <Text style={styles.officeName}>{invoiceDetails.officeName}</Text>
-        </View>
+      )}
+      {!dontShowProperty && (
+        <View style={styles.row}>
+          <View style={globalStyles.flexRow}>
+            <Text style={styles.officeNum}>{invoiceDetails.officeNumber}</Text>
+            <Text style={styles.officeName}>{invoiceDetails.officeName}</Text>
+          </View>
 
-        <View style={globalStyles.flexRow}>
-          <Text style={styles.heading}>Due Date</Text>
-          <Text style={styles.value}>{invoiceDetails.invoiceDueDate}</Text>
+          <View style={globalStyles.flexRow}>
+            <Text style={styles.heading}>Due Date</Text>
+            <Text style={styles.value}>{invoiceDetails.invoiceDueDate}</Text>
+          </View>
         </View>
-      </View>
+      )}
+
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
           <Text style={styles.heading}>Invoice Date</Text>
@@ -148,6 +154,7 @@ const styles = StyleSheet.create({
   },
 
   status: {
+    minWidth: 75,
     paddingHorizontal: 5,
     borderRadius: 3,
     overflow: 'hidden',

@@ -15,14 +15,87 @@ import {
 } from '../../../global/utils/helperFunctions';
 import {connect} from 'react-redux';
 import {addBuidlingDetails} from '../../../store/actions/BuildingActions';
+import {ValueEmpty} from '../../../global/utils/Validations';
+
+const INITIAL_STATE = {
+  accHolderName: '',
+  accNumber: '',
+  reAccNumber: '',
+  ifsc: '',
+};
 
 const BankDetailsForm = ({loading, onNextPress}) => {
-  const [bankDetails, setBankDetails] = useState({
-    accHolderName: '',
-    accNumber: '',
-    reAccNumber: '',
-    ifsc: '',
-  });
+  const [bankDetails, setBankDetails] = useState(INITIAL_STATE);
+
+  const [bankDetailsErr, setBankDetailsErr] = useState(INITIAL_STATE);
+
+  const validateFields = () => {
+    let result = true;
+
+    const accHolderNameError = ValueEmpty(bankDetails.accHolderName);
+    const accNumberError = ValueEmpty(bankDetails.accNumber);
+    const reAccNumberError = ValueEmpty(bankDetails.reAccNumber);
+    const ifscError = ValueEmpty(bankDetails.ifsc);
+
+    console.log({
+      accHolderNameError,
+      accNumberError,
+      reAccNumberError,
+      ifscError,
+    });
+
+    let errorObj = {
+      ...bankDetailsErr,
+    };
+
+    if (accHolderNameError) {
+      result = false;
+
+      errorObj['accHolderName'] = '*Required';
+    } else {
+      errorObj['accHolderName'] = '';
+    }
+
+    if (accNumberError) {
+      result = false;
+
+      errorObj['accNumber'] = '*Required';
+    } else {
+      errorObj['accNumber'] = '';
+    }
+
+    if (reAccNumberError) {
+      result = false;
+
+      errorObj['reAccNumber'] = '*Required';
+    } else {
+      errorObj['reAccNumber'] = '';
+    }
+
+    if (bankDetails.accNumber !== bankDetails.reAccNumber) {
+      result = false;
+
+      errorObj['reAccNumber'] = 'Account numbers do not match';
+    } else {
+      errorObj['reAccNumber'] = '';
+    }
+
+    if (ifscError) {
+      result = false;
+
+      errorObj['ifsc'] = '*Required';
+    } else {
+      errorObj['ifsc'] = '';
+    }
+
+    if (result) {
+      setBankDetailsErr(INITIAL_STATE);
+    } else {
+      setBankDetailsErr(errorObj);
+    }
+
+    return result;
+  };
 
   handleOnChange = (key, val) => {
     setBankDetails({
@@ -38,6 +111,7 @@ const BankDetailsForm = ({loading, onNextPress}) => {
         onChangeText={value => handleOnChange('accHolderName', value)}
         style={globalStyles.textDefault}
         placeholder={'Account Holder Name'}
+        errorMessage={bankDetailsErr.accHolderName}
         disabled={loading}
       />
       <Input
@@ -45,6 +119,7 @@ const BankDetailsForm = ({loading, onNextPress}) => {
         onChangeText={value => handleOnChange('accNumber', value)}
         style={globalStyles.textDefault}
         placeholder={'Enter your account number'}
+        errorMessage={bankDetailsErr.accNumber}
         disabled={loading}
       />
       <Input
@@ -52,6 +127,7 @@ const BankDetailsForm = ({loading, onNextPress}) => {
         onChangeText={value => handleOnChange('reAccNumber', value)}
         style={globalStyles.textDefault}
         placeholder={'Re-enter your account number'}
+        errorMessage={bankDetailsErr.reAccNumber}
         disabled={loading}
       />
       <Input
@@ -59,11 +135,16 @@ const BankDetailsForm = ({loading, onNextPress}) => {
         onChangeText={value => handleOnChange('ifsc', value)}
         style={globalStyles.textDefault}
         placeholder={'Enter IFSC Code'}
+        errorMessage={bankDetailsErr.ifsc}
         disabled={loading}
       />
       <Button
         titleStyle={globalStyles.headingWhite}
         onPress={() => {
+          if (!validateFields()) {
+            return;
+          }
+
           onNextPress(bankDetails);
         }}
         title={'Next'}
@@ -97,7 +178,7 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
 
     setLoading(false);
     if (!error) {
-      navigation.navigate('dashboard');
+      navigation.navigate('home');
     }
   };
 
@@ -138,10 +219,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  doAddBuildingDetails: data =>
-    dispatch(async innerdispatch => {
-      await addBuidlingDetails(innerdispatch, data);
-    }),
+  doAddBuildingDetails: data => dispatch(addBuidlingDetails(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankDetails);

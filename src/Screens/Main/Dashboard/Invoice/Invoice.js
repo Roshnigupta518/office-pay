@@ -7,7 +7,7 @@ import Text from '../../../../Components/UI/Text';
 import {globalStyles} from '../../../../global/Styles';
 
 import {getInvoices} from '../../../../API/Invoice';
-import { lightTheme } from '../../../../global/Theme';
+import {lightTheme} from '../../../../global/Theme';
 
 const useGetInvoices = () => {
   const [invoices, setInvoices] = useState(null);
@@ -23,7 +23,7 @@ const useGetInvoices = () => {
   return invoices;
 };
 
-const Invoice = () => {
+const Invoice = ({buildingOwner}) => {
   const invoices = useGetInvoices();
 
   if (!invoices) {
@@ -38,7 +38,7 @@ const Invoice = () => {
     <View style={styles.view}>
       <Text style={globalStyles.heading}>Due Invoice</Text>
       {invoices.map(invoice => (
-        <InvoiceItem invoiceDetails={invoice} />
+        <InvoiceItem buildingOwner={buildingOwner} invoiceDetails={invoice} />
       ))}
     </View>
   );

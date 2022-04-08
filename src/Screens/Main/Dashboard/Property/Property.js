@@ -8,11 +8,15 @@ import Card from '../../../../Components/UI/Card';
 
 import {styles} from './styles';
 
-import {getImageSrc} from '../../../../global/utils/helperFunctions';
+import {
+  getImageSrc,
+  prettyPrint,
+} from '../../../../global/utils/helperFunctions';
 import {globalStyles} from '../../../../global/Styles';
 
 import {getBuidlings} from '../../../../API/Building';
 import {lightTheme} from '../../../../global/Theme';
+import {getOfficesDashboard} from '../../../../API/Offices';
 
 const useGetBuildings = () => {
   const [buildings, setBuildings] = useState(null);
@@ -26,6 +30,20 @@ const useGetBuildings = () => {
   }, []);
 
   return buildings;
+};
+
+const useGetOffices = propertyID => {
+  const [offices, setOffices] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      setOffices(null);
+      const offices = await getOfficesDashboard(propertyID);
+      setOffices(offices);
+    })();
+  }, []);
+
+  return offices;
 };
 
 const RenderPropertyItem = ({item, handleItemClick}) => {
@@ -59,10 +77,54 @@ const RenderPropertyItem = ({item, handleItemClick}) => {
   );
 };
 
-const Property = ({onPropertyItemClick}) => {
-  const buildings = useGetBuildings();
+const RenderOfficeItem = ({item, handleItemClick}) => {
+  // prettyPrint({item});
 
-  if (!buildings) {
+  return (
+    <Card style={styles.propertyItemCont} onPress={() => handleItemClick(item)}>
+      <View style={styles.imgCont}>
+        <Image
+          source={getImageSrc(item.office_image)}
+          style={globalStyles.image}
+        />
+      </View>
+      <View style={styles.detailsCont}>
+        <Text style={styles.propertyName}>{item.office_name}</Text>
+        <Text style={styles.propertyaddress}>{item.office_address}</Text>
+        <Text style={styles.detailsValue}>{`WING ${item.wing}`}</Text>
+        <Text
+          style={
+            styles.detailsValue
+          }>{`Office no. ${item.office_number}`}</Text>
+        <View style={styles.detailsRow}>
+          <Text style={[styles.detailsHeadings, globalStyles.textDanger]}>
+            Due Invoices Amount
+          </Text>
+          <Text style={styles.detailsValue}>{item.due_invoices || 0}</Text>
+        </View>
+        <View style={styles.detailsRow}>
+          <Text style={[styles.detailsHeadings, styles.detailsHeadingsSmall]}>
+            Pending Invoices Amount
+          </Text>
+          <Text style={styles.detailsValue}>{item.occupied_offices || 0}</Text>
+        </View>
+      </View>
+    </Card>
+  );
+};
+
+const Property = ({onPropertyItemClick, onOfficeItemClick, buildingOwner}) => {
+  // ! dummy id
+  const propertyID = '0';
+
+  const buildings = useGetBuildings();
+  const offices = useGetOffices(propertyID);
+
+  const listingData = buildingOwner ? buildings : offices;
+
+  prettyPrint({listingData});
+
+  if (!listingData) {
     return (
       <View style={styles.loaderCont}>
         <ActivityIndicator color={lightTheme.PRIMARY_COLOR} size={'large'} />
@@ -73,31 +135,38 @@ const Property = ({onPropertyItemClick}) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.sectionHeader}>
-        <Text>My Property</Text>
-        <Pressable
-          onPress={() => {
-            console.log('Todo: handle add property');
-          }}>
-          <Text style={styles.addPropertyLink}>+ Add Property</Text>
-        </Pressable>
+        <Text>{`My ${buildingOwner ? 'Property' : 'Office'}`}</Text>
+        {buildingOwner && (
+          <Pressable
+            onPress={() => {
+              console.log('Todo: handle add property');
+            }}>
+            <Text style={styles.addPropertyLink}>+ Add Property</Text>
+          </Pressable>
+        )}
       </View>
       <View style={styles.listCont}>
-        {/* Todo: discuss using simple map is safe or not */}
-        {buildings.map((item, index) => {
+        {listingData.map((item, index) => {
+          if (buildingOwner) {
+            return (
+              <RenderPropertyItem
+                handleItemClick={onPropertyItemClick}
+                key={index}
+                item={item}
+                index={index}
+              />
+            );
+          }
+
           return (
-            <RenderPropertyItem
-              handleItemClick={onPropertyItemClick}
+            <RenderOfficeItem
+              handleItemClick={onOfficeItemClick}
               key={index}
               item={item}
               index={index}
             />
           );
         })}
-        {/* <FlatList
-          data={dummyProperties}
-          renderItem={RenderPropertyItem}
-          keyExtractor={item => item.id.toString()}
-        /> */}
       </View>
     </View>
   );
