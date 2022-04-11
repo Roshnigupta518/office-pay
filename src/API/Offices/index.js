@@ -1,4 +1,18 @@
 import {dummyOffices, dummyOfficesDashBoard} from '../../assets/dummy_data';
+import {prettyPrint} from '../../global/utils/helperFunctions';
+
+export const addOffice = async office => {
+  // Todo: add API call to get offices from server
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      prettyPrint({addOfficeHandler: office});
+      resolve({
+        success: 1,
+      });
+    }, 3000);
+  });
+};
 
 export const getOffices = async () => {
   // Todo: add API call to get offices from server

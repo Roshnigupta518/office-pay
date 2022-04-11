@@ -16,6 +16,7 @@ import {
 import {connect} from 'react-redux';
 import {addBuidlingDetails} from '../../../store/actions/BuildingActions';
 import {ValueEmpty} from '../../../global/utils/Validations';
+import CustomStackHeader from '../../../Components/Component-Parts/CustomStackHeader';
 
 const INITIAL_STATE = {
   accHolderName: '',
@@ -157,6 +158,7 @@ const BankDetailsForm = ({loading, onNextPress}) => {
 
 const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
   const buildingDetails = getObjPropertyValue(route.params, 'buildingDetails');
+  const fromDash = getObjPropertyValue(route.params, 'fromDash');
 
   const [loading, setLoading] = useState(false);
 
@@ -178,13 +180,19 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
 
     setLoading(false);
     if (!error) {
-      navigation.navigate('home');
+      const route = fromDash ? 'dashboard' : 'home';
+
+      navigation.navigate(route);
     }
   };
 
   return (
     <View style={styles.view}>
-      <AuthBgImage />
+      {fromDash ? (
+        <CustomStackHeader goBack={() => navigation.goBack()} />
+      ) : (
+        <AuthBgImage />
+      )}
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Pressable

@@ -21,7 +21,11 @@ const CreateInvoice = ({navigation, route}) => {
       {officeDetails ? (
         <CustomStackHeader goBack={() => navigation.goBack()} />
       ) : (
-        <CustomMainHeader />
+        <CustomMainHeader
+          goToInit={() => {
+            navigation.navigate('init');
+          }}
+        />
       )}
       <ScrollView contentContainerStyle={styles.scrollview}>
         <Text style={styles.pagetitle}>Create Invoice</Text>

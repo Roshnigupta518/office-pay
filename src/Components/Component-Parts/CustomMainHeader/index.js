@@ -1,20 +1,20 @@
 import React from 'react';
-import {StatusBar, StyleSheet, View, Image} from 'react-native';
+import {StatusBar, StyleSheet, View, Image, Pressable} from 'react-native';
 import {Icon} from 'react-native-elements';
+import { connect } from 'react-redux';
 import {globalStyles} from '../../../global/Styles';
 
 import {lightTheme} from '../../../global/Theme';
 import {getImageSrc} from '../../../global/utils/helperFunctions';
 
+import {logoutUser} from '../../../store/actions/AuthActions';
 
-const CustomMainHeader = () => {
+const CustomMainHeader = ({doUserLogout, goToInit}) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={lightTheme.THEME} barStyle="dark-content" />
       <View style={styles.headerLeft} />
       <View style={styles.headerCenter}>
-        {/* Todo: replace text with logo */}
-        {/* <Text style={globalStyles.accentHeading}>OfficePay</Text> */}
         <Image
           source={getImageSrc(
             require('../../../assets/images/placeholders/imgpsh.png'),
@@ -22,31 +22,42 @@ const CustomMainHeader = () => {
           style={styles.logo}
         />
       </View>
-      <View style={styles.headerRight}>
+      <Pressable
+        onPress={() => {
+          doUserLogout();
+          goToInit();
+        }}
+        style={styles.headerRight}>
         <Icon
           name={'logout'}
           type={'material'}
           color={lightTheme.PRIMARY_TEXT}
           size={30}
         />
-      </View>
+      </Pressable>
     </View>
   );
 };
 
-export default CustomMainHeader;
+const mapDispatchToProps = dispatch => ({
+  doUserLogout: () => dispatch(logoutUser()),
+});
+
+export default connect(null, mapDispatchToProps)(CustomMainHeader);
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingVertical: 20,
-    paddingTop: 50,
-    borderRadius: 20,
+    // paddingTop: 30,
+    borderBottomLeftRadius: 20,
+    borderBottomEndRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     elevation: 10,
     backgroundColor: lightTheme.THEME,
+    // backgroundColor: 'red',
   },
 
   headerCenter: {
@@ -64,6 +75,6 @@ const styles = StyleSheet.create({
   logo: {
     width: '60%',
     height: 50,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
 });

@@ -1,11 +1,11 @@
 import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {Icon, Image} from 'react-native-elements';
 import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';
 import {getImageSrc} from '../../../global/utils/helperFunctions';
 
-const AvatarImage = ({icon, src}) => {
+const AvatarImage = ({icon, src, onCameraClick}) => {
   return (
     <View style={styles.view}>
       <View style={styles.container}>
@@ -21,7 +21,11 @@ const AvatarImage = ({icon, src}) => {
         )}
       </View>
       <Pressable
-        onPress={() => console.log('TODO: handle camera click')}
+        onPress={() => {
+          if (onCameraClick) {
+            onCameraClick();
+          }
+        }}
         style={styles.camera}>
         <Icon name={'camera'} type={'ionicon'} color={lightTheme.THEME} />
       </Pressable>
@@ -34,6 +38,7 @@ export default AvatarImage;
 const styles = StyleSheet.create({
   view: {
     marginBottom: 20,
+    position: 'relative',
   },
   container: {
     width: 150,
@@ -45,7 +50,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#efefefef',
     overflow: 'hidden',
     alignSelf: 'center',
-    position: 'relative',
     ...globalStyles.placeCenter,
   },
   camera: {
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     position: 'absolute',
     bottom: 0,
-    right: '30%',
+    left: 10,
     ...globalStyles.placeCenter,
   },
   image: {

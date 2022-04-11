@@ -1,28 +1,28 @@
 import React, {useState} from 'react';
-import {Platform} from 'react-native';
-// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import ImagePicker from 'react-native-image-picker';
+import {PermissionsAndroid, Platform, StyleSheet, View} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS} from 'react-native-permissions';
+
+import Text from '../../UI/Text';
+import Button from '../../UI/Button';
+import Alert from '../../UI/Alert';
+
+import {globalStyles} from '../../../global/Styles';
+
 import {prettyPrint} from '../../../global/utils/helperFunctions';
 
-const WithImageUpload = (WrappedComp, uploadImageToServer, avatarSrc) => {
+const WithImageUpload = (WrappedComponent, uploadImageToServer) => {
   return props => {
-    const [loading, setLoading] = useState(false);
-    const [avatar, setAvatar] = useState(avatarSrc);
-
-    const onTakePhotoClick = () => {
-      setLoading(true);
-      checkCameraPermission();
-    };
+    const [showModal, setShowModal] = useState(false);
 
     const checkCameraPermission = async () => {
       try {
         if (Platform.OS === 'ios') {
-          request(PERMISSIONS.IOS.CAMERA).then(result => {
-            if (result === 'granted') {
-              handleTakePhoto();
-            }
-          });
+          const result = await request(PERMISSIONS.IOS.CAMERA);
+
+          if (result === 'granted') {
+            handleTakePhoto();
+          }
         } else {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -38,7 +38,7 @@ const WithImageUpload = (WrappedComp, uploadImageToServer, avatarSrc) => {
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             console.log('You can use the camera');
-            checkWriteToExternalPermission();
+            await checkWriteToExternalPermission();
           } else {
             console.log('Camera permission denied');
           }
@@ -63,20 +63,21 @@ const WithImageUpload = (WrappedComp, uploadImageToServer, avatarSrc) => {
           },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('You can write to storage');
-          if ((key = 'camera')) {
-            handleTakePhoto();
-            return;
-          }
+          return true;
         } else {
           console.log('Storage permission denied');
+          return false;
         }
       } catch (err) {
         console.warn(err);
       }
     };
 
-    const handleTakePhoto = (storagePermission = true) => {
+    const handleTakePhoto = async (storagePermission = true) => {
+      const permissionsGranted = await checkCameraPermission();
+
+      console.log({permissionsGranted});
+
       const options = {
         mediaType: 'photo',
         saveToPhotos: storagePermission,
@@ -112,32 +113,38 @@ const WithImageUpload = (WrappedComp, uploadImageToServer, avatarSrc) => {
       });
     };
 
-    const handleImageUpload = () => {
-      ImagePicker.showImagePicker(options, response => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-          return;
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-          return;
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-          return;
-        } else {
-          uploadImageToServer(response);
-
-          const source = {uri: 'file:///' + response.path};
-
-          setAvatar(source);
-          changeAvatar('file:///' + response.path);
-        }
-      });
-    };
-
     return (
-      <WrappedComponent {...props} handleImageUpload={handleImageUpload} />
+      <View>
+        <WrappedComponent
+          {...props}
+          handleImageUpload={() => setShowModal(!showModal)}
+        />
+        <Alert showModal={showModal} setShowModal={setShowModal}>
+          <Text style={styles.heading}>Upload Image</Text>
+          <Button
+            title={'Take a photo'}
+            containerStyle={styles.btn}
+            onPress={() => handleTakePhoto()}
+          />
+          <Button
+            title={'Pick from Gallery'}
+            containerStyle={styles.btn}
+            onPress={() => handleChooseFromGallery()}
+          />
+        </Alert>
+      </View>
     );
   };
 };
 
 export default WithImageUpload;
+
+const styles = StyleSheet.create({
+  heading: {
+    ...globalStyles.heading,
+  },
+  btn: {
+    marginTop: 20,
+    width: '70%',
+  },
+});

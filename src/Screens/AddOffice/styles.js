@@ -13,6 +13,8 @@ export const styles = StyleSheet.create({
 
   form: {
     paddingHorizontal: 15,
-    paddingBottom: 30,
+  },
+  scroll: {
+    paddingBottom: 50,
   },
 });

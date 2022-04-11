@@ -6,19 +6,34 @@ import Login from '../../../Screens/Auth/Login/Login';
 import SignUp from '../../../Screens/Auth/SignUp/SignUp';
 import BuildingDetails from '../../../Screens/Auth/BuildingDetails/BuildingDetails';
 import BankDetails from '../../../Screens/Auth/BankDetails/BankDetails';
-import Dashboard from '../../../Screens/Main/Dashboard/Dashboard';
+// import Dashboard from '../../../Screens/Main/Dashboard/Dashboard';
 import MyProperty from '../../../Screens/MyProperty/MyProperty';
 import AddOffice from '../../../Screens/AddOffice/AddOffice';
 import PropertyDetails from '../../../Screens/PropertyDetails';
 import CreateInvoice from '../../../Screens/CreateInvoice/CreateInvoice';
 import SelectLanguage from '../../../Screens/SelectLanguage/SelectLanguage';
-import { RootTab } from '../../Tabs/rootTab';
+import RootTab from '../../Tabs/rootTab';
+import Init from '../../../Screens/Init/Init';
 
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
   return (
     <Stack.Navigator>
+      {/* <Stack.Screen
+        name="splash"
+        options={{
+          headerShown: false,
+        }}
+        component={Splash}
+      /> */}
+      <Stack.Screen
+        name="init"
+        options={{
+          headerShown: false,
+        }}
+        component={Init}
+      />
       <Stack.Screen
         name="lang"
         options={{

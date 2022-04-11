@@ -19,6 +19,9 @@ import {
   ValidateMobile,
   ValueEmpty,
 } from '../../../global/utils/Validations';
+import CustomStackHeader from '../../../Components/Component-Parts/CustomStackHeader';
+import {getObjPropertyValue} from '../../../global/utils/helperFunctions';
+import WithImageUpload from '../../../Components/HOCs/ImageUploader';
 
 const INITIAL_STATE = {
   name: '',
@@ -159,11 +162,18 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
 };
 
 const UploadPANimageSection = () => {
-  return (
-    <View style={styles.uploadImageBtnCont}>
+  const uploadPANToServer = () => {
+    console.log('handle PAN upload to server');
+  };
+
+  const PandCardUploaderWithPicker = WithImageUpload(
+    ({handleImageUpload, ...props}) => (
       <TouchableOpacity
         style={styles.uploadImageBtn}
-        onPress={() => console.log('Todo: Handle upload PAN image')}>
+        onPress={() => {
+          console.log('Todo: Handle upload PAN image');
+          handleImageUpload();
+        }}>
         <Icon
           name={'image-plus'}
           type={'material-community'}
@@ -173,35 +183,71 @@ const UploadPANimageSection = () => {
           Upload your PAN card Image
         </Text>
       </TouchableOpacity>
+    ),
+    uploadPANToServer,
+    null,
+  );
+
+  return (
+    <View style={styles.uploadImageBtnCont}>
+      <PandCardUploaderWithPicker />
     </View>
   );
 };
 
-const BuildingDetails = ({navigation, buildingOwner}) => {
+const BuildingDetails = ({navigation, buildingOwner, route}) => {
   const [officeImage, setOfficeImage] = useState(null);
+
+  const {fromDash} = getObjPropertyValue(route.params, 'fromDash');
+
+  console.log({fromDash});
+
+  const uploadProfileToServer = () => {
+    console.log('handle image upload to server');
+  };
+
+  const AvatarImageWithPicker = WithImageUpload(
+    ({handleImageUpload, ...props}) => (
+      <AvatarImage onCameraClick={handleImageUpload} {...props} />
+    ),
+    uploadProfileToServer,
+    null,
+  );
 
   return (
     <View style={styles.view}>
-      <AuthBgImage />
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <Pressable
-            style={styles.headerLeft}
-            onPress={() => console.log('Todo: Handle Skip')}>
-            <Text>Skip</Text>
-          </Pressable>
-          <View style={styles.headerMid}>
-            <Text>1 to 2 Step</Text>
-          </View>
-          <View style={styles.headerRight} />
-        </View>
-        <View style={styles.pageTitle}>
-          <Text style={globalStyles.heading}>
-            Complete your Building Details
-          </Text>
-        </View>
+      {fromDash ? (
+        <CustomStackHeader goBack={() => navigation.goBack()} />
+      ) : (
+        <AuthBgImage />
+      )}
+      <ScrollView
+        style={[styles.container, fromDash ? {} : styles.containerShifted]}>
+        {!fromDash ? (
+          <>
+            <View style={styles.header}>
+              <Pressable
+                style={styles.headerLeft}
+                onPress={() => console.log('Todo: Handle Skip')}>
+                <Text>Skip</Text>
+              </Pressable>
+              <View style={styles.headerMid}>
+                <Text>1 to 2 Step</Text>
+              </View>
+              <View style={styles.headerRight} />
+            </View>
+            <View style={styles.pageTitle}>
+              <Text style={globalStyles.heading}>
+                Complete your Building Details
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View style={styles.placeholderView} />
+        )}
+
         <View style={styles.avatar}>
-          <AvatarImage
+          <AvatarImageWithPicker
             src={officeImage}
             setAvatar={img => setOfficeImage(img)}
           />
@@ -211,7 +257,7 @@ const BuildingDetails = ({navigation, buildingOwner}) => {
         </View>
         <BuildingDetailsForm
           pushNextScreen={buildingDetails => {
-            navigation.navigate('bank-details', {buildingDetails});
+            navigation.navigate('bank-details', {buildingDetails, fromDash});
           }}
         />
         <UploadPANimageSection />

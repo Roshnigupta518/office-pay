@@ -38,6 +38,7 @@ const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
 const RenderDashboardTabs = ({
   onPropertyItemClick,
   onOfficeItemClick,
+  onAddPropertyClick,
   buildingOwner,
 }) => {
   const tabConfigs = {
@@ -75,6 +76,7 @@ const RenderDashboardTabs = ({
         buildingOwner={buildingOwner}
         onPropertyItemClick={onPropertyItemClick}
         onOfficeItemClick={onOfficeItemClick}
+        onAddPropertyClick={onAddPropertyClick}
       />,
       <Invoice buildingOwner={buildingOwner} />,
       <Notifications />,
@@ -97,9 +99,19 @@ const Dashboard = ({navigation, buildingOwner}) => {
     });
   };
 
+  const onAddPropertyClick = () => {
+    navigation.navigate('building-details', {
+      fromDash: true,
+    });
+  };
+
+  const goToInit = () => {
+    navigation.navigate('init');
+  };
+
   return (
     <View style={styles.view}>
-      <CustomMainHeader />
+      <CustomMainHeader goToInit={goToInit} />
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.greetingCont}>
@@ -115,6 +127,7 @@ const Dashboard = ({navigation, buildingOwner}) => {
           buildingOwner={buildingOwner}
           onPropertyItemClick={onPropertyItemClick}
           onOfficeItemClick={onOfficeItemClick}
+          onAddPropertyClick={onAddPropertyClick}
         />
       </ScrollView>
     </View>

@@ -113,7 +113,12 @@ const RenderOfficeItem = ({item, handleItemClick}) => {
   );
 };
 
-const Property = ({onPropertyItemClick, onOfficeItemClick, buildingOwner}) => {
+const Property = ({
+  onPropertyItemClick,
+  onOfficeItemClick,
+  onAddPropertyClick,
+  buildingOwner,
+}) => {
   // ! dummy id
   const propertyID = '0';
 
@@ -139,7 +144,7 @@ const Property = ({onPropertyItemClick, onOfficeItemClick, buildingOwner}) => {
         {buildingOwner && (
           <Pressable
             onPress={() => {
-              console.log('Todo: handle add property');
+              onAddPropertyClick();
             }}>
             <Text style={styles.addPropertyLink}>+ Add Property</Text>
           </Pressable>

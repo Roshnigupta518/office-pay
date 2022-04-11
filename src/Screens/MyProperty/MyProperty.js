@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 
 import CustomStackHeader from '../../Components/Component-Parts/CustomStackHeader';
 import Text from '../../Components/UI/Text';
@@ -51,7 +51,7 @@ const getWingTabConfigs = wingOffices => {
   return tabConfigs;
 };
 
-const RenderTitleHeader = ({property, noOffice}) => {
+const RenderTitleHeader = ({property, noOffice, addOffice}) => {
   if (noOffice) {
     return (
       <View style={styles.headerCont}>
@@ -74,7 +74,9 @@ const RenderTitleHeader = ({property, noOffice}) => {
           </View>
         </View>
       </View>
-      <Text style={styles.addPropertyLink}>+ Add Property</Text>
+      <Pressable onPress={addOffice}>
+        <Text style={styles.addPropertyLink}>+ Add Office</Text>
+      </Pressable>
     </View>
   );
 };
@@ -148,14 +150,20 @@ const MyProperty = ({route, navigation}) => {
 
   const offices = useGetOffices(id);
 
+  const goToAddOffice = () => navigation.navigate('add-office');
+
   return (
     <View style={styles.view}>
       <CustomStackHeader goBack={() => navigation.goBack()} />
-      <RenderTitleHeader noOffice={noOffice} property={property} />
+      <RenderTitleHeader
+        noOffice={noOffice}
+        property={property}
+        addOffice={goToAddOffice}
+      />
       <RenderBody
         noOffice={noOffice}
         offices={offices}
-        onAddOfficeClick={() => navigation.navigate('add-office')}
+        onAddOfficeClick={goToAddOffice}
         onOfficeClick={officeDetails =>
           navigation.navigate('property-details', {
             office: officeDetails,

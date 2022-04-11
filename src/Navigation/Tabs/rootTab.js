@@ -4,10 +4,15 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CreateInvoice from '../../Screens/CreateInvoice/CreateInvoice';
 import Dashboard from '../../Screens/Main/Dashboard/Dashboard';
 import {CustomTabBar} from '../../Components/UI/CustomBottomBar';
+import { connect } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
-export const RootTab = () => {
+const RootTab = ({buildingOwner, ...props}) => {
+  if (!buildingOwner) {
+    return <Dashboard {...props} />;
+  }
+
   return (
     <Tab.Navigator tabBar={CustomTabBar}>
       <Tab.Screen
@@ -27,3 +32,13 @@ export const RootTab = () => {
     </Tab.Navigator>
   );
 };
+
+const mapStateToProps = state => {
+  const {buildingOwner} = state.auth;
+
+  return {
+    buildingOwner,
+  };
+};
+
+export default connect(mapStateToProps)(RootTab);

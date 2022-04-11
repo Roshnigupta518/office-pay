@@ -54,11 +54,13 @@ export const CustomTabBar = ({state, descriptors, navigation}) => {
               return {
                 name: 'home',
                 pack: 'feather',
+                title: 'Dashboard',
               };
             case 'create-invoice':
               return {
                 name: 'copy1',
                 pack: 'antdesign',
+                title: 'Create Invoice',
               };
           }
         };
@@ -72,7 +74,7 @@ export const CustomTabBar = ({state, descriptors, navigation}) => {
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={[styles.tabBtn]}>
+            style={[styles.tabBtn, isFocused ? styles.selectedBorder : {}]}>
             {label.toLowerCase() === 'search' ? (
               <View style={styles.searchBtn}>
                 <Avatar
@@ -107,7 +109,7 @@ export const CustomTabBar = ({state, descriptors, navigation}) => {
                     fontSize: fonts.fontSize.small,
                     color: isFocused ? '#000' : theme.SECONDARY_TEXT,
                   }}>
-                  {label}
+                  {tabIcon().title}
                 </Text>
               </View>
             )}
@@ -121,7 +123,7 @@ export const CustomTabBar = ({state, descriptors, navigation}) => {
 const styles = StyleSheet.create({
   barCont: {
     flexDirection: 'row',
-    padding: 10,
+
     backgroundColor: lightTheme.THEME,
     elevation: 10,
     borderTopColor: lightTheme.SECONDARY_TEXT,
@@ -131,6 +133,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     position: 'relative',
+    padding: 10,
+  },
+  selectedBorder: {
+    borderTopColor: lightTheme.PRIMARY_COLOR,
+    borderTopWidth: 3,
   },
   searchBtn: {
     position: 'absolute',

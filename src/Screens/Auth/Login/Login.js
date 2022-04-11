@@ -149,7 +149,7 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
   );
 };
 
-const Login = ({navigation, doUserLogin}) => {
+const Login = ({navigation, doUserLogin, buildingAdded}) => {
   return (
     <>
       <AuthBgImage />
@@ -161,6 +161,11 @@ const Login = ({navigation, doUserLogin}) => {
         <LoginForm
           onSubmit={doUserLogin}
           continueToProfileDetails={() => {
+            // if a building is already added navigate to home then
+            if (buildingAdded) {
+              navigation.navigate('home');
+              return;
+            }
             navigation.navigate('building-details');
           }}
         />
@@ -181,12 +186,13 @@ const Login = ({navigation, doUserLogin}) => {
 };
 
 const mapStateToProps = state => {
-  const {auth} = state;
+  const {auth, buildingDetails} = state;
 
-  prettyPrint({auth});
+  prettyPrint({auth, buildingDetails});
 
   return {
     auth,
+    buildingAdded: Object.keys(buildingDetails).length,
   };
 };
 

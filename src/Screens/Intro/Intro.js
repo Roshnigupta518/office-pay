@@ -15,6 +15,8 @@ import {lightTheme} from '../../global/Theme';
 import Button from '../../Components/UI/Button';
 import {fonts} from '../../global/fonts';
 import {globalStyles} from '../../global/Styles';
+import {connect} from 'react-redux';
+import {IntroDone} from '../../store/actions/IntroActions';
 
 // Todo: handle Skip and Next
 
@@ -35,7 +37,7 @@ const SLIDE_DATA = [
   },
 ];
 
-const Intro = ({navigation}) => {
+const Intro = ({navigation, doIntroDone}) => {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const _renderItem = ({item, index}) => {
@@ -79,6 +81,7 @@ const Intro = ({navigation}) => {
             setActiveSlide(1);
             return;
           }
+          doIntroDone();
           navigation.navigate('login');
         }}
         title={'Next'}
@@ -86,8 +89,6 @@ const Intro = ({navigation}) => {
     </View>
   );
 };
-
-export default Intro;
 
 const styles = StyleSheet.create({
   view: {
@@ -148,3 +149,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const mapDispatchToProps = dispatch => ({
+  doIntroDone: () => dispatch(IntroDone()),
+});
+
+export default connect(null, mapDispatchToProps)(Intro);

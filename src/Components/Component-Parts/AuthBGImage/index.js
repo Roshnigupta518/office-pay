@@ -1,6 +1,6 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
-import {Image} from 'react-native-elements';
+import {StatusBar, StyleSheet, Text, View, Image} from 'react-native';
+// import {Image} from 'react-native-elements';
 
 import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';

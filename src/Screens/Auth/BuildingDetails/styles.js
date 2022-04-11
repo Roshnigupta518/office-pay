@@ -11,6 +11,8 @@ export const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 15,
+  },
+  containerShifted: {
     position: 'relative',
     top: -30,
   },
@@ -47,5 +49,8 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.family.fontSemiBold,
     fontSize: fonts.fontSize.semiLarge,
     marginLeft: 15,
+  },
+  placeholderView: {
+    marginBottom: 30,
   },
 });
