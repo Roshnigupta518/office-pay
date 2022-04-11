@@ -50,4 +50,8 @@ export const styles = StyleSheet.create({
   detailsFormCont: {
     marginTop: 30,
   },
+
+  placeholderView: {
+    marginBottom: 30,
+  },
 });

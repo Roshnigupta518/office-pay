@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import AuthBgImage from '../../Components/Component-Parts/AuthBGImage';
 import {globalStyles} from '../../global/Styles';
@@ -30,16 +25,16 @@ const Init = ({navigation, auth, introComplete}) => {
 
       if (route === '') {
         let setupRoute = '';
-        if (!introComplete) {
+        if (userLogin) {
+          console.log('INFO: user already logged in, moving to Dashboard');
+
+          setupRoute = 'home';
+        } else if (!introComplete) {
           console.log(
             "INFO: user haven't walkeded through yet, pushing intro screens",
           );
 
           setupRoute = 'lang';
-        } else if (userLogin) {
-          console.log('INFO: user already logged in, moving to Dashboard');
-
-          setupRoute = 'home';
         } else {
           console.log('INFO: user is not logged in, moving to login page');
 

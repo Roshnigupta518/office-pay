@@ -18,8 +18,7 @@ const SelectLanguage = ({navigation}) => {
       <AuthBgImage />
       <Pressable
         onPress={() => {
-          // Todo: handle skip
-          console.log('Todo: handle skip');
+          navigation.navigate('intro');
         }}>
         <Text style={styles.skiptext}>Skip</Text>
       </Pressable>

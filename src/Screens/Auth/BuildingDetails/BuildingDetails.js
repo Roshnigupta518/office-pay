@@ -206,6 +206,10 @@ const BuildingDetails = ({navigation, buildingOwner, route}) => {
     console.log('handle image upload to server');
   };
 
+  const goToDashboard = () => {
+    navigation.navigate('home');
+  };
+
   const AvatarImageWithPicker = WithImageUpload(
     ({handleImageUpload, ...props}) => (
       <AvatarImage onCameraClick={handleImageUpload} {...props} />
@@ -226,9 +230,7 @@ const BuildingDetails = ({navigation, buildingOwner, route}) => {
         {!fromDash ? (
           <>
             <View style={styles.header}>
-              <Pressable
-                style={styles.headerLeft}
-                onPress={() => console.log('Todo: Handle Skip')}>
+              <Pressable style={styles.headerLeft} onPress={goToDashboard}>
                 <Text>Skip</Text>
               </Pressable>
               <View style={styles.headerMid}>

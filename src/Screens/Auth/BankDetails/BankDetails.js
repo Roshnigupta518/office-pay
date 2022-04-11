@@ -186,6 +186,10 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
     }
   };
 
+  const goToDashboard = () => {
+    navigation.navigate('home');
+  };
+
   return (
     <View style={styles.view}>
       {fromDash ? (
@@ -194,17 +198,21 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
         <AuthBgImage />
       )}
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <Pressable
-            style={styles.headerLeft}
-            onPress={() => console.log('Todo: Handle Skip')}>
-            <Text>Skip</Text>
-          </Pressable>
-          <View style={styles.headerMid}>
-            <Text>2 to 2 Step</Text>
+        {!fromDash ? (
+          <View style={styles.header}>
+            <Pressable
+              style={styles.headerLeft}
+              onPress={goToDashboard}>
+              <Text>Skip</Text>
+            </Pressable>
+            <View style={styles.headerMid}>
+              <Text>2 to 2 Step</Text>
+            </View>
+            <View style={styles.headerRight} />
           </View>
-          <View style={styles.headerRight} />
-        </View>
+        ) : (
+          <View style={styles.placeholderView} />
+        )}
         <View style={styles.pageTitle}>
           <Text style={globalStyles.heading}>Add your Bank Detail</Text>
         </View>

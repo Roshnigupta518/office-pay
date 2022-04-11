@@ -46,8 +46,7 @@ const Intro = ({navigation, doIntroDone}) => {
         <AuthBgImage />
         <Pressable
           onPress={() => {
-            // Todo: handle skip
-            console.log('Todo: handle skip');
+            navigation.navigate('login');
           }}>
           <Text style={styles.skiptext}>Skip</Text>
         </Pressable>
