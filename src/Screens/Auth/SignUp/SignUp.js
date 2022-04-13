@@ -1,24 +1,57 @@
 import React, {useState} from 'react';
-import {Pressable, ScrollView, StatusBar, View} from 'react-native';
+import {Pressable, ScrollView, View} from 'react-native';
 import {Icon, SocialIcon} from 'react-native-elements';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
-
 import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
 import Button from '../../../Components/UI/Button';
 import CheckBox from '../../../Components/UI/Checkbox';
+import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 
 import {styles} from './styles';
 
 import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
-import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
+
 import {signUp} from '../../../API/Auth';
+
 import {
   ValidateMail,
   ValidatePassword,
 } from '../../../global/utils/Validations';
+
+import {GOOGLE_WEB_CLIENT_ID} from '../../../assets/Constants';
+import {prettyPrint} from '../../../global/utils/helperFunctions';
+
+GoogleSignin.configure({
+  webClientId: GOOGLE_WEB_CLIENT_ID,
+});
+
+const handleSignUpWithGoogle = async () => {
+  try {
+    await GoogleSignin.hasPlayServices();
+    const userInfo = await GoogleSignin.signIn();
+
+    return userInfo;
+  } catch (error) {
+    prettyPrint({error});
+    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      // user cancelled the login flow
+    } else if (error.code === statusCodes.IN_PROGRESS) {
+      // operation (e.g. sign in) is in progress already
+    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      // play services not available or outdated
+    } else {
+      // some other error happened
+      console.log('Error: some other error happend in google sign-up');
+    }
+  }
+};
 
 const SignUpForm = ({continueSignup}) => {
   const [secure, setSecure] = useState(true);
@@ -223,6 +256,12 @@ const SignUpForm = ({continueSignup}) => {
 };
 
 const RenderSocialSignUp = () => {
+  const onGoogleButtonPress = async () => {
+    const googleUserInfo = await handleSignUpWithGoogle();
+
+    prettyPrint({googleUserInfo});
+  };
+
   return (
     <View style={styles.footerBg}>
       <View style={styles.footerRelativeCont}>
@@ -232,14 +271,16 @@ const RenderSocialSignUp = () => {
             <Text style={styles.footerText}>Or SignUp with</Text>
             <View style={styles.footerLine} />
           </View>
-          <View style={styles.footerIconsCont}>
-            <View style={styles.footerIconsContInner}>
+          <View style={styles.footerIconsContInner}>
               <SocialIcon
                 underlayColor={lightTheme.PRIMARY_COLOR}
                 raised
+                button
                 type="google"
+                title='Sign Up With Google'
+                onPress={onGoogleButtonPress}
               />
-              <SocialIcon
+              {/* <SocialIcon
                 underlayColor={lightTheme.PRIMARY_COLOR}
                 raised
                 type="facebook"
@@ -248,9 +289,8 @@ const RenderSocialSignUp = () => {
                 underlayColor={lightTheme.PRIMARY_COLOR}
                 raised
                 type="linkedin"
-              />
+              /> */}
             </View>
-          </View>
         </View>
       </View>
     </View>

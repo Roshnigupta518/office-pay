@@ -94,9 +94,9 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
   footerIconsContInner: {
-    width: '60%',
+    width: '80%',
     // backgroundColor: 'red',
-    ...globalStyles.flexRow,
-    justifyContent: 'space-around',
+    // ...globalStyles.flexRow,
+    // justifyContent: 'space-around',
   },
 });
