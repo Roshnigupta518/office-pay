@@ -14,6 +14,11 @@ export const styles = StyleSheet.create({
     marginTop: 15,
     paddingBottom: 100,
   },
+  showMore: {
+    ...globalStyles.anchor,
+    textDecorationLine: 'underline',
+    paddingRight: 0,
+  },
   officeImgCont: {
     width: '95%',
     height: 200,

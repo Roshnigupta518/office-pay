@@ -198,9 +198,7 @@ const UploadPANimageSection = () => {
 const BuildingDetails = ({navigation, buildingOwner, route}) => {
   const [officeImage, setOfficeImage] = useState(null);
 
-  const {fromDash} = getObjPropertyValue(route.params, 'fromDash');
-
-  console.log({fromDash});
+  const fromDash =  getObjPropertyValue(route.params, 'fromDash');
 
   const uploadProfileToServer = () => {
     console.log('handle image upload to server');

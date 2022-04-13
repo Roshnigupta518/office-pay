@@ -13,8 +13,9 @@ export const isJSObj = obj => {
 export const getObjPropertyValue = (obj, property) => {
   return isJSObj(obj) && obj.hasOwnProperty(property)
     ? obj[property]
-    : {[property]: null};
-};
+    // : {[property]: null};
+    : null;
+  };
 
 export const getShadowProperties = (elevation, width, height, radius) => {
   return {

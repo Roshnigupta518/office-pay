@@ -40,6 +40,7 @@ const RenderDashboardTabs = ({
   onOfficeItemClick,
   onAddPropertyClick,
   buildingOwner,
+  goToListMore,
 }) => {
   const tabConfigs = {
     tabItems: [
@@ -77,9 +78,10 @@ const RenderDashboardTabs = ({
         onPropertyItemClick={onPropertyItemClick}
         onOfficeItemClick={onOfficeItemClick}
         onAddPropertyClick={onAddPropertyClick}
+        goToListMore={goToListMore}
       />,
-      <Invoice buildingOwner={buildingOwner} />,
-      <Notifications />,
+      <Invoice buildingOwner={buildingOwner} goToListMore={goToListMore} />,
+      <Notifications goToListMore={goToListMore} />,
     ],
   };
 
@@ -109,6 +111,10 @@ const Dashboard = ({navigation, buildingOwner}) => {
     navigation.navigate('init');
   };
 
+  const goToListMore = props => {
+    navigation.navigate('list-more', props);
+  };
+
   return (
     <View style={styles.view}>
       <CustomMainHeader goToInit={goToInit} />
@@ -128,6 +134,7 @@ const Dashboard = ({navigation, buildingOwner}) => {
           onPropertyItemClick={onPropertyItemClick}
           onOfficeItemClick={onOfficeItemClick}
           onAddPropertyClick={onAddPropertyClick}
+          goToListMore={goToListMore}
         />
       </ScrollView>
     </View>

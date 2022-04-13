@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
 
 import InvoiceItem from './InvoiceItem';
 import Text from '../../../../Components/UI/Text';
@@ -23,7 +23,7 @@ const useGetInvoices = () => {
   return invoices;
 };
 
-const Invoice = ({buildingOwner}) => {
+const Invoice = ({buildingOwner, goToListMore}) => {
   const invoices = useGetInvoices();
 
   if (!invoices) {
@@ -37,9 +37,29 @@ const Invoice = ({buildingOwner}) => {
   return (
     <View style={styles.view}>
       <Text style={globalStyles.heading}>Due Invoice</Text>
-      {invoices.map(invoice => (
-        <InvoiceItem buildingOwner={buildingOwner} invoiceDetails={invoice} />
-      ))}
+      {invoices.map((invoice, index) => {
+        if (index > 2) {
+          return <View key={index} />;
+        }
+
+        return (
+          <InvoiceItem buildingOwner={buildingOwner} invoiceDetails={invoice} />
+        );
+      })}
+      <Pressable
+        onPress={() =>
+          goToListMore({
+            data: invoices,
+            renderItem: ({item}) => (
+              <InvoiceItem
+                buildingOwner={buildingOwner}
+                invoiceDetails={item}
+              />
+            ),
+          })
+        }>
+        <Text style={styles.showMore}>Show More</Text>
+      </Pressable>
     </View>
   );
 };
@@ -50,11 +70,18 @@ const styles = StyleSheet.create({
   view: {
     width: '90%',
     marginVertical: 20,
+    flex: 1,
   },
 
   loaderCont: {
     ...globalStyles.placeCenter,
     paddingTop: 40,
     paddingRight: 30,
+  },
+
+  showMore: {
+    ...globalStyles.anchor,
+    textDecorationLine: 'underline',
+    paddingRight: 0,
   },
 });

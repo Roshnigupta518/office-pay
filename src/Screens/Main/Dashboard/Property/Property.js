@@ -118,6 +118,7 @@ const Property = ({
   onOfficeItemClick,
   onAddPropertyClick,
   buildingOwner,
+  goToListMore,
 }) => {
   // ! dummy id
   const propertyID = '0';
@@ -152,6 +153,11 @@ const Property = ({
       </View>
       <View style={styles.listCont}>
         {listingData.map((item, index) => {
+          console.log({index});
+          if (index > 3) {
+            return <View key={index} />;
+          }
+
           if (buildingOwner) {
             return (
               <RenderPropertyItem
@@ -173,6 +179,15 @@ const Property = ({
           );
         })}
       </View>
+      <Pressable
+        onPress={() =>
+          goToListMore({
+            data: listingData,
+            renderItem: buildingOwner ? RenderPropertyItem : RenderOfficeItem,
+          })
+        }>
+        <Text style={styles.addPropertyLink}>Show More</Text>
+      </Pressable>
     </View>
   );
 };

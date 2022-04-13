@@ -14,6 +14,7 @@ import CreateInvoice from '../../../Screens/CreateInvoice/CreateInvoice';
 import SelectLanguage from '../../../Screens/SelectLanguage/SelectLanguage';
 import RootTab from '../../Tabs/rootTab';
 import Init from '../../../Screens/Init/Init';
+import ListMore from '../../../Screens/ListMore/ListMore';
 
 const Stack = createNativeStackNavigator();
 
@@ -111,6 +112,13 @@ const RootStack = () => {
           headerShown: false,
         }}
         component={CreateInvoice}
+      />
+      <Stack.Screen
+        name="list-more"
+        options={{
+          headerShown: false,
+        }}
+        component={ListMore}
       />
     </Stack.Navigator>
   );

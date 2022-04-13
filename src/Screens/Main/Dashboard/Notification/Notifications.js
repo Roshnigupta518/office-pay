@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
 
 import NotifItem from './NotifItem';
+import Text from '../../../../Components/UI/Text';
 
 import {globalStyles} from '../../../../global/Styles';
 
@@ -22,7 +23,7 @@ const useGetNotifs = () => {
   return notifs;
 };
 
-const Notifications = () => {
+const Notifications = ({goToListMore}) => {
   const notifs = useGetNotifs();
 
   if (!notifs) {
@@ -35,9 +36,23 @@ const Notifications = () => {
 
   return (
     <View style={styles.view}>
-      {notifs.map((notif, index) => (
-        <NotifItem key={index} notifItem={notif} />
-      ))}
+      {notifs.map((notif, index) => {
+        if (index > 2) {
+          return <View key={index} />;
+        }
+        return <NotifItem key={index} notifItem={notif} />;
+      })}
+      <Pressable
+        onPress={() =>
+          goToListMore({
+            data: notifs,
+            renderItem: ({item, index}) => (
+              <NotifItem key={index} notifItem={item} />
+            ),
+          })
+        }>
+        <Text style={styles.showMore}>Show More</Text>
+      </Pressable>
     </View>
   );
 };
@@ -54,5 +69,10 @@ const styles = StyleSheet.create({
     ...globalStyles.placeCenter,
     paddingTop: 40,
     paddingRight: 30,
+  },
+  showMore: {
+    ...globalStyles.anchor,
+    textDecorationLine: 'underline',
+    paddingRight: 0,
   },
 });

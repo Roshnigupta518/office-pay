@@ -1,4 +1,4 @@
-import {Image, ScrollView, View} from 'react-native';
+import {Image, Pressable, ScrollView, View} from 'react-native';
 import React from 'react';
 import {Icon} from 'react-native-elements';
 
@@ -10,7 +10,6 @@ import Button from '../../Components/UI/Button';
 import {
   getImageSrc,
   getObjPropertyValue,
-  prettyPrint,
 } from '../../global/utils/helperFunctions';
 
 import {styles} from './styles';
@@ -19,17 +18,39 @@ import {lightTheme} from '../../global/Theme';
 import {dummyInvoiceDashboard} from '../../assets/dummy_data';
 import {connect} from 'react-redux';
 
-const PropertyInvoices = ({buildingOwner}) => {
+const PropertyInvoices = ({buildingOwner, goToListMore}) => {
   return (
     <View style={styles.invoiceCont}>
-      {dummyInvoiceDashboard.map((invoice, key) => (
-        <InvoiceItem
-          key={key}
-          buildingOwner={buildingOwner}
-          invoiceDetails={invoice}
-          dontShowProperty
-        />
-      ))}
+      {dummyInvoiceDashboard.map((invoice, key) => {
+        if (key > 2) {
+          return <View key={key} />;
+        }
+
+        return (
+          <InvoiceItem
+            key={key}
+            buildingOwner={buildingOwner}
+            invoiceDetails={invoice}
+            dontShowProperty
+          />
+        );
+      })}
+      <Pressable
+        onPress={() =>
+          goToListMore({
+            data: dummyInvoiceDashboard,
+            renderItem: ({item, index}) => (
+              <InvoiceItem
+                key={index}
+                buildingOwner={buildingOwner}
+                invoiceDetails={item}
+                dontShowProperty
+              />
+            ),
+          })
+        }>
+        <Text style={styles.showMore}>Show More</Text>
+      </Pressable>
     </View>
   );
 };
@@ -46,7 +67,11 @@ const PropertyDetails = ({route, navigation, buildingOwner}) => {
   // ! in production may be office is fetched through API
   const office = getObjPropertyValue(route.params, 'office');
 
-  prettyPrint({office});
+  // prettyPrint({office});
+
+  const goToListMore = props => {
+    navigation.navigate('list-more', props);
+  };
 
   return (
     <View style={styles.view}>
@@ -104,7 +129,10 @@ const PropertyDetails = ({route, navigation, buildingOwner}) => {
           )}
         </View>
         <RenderInvoiceDetailsHeader />
-        <PropertyInvoices buildingOwner={buildingOwner} />
+        <PropertyInvoices
+          buildingOwner={buildingOwner}
+          goToListMore={goToListMore}
+        />
       </ScrollView>
     </View>
   );
