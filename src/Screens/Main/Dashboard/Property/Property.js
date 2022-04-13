@@ -128,7 +128,7 @@ const Property = ({
 
   const listingData = buildingOwner ? buildings : offices;
 
-  prettyPrint({listingData});
+  // prettyPrint({listingData});
 
   if (!listingData) {
     return (

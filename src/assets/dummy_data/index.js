@@ -215,6 +215,8 @@ export const dummyInvoiceDashboard = [
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
     invoiceStatus: 0,
+    invoiceURL:
+      'https://i.picsum.photos/id/296/200/200.jpg?hmac=y-H33xJ0Tpm9muoZO3ZMb5kXpNPG1mptQ9HBmpjCc8A',
   },
   {
     id: 1,
@@ -229,6 +231,8 @@ export const dummyInvoiceDashboard = [
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
     invoiceStatus: 1,
+    invoiceURL:
+      'https://i.picsum.photos/id/296/200/200.jpg?hmac=y-H33xJ0Tpm9muoZO3ZMb5kXpNPG1mptQ9HBmpjCc8A',
   },
   {
     id: 2,
@@ -243,6 +247,8 @@ export const dummyInvoiceDashboard = [
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
     invoiceStatus: 0,
+    invoiceURL:
+      'https://i.picsum.photos/id/296/200/200.jpg?hmac=y-H33xJ0Tpm9muoZO3ZMb5kXpNPG1mptQ9HBmpjCc8A',
   },
   {
     id: 3,
@@ -257,6 +263,8 @@ export const dummyInvoiceDashboard = [
     invoiceAmmount: '₹ 2000',
     lastReminderDate: '05 Nov 2021',
     invoiceStatus: 0,
+    invoiceURL:
+      'https://i.picsum.photos/id/296/200/200.jpg?hmac=y-H33xJ0Tpm9muoZO3ZMb5kXpNPG1mptQ9HBmpjCc8A',
   },
 ];
 

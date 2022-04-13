@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Icon} from 'react-native-elements';
 
@@ -9,8 +9,27 @@ import {getShadowProperties} from '../../../global/utils/helperFunctions';
 import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
 import {fonts} from '../../../global/fonts';
+import WithFileDownloader from '../../HOCs/FileDownloader';
 
 const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
+  const DownloadFile = WithFileDownloader(({handleDownload}) => (
+    <Pressable
+      onPress={() =>
+        handleDownload(
+          invoiceDetails.invoiceURL,
+          `invoice_${invoiceDetails.officeNumber}_${invoiceDetails.invoiceSubject}_${invoiceDetails.id}.jpg`, // ! change ext to pdf
+        )
+      }
+      style={globalStyles.flexRow}>
+      <Icon
+        type="ionicon"
+        name={'ios-document-text-outline'}
+        color={lightTheme.PRIMARY_COLOR}
+      />
+      <Text style={styles.download}>Download</Text>
+    </Pressable>
+  ));
+
   return (
     <View style={styles.itemCont}>
       {!dontShowProperty && (
@@ -72,14 +91,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
           <Text style={styles.heading}>Last Reminder</Text>
           <Text style={styles.value}>{invoiceDetails.lastReminderDate}</Text>
         </View>
-        <View style={globalStyles.flexRow}>
-          <Icon
-            type="ionicon"
-            name={'ios-document-text-outline'}
-            color={lightTheme.PRIMARY_COLOR}
-          />
-          <Text style={styles.download}>Download</Text>
-        </View>
+        <DownloadFile />
       </View>
       {buildingOwner ? (
         <View style={styles.row}>
