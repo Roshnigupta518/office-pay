@@ -100,13 +100,17 @@ const RenderOfficeItem = ({item, handleItemClick}) => {
           <Text style={[styles.detailsHeadings, globalStyles.textDanger]}>
             Due Invoices Amount
           </Text>
-          <Text style={styles.detailsValue}>{item.due_invoices || 0}</Text>
+          <Text style={[styles.detailsValue, {color: lightTheme.DANGER}]}>
+            {`₹${item.due_invoices || 0}`}
+          </Text>
         </View>
         <View style={styles.detailsRow}>
           <Text style={[styles.detailsHeadings, styles.detailsHeadingsSmall]}>
             Pending Invoices Amount
           </Text>
-          <Text style={styles.detailsValue}>{item.occupied_offices || 0}</Text>
+          <Text style={[styles.detailsValue, {color: lightTheme.WARNING}]}>
+            {`₹${item.occupied_offices || 0}`}
+          </Text>
         </View>
       </View>
     </Card>

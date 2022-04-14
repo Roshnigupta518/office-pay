@@ -1,10 +1,17 @@
-import React from 'react';
-import {Alert, PermissionsAndroid, View} from 'react-native';
-
+import React, { useState } from 'react';
+import {Alert, PermissionsAndroid, StyleSheet, View} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+
+import AppAlert from '../../UI/Alert';
+import Text from '../../UI/Text';
+
+import {globalStyles} from '../../../global/Styles';
+import Button from '../../UI/Button';
 
 const WithFileDownloader = WrappedComponent => {
   return props => {
+    const [showModal, setShowModal] = useState(false);
+
     const checkWriteToExternalPermission = async () => {
       try {
         const granted = await PermissionsAndroid.request(
@@ -46,6 +53,7 @@ const WithFileDownloader = WrappedComponent => {
         .fetch('GET', url)
         .then(res => {
           console.log('The file saved to ', res.path());
+          setShowModal(true);
         })
         .catch(e => {
           console.log(e);
@@ -78,8 +86,30 @@ const WithFileDownloader = WrappedComponent => {
       }
     };
 
-    return <WrappedComponent {...props} handleDownload={handleDownload} />;
+    return (
+      <View>
+        <WrappedComponent {...props} handleDownload={handleDownload} />
+        <AppAlert showModal={showModal} setShowModal={setShowModal}>
+          <Text style={globalStyles.heading}>File download successfully</Text>
+          <Button
+            title={'OK'}
+            containerStyle={styles.btn}
+            onPress={() => setShowModal(false)}
+          />
+        </AppAlert>
+      </View>
+    );
   };
 };
 
 export default WithFileDownloader;
+
+const styles = StyleSheet.create({
+  heading: {
+    ...globalStyles.heading,
+  },
+  btn: {
+    marginTop: 20,
+    width: '70%',
+  },
+});

@@ -12,6 +12,7 @@ import WithPaymentPerformer from '../../../../Components/HOCs/PaymentPerformer';
 import {connect} from 'react-redux';
 
 const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
+  // payment HOC
   const WithPay = WithPaymentPerformer(
     ({handlePay}) => (
       <View style={styles.row}>
@@ -175,8 +176,10 @@ const styles = StyleSheet.create({
   },
 
   status: {
-    paddingHorizontal: 5,
-    borderRadius: 3,
+    paddingHorizontal: 10,
+    paddingTop: 2,
+    borderRadius: 25,
+    marginVertical: 5,
     overflow: 'hidden',
     ...globalStyles.placeCenter,
   },

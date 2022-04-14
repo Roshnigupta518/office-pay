@@ -14,6 +14,7 @@ export const lightTheme = {
   // Symbolic
   DANGER: '#FF0000',
   SUCCESS: '#187A00',
+  WARNING: '#FFB800',
 };
 
 export const rnElementsTheme = {

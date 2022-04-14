@@ -167,8 +167,10 @@ const styles = StyleSheet.create({
 
   status: {
     minWidth: 75,
-    paddingHorizontal: 5,
-    borderRadius: 3,
+    paddingHorizontal: 10,
+    paddingTop: 3,
+    borderRadius: 15,
+    marginBottom: 5,
     overflow: 'hidden',
     ...globalStyles.placeCenter,
   },
