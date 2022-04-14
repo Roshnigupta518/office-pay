@@ -8,8 +8,36 @@ import {globalStyles} from '../../../../global/Styles';
 import {fonts} from '../../../../global/fonts';
 import {Icon} from 'react-native-elements';
 import Button from '../../../../Components/UI/Button';
+import WithPaymentPerformer from '../../../../Components/HOCs/PaymentPerformer';
+import {connect} from 'react-redux';
 
-const InvoiceItem = ({invoiceDetails, showPropertyDetails, buildingOwner}) => {
+const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
+  const WithPay = WithPaymentPerformer(
+    ({handlePay}) => (
+      <View style={styles.row}>
+        <Button
+          titleStyle={styles.btntitle}
+          containerStyle={styles.btnContFull}
+          onPress={() => {
+            // Todo: handle Pay now
+
+            const paymentDetails = {
+              amount: 200,
+              invoiceDesc: invoiceDetails.invoiceSubject,
+              ...invoiceDetails,
+            };
+
+            handlePay(paymentDetails);
+          }}
+          title={'Pay Now'}
+        />
+      </View>
+    ),
+    () => console.log('INFO: payment success'),
+    () => console.log('INFO: payment error'),
+    auth,
+  );
+
   return (
     <View style={styles.itemCont}>
       <View style={styles.row}>
@@ -96,16 +124,7 @@ const InvoiceItem = ({invoiceDetails, showPropertyDetails, buildingOwner}) => {
           />
         </View>
       ) : invoiceDetails.invoiceStatus === 0 ? (
-        <View style={styles.row}>
-          <Button
-            titleStyle={styles.btntitle}
-            containerStyle={styles.btnContFull}
-            onPress={() => {
-              // Todo: handle Pay now
-            }}
-            title={'Pay Now'}
-          />
-        </View>
+        <WithPay />
       ) : (
         <View />
       )}
@@ -113,7 +132,15 @@ const InvoiceItem = ({invoiceDetails, showPropertyDetails, buildingOwner}) => {
   );
 };
 
-export default InvoiceItem;
+const mapStateToProps = state => {
+  const {auth} = state;
+
+  return {
+    auth,
+  };
+};
+
+export default connect(mapStateToProps)(InvoiceItem);
 
 const styles = StyleSheet.create({
   itemCont: {

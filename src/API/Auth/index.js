@@ -8,7 +8,7 @@ export const login = async loginData => {
   // * this value will represent if the user loggin,
   // * in is an office owner / building owner
   // Todo: toggle depending on the login response
-  const buildingOwner = true;
+  const buildingOwner = false;
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
