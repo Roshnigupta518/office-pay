@@ -1,31 +1,43 @@
-import {prettyPrint} from '../../global/utils/helperFunctions';
+import {create, CancelToken} from 'apisauce';
+
+import {API_BASE_URL} from '../../assets/Constants';
+import {
+  handleAPIErrorResponse,
+  prettyPrint,
+} from '../../global/utils/helperFunctions';
 
 export const login = async loginData => {
-  // Todo: add API call to login user
+  console.log(`calling "login" api with data - ${loginData.email}, ${loginData.password}`);
 
-  const {email, password} = loginData;
+  const api = create({baseURL: API_BASE_URL});
+  const response = await api.post('/login', loginData);
 
   // * this value will represent if the user loggin,
   // * in is an office owner / building owner
   // Todo: toggle depending on the login response
   const buildingOwner = false;
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log(`Todo: call "login" api with data - ${email}, ${password}`);
-      resolve(buildingOwner);
-    }, 3000);
-  });
+  // prettyPrint({response});
+
+  if (response.ok) {
+    return {buildingOwner, access_token: response.data.access_token};
+  } else {
+    console.log('login error => ', response.status);
+    handleAPIErrorResponse(response, 'login user');
+  }
 };
 
 export const signUp = async signUpData => {
-  // Todo: add API call to signUp user
+  console.log('calling "signUp" api with data - ');
+  prettyPrint({signUpData});
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log(`Todo: call "signUp" api with data - `);
-      prettyPrint({signUpData});
-      resolve();
-    }, 3000);
-  });
+  const api = create({baseURL: API_BASE_URL});
+  const response = await api.post('/register', signUpData);
+
+  if (response.ok) {
+    return response.data;
+  } else {
+    console.log('signUp error => ', response.status);
+    handleAPIErrorResponse(response, 'register user');
+  }
 };

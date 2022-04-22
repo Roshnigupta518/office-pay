@@ -13,9 +13,9 @@ export const isJSObj = obj => {
 export const getObjPropertyValue = (obj, property) => {
   return isJSObj(obj) && obj.hasOwnProperty(property)
     ? obj[property]
-    // : {[property]: null};
-    : null;
-  };
+    : // : {[property]: null};
+      null;
+};
 
 export const getShadowProperties = (elevation, width, height, radius) => {
   return {
@@ -31,4 +31,26 @@ export const getShadowProperties = (elevation, width, height, radius) => {
 
 export const sortOfficeDetails = offices => {
   return orderBy(offices, ['wing', 'floor_number'], ['asc', 'asc']);
+};
+
+// * API helpers ===================
+
+const getErrorString = err => {
+  return Array.isArray(err) && err.length ? err[0] : err ? err : '';
+};
+
+export const handleAPIErrorResponse = (response, caller) => {
+  const {status, problem, data} = response;
+
+  if (status === 200) {
+    return;
+  }
+
+  if (problem === 'CLIENT_ERROR') {
+    Object.keys(data).map(field => {
+      const reason = getErrorString(data[field]);
+
+      throw `error in ${caller}: ${reason}`;
+    });
+  }
 };

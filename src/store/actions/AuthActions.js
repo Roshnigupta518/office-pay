@@ -7,11 +7,14 @@ const {LOGIN_USER, LOGOUT_USER} = types;
 // * middleware
 export const loginUser = loginData => {
   return async dispatch => {
-    const buildingOwner = await login(loginData);
+    const {buildingOwner, access_token} = await login(loginData);
 
     dispatch({
       type: LOGIN_USER,
-      buildingOwner,
+      data: {
+        buildingOwner,
+        access_token,
+      },
     });
   };
 };

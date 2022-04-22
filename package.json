@@ -16,6 +16,7 @@
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "apisauce": "^2.1.5",
     "lodash.orderby": "^4.6.0",
     "react": "17.0.2",
     "react-native": "0.66.4",
