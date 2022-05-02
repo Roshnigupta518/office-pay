@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: lightTheme.PAID_ACCENT,
   },
   overdue: {
-    backgroundColor: lightTheme.OVERDUE_ACCENT,
+    backgroundColor: lightTheme.DANGER,
   },
   pending: {
     backgroundColor: lightTheme.PENDING_ACCENT,
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
   paymentStatus: {
     fontSize: fonts.fontSize.small,
     fontFamily: fonts.family.fontBold,
+    color: fonts.fontColor.white
   },
 
   officeItemText: {

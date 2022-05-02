@@ -1,23 +1,25 @@
 import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
-import {Icon, Image} from 'react-native-elements';
+import {Pressable, StyleSheet, View, Image} from 'react-native';
+import {Icon} from 'react-native-elements';
 import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';
 import {getImageSrc} from '../../../global/utils/helperFunctions';
 
 const AvatarImage = ({icon, src, onCameraClick}) => {
+  // console.log({src, icon});
+
   return (
     <View style={styles.view}>
       <View style={styles.container}>
-        {icon ? (
-          <Image style={styles.image} source={getImageSrc(src)} />
-        ) : (
+        {icon || !src ? (
           <Icon
             type={'ionicon'}
             name={'md-person-outline'}
             size={80}
             color={lightTheme.PRIMARY_COLOR_LIGHT}
           />
+        ) : (
+          <Image style={styles.image} source={getImageSrc(src)} />
         )}
       </View>
       <Pressable
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderColor: lightTheme.PRIMARY_COLOR_LIGHT,
     borderWidth: 5,
-    padding: 10,
+    // padding: 10,
     backgroundColor: '#efefefef',
     overflow: 'hidden',
     alignSelf: 'center',
@@ -66,5 +68,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+    resizeMode: 'cover',
   },
 });

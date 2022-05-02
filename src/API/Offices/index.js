@@ -1,27 +1,70 @@
+import {create} from 'apisauce';
+import {API_BASE_URL} from '../../assets/Constants';
 import {dummyOffices, dummyOfficesDashBoard} from '../../assets/dummy_data';
-import {prettyPrint} from '../../global/utils/helperFunctions';
+import {
+  getQueryString,
+  handleAPIErrorResponse,
+  handleAPISuccessResponse,
+  prettyPrint,
+} from '../../global/utils/helperFunctions';
 
-export const addOffice = async office => {
-  // Todo: add API call to get offices from server
+export const addOffice = async (office, addInQuery = false) => {
+  console.log(`calling "offices" api with data - `);
+  prettyPrint({office});
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      prettyPrint({addOfficeHandler: office});
-      resolve({
-        success: 1,
-      });
-    }, 3000);
-  });
+  const api = create({baseURL: API_BASE_URL});
+  let response;
+
+  if (addInQuery) {
+    response = await api.post('/offices' + getQueryString(office));
+  } else {
+    response = await api.post('/offices', office);
+  }
+
+  // prettyPrint({response});
+
+  if (response.ok) {
+    return {
+      success: 1,
+      data: handleAPISuccessResponse(response),
+    };
+  } else {
+    console.log('add office error => ', response.status);
+    handleAPIErrorResponse(response, 'add office');
+  }
+
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     prettyPrint({addOfficeHandler: office});
+  //     resolve({
+  //       success: 1,
+  //     });
+  //   }, 3000);
+  // });
 };
 
-export const getOffices = async () => {
-  // Todo: add API call to get offices from server
+export const getOffices = async id => {
+  console.log(`calling "offices with GET" api with data - ${id}`);
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(formatOfficeResponse(dummyOffices));
-    }, 3000);
-  });
+  // Todo: send building in API request
+
+  const api = create({baseURL: API_BASE_URL});
+  const response = await api.get('/offices');
+
+  prettyPrint({response: handleAPISuccessResponse(response)});
+
+  if (response.ok) {
+    return formatOfficeResponse(handleAPISuccessResponse(response));
+  } else {
+    console.log('get building error => ', response.status);
+    handleAPIErrorResponse(response, 'get building user');
+  }
+
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve(formatOfficeResponse(dummyOffices));
+  //   }, 3000);
+  // });
 };
 
 export const getOfficesDashboard = async () => {

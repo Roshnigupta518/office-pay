@@ -1,22 +1,24 @@
 import React, {useState} from 'react';
 import {Pressable, ScrollView, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
 
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
 import Button from '../../../Components/UI/Button';
+import ErrorAlert from '../../../Components/UI/ErrorAlert';
+import CustomStackHeader from '../../../Components/Component-Parts/CustomStackHeader';
 
 import {styles} from './styles';
-
 import {globalStyles} from '../../../global/Styles';
+
 import {
   getObjPropertyValue,
   prettyPrint,
 } from '../../../global/utils/helperFunctions';
-import {connect} from 'react-redux';
 import {addBuidlingDetails} from '../../../store/actions/BuildingActions';
 import {ValueEmpty} from '../../../global/utils/Validations';
-import CustomStackHeader from '../../../Components/Component-Parts/CustomStackHeader';
+import {addBank} from '../../../API/Bank';
 
 const INITIAL_STATE = {
   accHolderName: '',
@@ -161,26 +163,37 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
   const fromDash = getObjPropertyValue(route.params, 'fromDash');
 
   const [loading, setLoading] = useState(false);
+  const [addBankErr, setAddBankErr] = useState(false);
+  const [addBankErrText, setAddBankErrText] = useState('');
 
   const handleNextPress = async bankDetails => {
     setLoading(true);
 
     let error = false;
 
-    await doAddBuildingDetails({...buildingDetails, ...bankDetails}).catch(
-      err => {
-        // Todo: show error to user
-        prettyPrint({
-          msg: 'Error: in add building details',
-          err,
-        });
-        error = true;
-      },
-    );
+    const requestOptions = {
+      building_id: buildingDetails.id,
+      account_holder: bankDetails.accHolderName,
+      account_number: bankDetails.accNumber,
+      ifsc_code: bankDetails.ifsc,
+    };
+
+    const bankData = await addBank(requestOptions).catch(err => {
+      prettyPrint({
+        msg: 'Error: in add bank details',
+        err,
+      });
+      error = true;
+
+      setAddBankErrText(err);
+      setAddBankErr(true);
+    });
 
     setLoading(false);
     if (!error) {
       const route = fromDash ? 'dashboard' : 'home';
+      
+      console.log(`added bank details with account no:  ${bankData.account_number}`);
 
       navigation.navigate(route);
     }
@@ -200,9 +213,7 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
       <ScrollView style={styles.container}>
         {!fromDash ? (
           <View style={styles.header}>
-            <Pressable
-              style={styles.headerLeft}
-              onPress={goToDashboard}>
+            <Pressable style={styles.headerLeft} onPress={goToDashboard}>
               <Text>Skip</Text>
             </Pressable>
             <View style={styles.headerMid}>
@@ -218,6 +229,13 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
         </View>
         <BankDetailsForm loading={loading} onNextPress={handleNextPress} />
       </ScrollView>
+      <ErrorAlert
+        alertProps={{
+          showModal: addBankErr,
+          setShowModal: setAddBankErr,
+        }}
+        errText={addBankErrText}
+      />
     </View>
   );
 };

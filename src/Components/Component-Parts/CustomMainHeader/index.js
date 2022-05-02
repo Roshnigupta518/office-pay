@@ -1,7 +1,7 @@
 import React from 'react';
 import {StatusBar, StyleSheet, View, Image, Pressable} from 'react-native';
 import {Icon} from 'react-native-elements';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {globalStyles} from '../../../global/Styles';
 
 import {lightTheme} from '../../../global/Theme';
@@ -9,7 +9,7 @@ import {getImageSrc} from '../../../global/utils/helperFunctions';
 
 import {logoutUser} from '../../../store/actions/AuthActions';
 
-const CustomMainHeader = ({doUserLogout, goToInit}) => {
+const CustomMainHeader = ({doUserLogout, goToInit, userID, access_token}) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={lightTheme.THEME} barStyle="dark-content" />
@@ -23,8 +23,9 @@ const CustomMainHeader = ({doUserLogout, goToInit}) => {
         />
       </View>
       <Pressable
-        onPress={() => {
-          doUserLogout();
+        onPress={async () => {
+          await doUserLogout({userID, access_token});
+
           goToInit();
         }}
         style={styles.headerRight}>
@@ -39,11 +40,20 @@ const CustomMainHeader = ({doUserLogout, goToInit}) => {
   );
 };
 
+const mapStateToProps = state => {
+  const {userID, access_token} = state.auth;
+
+  return {
+    userID,
+    access_token,
+  };
+};
+
 const mapDispatchToProps = dispatch => ({
-  doUserLogout: () => dispatch(logoutUser()),
+  doUserLogout: reqData => dispatch(logoutUser(reqData)),
 });
 
-export default connect(null, mapDispatchToProps)(CustomMainHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomMainHeader);
 
 const styles = StyleSheet.create({
   container: {

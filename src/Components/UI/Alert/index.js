@@ -26,7 +26,7 @@ const Alert = ({showModal, setShowModal, children}) => {
               type="antdesign"
               name="closecircleo"
               color={lightTheme.PRIMARY_TEXT}
-              size={25}
+              size={20}
               style={styles.closeIcon}
             />
           </Pressable>

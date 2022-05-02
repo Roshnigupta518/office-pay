@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Pressable, ScrollView, StatusBar, View} from 'react-native';
+import {Pressable, ScrollView, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 
@@ -8,13 +8,15 @@ import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
 import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
 import Button from '../../../Components/UI/Button';
+import ErrorAlert from '../../../Components/UI/ErrorAlert';
+import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 
 import {styles} from './styles';
 
-import {lightTheme} from '../../../global/Theme';
-import {globalStyles} from '../../../global/Styles';
-import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import {loginUser} from '../../../store/actions/AuthActions';
+
+import {globalStyles} from '../../../global/Styles';
+import {lightTheme} from '../../../global/Theme';
 import {prettyPrint} from '../../../global/utils/helperFunctions';
 import {ValidateMail, ValueEmpty} from '../../../global/utils/Validations';
 
@@ -25,6 +27,9 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
   const [password, setPassword] = useState('');
   const [pwdErr, setPwdErr] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [loginErr, setLoginErr] = useState(false);
+  const [loginErrText, setLoginErrText] = useState('');
 
   const validateLoginData = () => {
     let result = true;
@@ -60,11 +65,13 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
     let error = false;
 
     await onSubmit({email, password}).catch(err => {
-      // Todo: show error to user
       prettyPrint({
         msg: 'Error: in login user',
         err,
       });
+
+      setLoginErrText(err);
+      setLoginErr(true);
 
       error = true;
     });
@@ -145,6 +152,13 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
           loadingProps={{size: 'large'}}
         />
       </View>
+      <ErrorAlert
+        alertProps={{
+          showModal: loginErr,
+          setShowModal: setLoginErr,
+        }}
+        errText={loginErrText}
+      />
     </View>
   );
 };

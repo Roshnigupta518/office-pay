@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Pressable, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-elements';
+import {connect} from 'react-redux';
 
 import AvatarImage from '../../../Components/Component-Parts/AddAvatarImage';
 
@@ -8,20 +9,25 @@ import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
 import Button from '../../../Components/UI/Button';
+import ErrorAlert from '../../../Components/UI/ErrorAlert';
+import WithImageUpload from '../../../Components/HOCs/ImageUploader';
+import CustomStackHeader from '../../../Components/Component-Parts/CustomStackHeader';
 
 import {styles} from './styles';
 
 import {globalStyles} from '../../../global/Styles';
 import {lightTheme} from '../../../global/Theme';
-import {connect} from 'react-redux';
 import {
   ValidateMail,
   ValidateMobile,
   ValueEmpty,
 } from '../../../global/utils/Validations';
-import CustomStackHeader from '../../../Components/Component-Parts/CustomStackHeader';
-import {getObjPropertyValue} from '../../../global/utils/helperFunctions';
-import WithImageUpload from '../../../Components/HOCs/ImageUploader';
+import {
+  getObjPropertyValue,
+  getPickerImageResp,
+  prettyPrint,
+} from '../../../global/utils/helperFunctions';
+import {addBuilding} from '../../../API/Building';
 
 const INITIAL_STATE = {
   name: '',
@@ -29,9 +35,11 @@ const INITIAL_STATE = {
   email: '',
   gst: '',
   contact: '',
+  pan: '',
+  city: '',
 };
 
-const BuildingDetailsForm = ({pushNextScreen}) => {
+const BuildingDetailsForm = ({loading, pushNextScreen}) => {
   const [buildingDetails, setBuildingDetails] = useState(INITIAL_STATE);
 
   const [buildingDetailsErr, setBuildingDetailsErr] = useState(INITIAL_STATE);
@@ -44,8 +52,18 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
     const gstError = ValueEmpty(buildingDetails.gst);
     const emailError = ValidateMail(buildingDetails.email);
     const mobileError = ValidateMobile(buildingDetails.contact);
+    const panError = ValueEmpty(buildingDetails.pan);
+    const cityError = ValueEmpty(buildingDetails.city);
 
-    console.log({nameError, addressError, gstError, emailError, mobileError});
+    console.log({
+      nameError,
+      addressError,
+      gstError,
+      emailError,
+      mobileError,
+      panError,
+      cityError,
+    });
 
     let errorObj = {
       ...buildingDetailsErr,
@@ -91,6 +109,22 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
       errorObj['contact'] = '';
     }
 
+    if (panError) {
+      result = false;
+
+      errorObj['pan'] = '*Required';
+    } else {
+      errorObj['pan'] = '';
+    }
+
+    if (cityError) {
+      result = false;
+
+      errorObj['city'] = '*Required';
+    } else {
+      errorObj['city'] = '';
+    }
+
     if (result) {
       setBuildingDetailsErr(INITIAL_STATE);
     } else {
@@ -113,6 +147,8 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
     }
 
     pushNextScreen(buildingDetails);
+    setBuildingDetails(INITIAL_STATE);
+    setBuildingDetailsErr(INITIAL_STATE);
   };
 
   return (
@@ -123,6 +159,7 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.name}
         placeholder={'Building Name'}
+        disabled={loading}
       />
       <Input
         value={buildingDetails.address}
@@ -130,6 +167,7 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.address}
         placeholder={'Address'}
+        disabled={loading}
       />
       <Input
         value={buildingDetails.email}
@@ -137,6 +175,7 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.email}
         placeholder={'Email Id'}
+        disabled={loading}
       />
       <Input
         value={buildingDetails.gst}
@@ -144,6 +183,7 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.gst}
         placeholder={'GST number'}
+        disabled={loading}
       />
       <Input
         value={buildingDetails.contact}
@@ -151,19 +191,43 @@ const BuildingDetailsForm = ({pushNextScreen}) => {
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.contact}
         placeholder={'Contact Number'}
+        disabled={loading}
+      />
+      <Input
+        value={buildingDetails.city}
+        onChangeText={value => handleOnChange('city', value)}
+        style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.city}
+        placeholder={'City'}
+        disabled={loading}
+      />
+      <Input
+        value={buildingDetails.pan}
+        onChangeText={value => handleOnChange('pan', value)}
+        style={globalStyles.textDefault}
+        errorMessage={buildingDetailsErr.pan}
+        placeholder={'Enter your PAN Card number'}
+        disabled={loading}
       />
       <Button
         titleStyle={globalStyles.headingWhite}
         onPress={onNextPress}
         title={'Next'}
+        loading={loading}
+        loadingProps={{size: 'large'}}
       />
     </View>
   );
 };
 
-const UploadPANimageSection = () => {
-  const uploadPANToServer = () => {
+const UploadPANimageSection = ({setImage}) => {
+  const uploadPANToServer = res => {
     console.log('handle PAN upload to server');
+
+    const imageResp = getPickerImageResp(res);
+
+    prettyPrint({imageResp});
+    setImage(imageResp);
   };
 
   const PandCardUploaderWithPicker = WithImageUpload(
@@ -195,13 +259,64 @@ const UploadPANimageSection = () => {
   );
 };
 
-const BuildingDetails = ({navigation, buildingOwner, route}) => {
+const BuildingDetails = ({navigation, buildingOwner, route, userID}) => {
   const [officeImage, setOfficeImage] = useState(null);
+  const [panImage, setPanImage] = useState(null);
 
-  const fromDash =  getObjPropertyValue(route.params, 'fromDash');
+  const [loading, setLoading] = useState(false);
+  const [addBuildingErr, setAddBuildingErr] = useState(false);
+  const [addBuildingErrText, setAddBuildingErrText] = useState('');
 
-  const uploadProfileToServer = () => {
+  const fromDash = getObjPropertyValue(route.params, 'fromDash');
+
+  const handleNextPress = async buildingDetails => {
+    console.log('INFO: initializing add building details...');
+    setLoading(true);
+
+    let error = false;
+
+    const requestOptions = {
+      user_id: userID,
+      email_id: buildingDetails.email,
+      phone_number: buildingDetails.contact,
+      pan_card: buildingDetails.pan,
+      address: buildingDetails.address,
+      city: buildingDetails.city,
+      building_name: buildingDetails.name,
+      building_image: officeImage,
+      pan_card_image: panImage,
+    };
+
+    const buildingData = await addBuilding(requestOptions, true).catch(err => {
+      prettyPrint({
+        msg: 'Error: in add building details',
+        err,
+      });
+
+      setAddBuildingErrText(err);
+      setAddBuildingErr(true);
+
+      error = true;
+    });
+
+    setLoading(false);
+    if (!error) {
+      console.log(`added building with id ${buildingData.id}`);
+
+      navigation.navigate('bank-details', {
+        buildingDetails: buildingData,
+        fromDash,
+      });
+    }
+  };
+
+  const uploadProfileToServer = res => {
     console.log('handle image upload to server');
+
+    const imageResp = getPickerImageResp(res);
+
+    prettyPrint({imageResp});
+    setOfficeImage(imageResp);
   };
 
   const goToDashboard = () => {
@@ -248,7 +363,7 @@ const BuildingDetails = ({navigation, buildingOwner, route}) => {
 
         <View style={styles.avatar}>
           <AvatarImageWithPicker
-            src={officeImage}
+            src={getObjPropertyValue(officeImage, 'uri')}
             setAvatar={img => setOfficeImage(img)}
           />
           <Text style={globalStyles.heading}>{`Add ${
@@ -256,21 +371,31 @@ const BuildingDetails = ({navigation, buildingOwner, route}) => {
           } Image`}</Text>
         </View>
         <BuildingDetailsForm
-          pushNextScreen={buildingDetails => {
-            navigation.navigate('bank-details', {buildingDetails, fromDash});
-          }}
+          loading={loading}
+          pushNextScreen={handleNextPress}
         />
-        <UploadPANimageSection />
+        <UploadPANimageSection
+          src={panImage}
+          setImage={img => setPanImage(img)}
+        />
       </ScrollView>
+      <ErrorAlert
+        alertProps={{
+          showModal: addBuildingErr,
+          setShowModal: setAddBuildingErr,
+        }}
+        errText={addBuildingErrText}
+      />
     </View>
   );
 };
 
 const mapStateToProps = state => {
-  const {buildingOwner} = state.auth;
+  const {buildingOwner, userID} = state.auth;
 
   return {
     buildingOwner,
+    userID,
   };
 };
 

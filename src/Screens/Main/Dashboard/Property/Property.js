@@ -14,7 +14,7 @@ import {
 } from '../../../../global/utils/helperFunctions';
 import {globalStyles} from '../../../../global/Styles';
 
-import {getBuidlings} from '../../../../API/Building';
+import {getBuildings} from '../../../../API/Building';
 import {lightTheme} from '../../../../global/Theme';
 import {getOfficesDashboard} from '../../../../API/Offices';
 
@@ -24,7 +24,7 @@ const useGetBuildings = () => {
   useEffect(() => {
     (async () => {
       setBuildings(null);
-      const item = await getBuidlings();
+      const item = await getBuildings();
       setBuildings(item);
     })();
   }, []);
@@ -51,13 +51,17 @@ const RenderPropertyItem = ({item, handleItemClick}) => {
     <Card style={styles.propertyItemCont} onPress={() => handleItemClick(item)}>
       <View style={styles.imgCont}>
         <Image
-          source={getImageSrc(item.property_image)}
+          source={
+            item.building_image
+              ? getImageSrc(item.building_image)
+              : require('../../../../assets/images/placeholders/office_dashboard.png')
+          }
           style={globalStyles.image}
         />
       </View>
       <View style={styles.detailsCont}>
-        <Text style={styles.propertyName}>{item.property_name}</Text>
-        <Text style={styles.propertyaddress}>{item.property_address}</Text>
+        <Text style={styles.propertyName}>{item.building_name}</Text>
+        <Text style={styles.propertyaddress}>{item.address}</Text>
         <View style={styles.detailsRow}>
           <Text style={[styles.detailsHeadings, globalStyles.textDanger]}>
             Due Invoices

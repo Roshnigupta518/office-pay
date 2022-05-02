@@ -23,5 +23,6 @@ export const fonts = {
     primary: lightTheme.PRIMARY_COLOR,
     white: '#fff',
     warning: '#ffb800',
+    error: lightTheme.DANGER,
   },
 };

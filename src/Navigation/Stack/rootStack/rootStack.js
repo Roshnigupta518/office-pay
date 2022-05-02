@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {connect} from 'react-redux';
 
 import Intro from '../../../Screens/Intro/Intro';
 import Login from '../../../Screens/Auth/Login/Login';
@@ -18,110 +19,129 @@ import ListMore from '../../../Screens/ListMore/ListMore';
 
 const Stack = createNativeStackNavigator();
 
-const RootStack = () => {
+const RootStack = ({access_token}) => {
+  // console.log({rootStack: access_token});
+
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
-        name="splash"
-        options={{
-          headerShown: false,
-        }}
-        component={Splash}
-      /> */}
-      <Stack.Screen
-        name="init"
-        options={{
-          headerShown: false,
-        }}
-        component={Init}
-      />
-      <Stack.Screen
-        name="lang"
-        options={{
-          headerShown: false,
-        }}
-        component={SelectLanguage}
-      />
-      <Stack.Screen
-        name="intro"
-        options={{
-          headerShown: false,
-        }}
-        component={Intro}
-      />
-      <Stack.Screen
-        name="login"
-        options={{
-          headerShown: false,
-        }}
-        component={Login}
-      />
-      <Stack.Screen
-        name="signup"
-        options={{
-          headerShown: false,
-        }}
-        component={SignUp}
-      />
-      <Stack.Screen
-        name="building-details"
-        options={{
-          headerShown: false,
-        }}
-        component={BuildingDetails}
-      />
-      <Stack.Screen
-        name="bank-details"
-        options={{
-          headerShown: false,
-        }}
-        component={BankDetails}
-      />
-      {/* Main */}
-      <Stack.Screen
-        name="home"
-        options={{
-          headerShown: false,
-        }}
-        component={RootTab}
-      />
-      <Stack.Screen
-        name="my-property"
-        options={{
-          headerShown: false,
-        }}
-        component={MyProperty}
-      />
-      <Stack.Screen
-        name="add-office"
-        options={{
-          headerShown: false,
-        }}
-        component={AddOffice}
-      />
-      <Stack.Screen
-        name="property-details"
-        options={{
-          headerShown: false,
-        }}
-        component={PropertyDetails}
-      />
-      <Stack.Screen
-        name="create-invoice"
-        options={{
-          headerShown: false,
-        }}
-        component={CreateInvoice}
-      />
-      <Stack.Screen
-        name="list-more"
-        options={{
-          headerShown: false,
-        }}
-        component={ListMore}
-      />
+      {!access_token ? (
+        <>
+          <Stack.Screen
+            name="init"
+            options={{
+              headerShown: false,
+            }}
+            component={Init}
+          />
+          <Stack.Screen
+            name="lang"
+            options={{
+              headerShown: false,
+            }}
+            component={SelectLanguage}
+          />
+          <Stack.Screen
+            name="intro"
+            options={{
+              headerShown: false,
+            }}
+            component={Intro}
+          />
+          <Stack.Screen
+            name="login"
+            options={{
+              headerShown: false,
+            }}
+            component={Login}
+          />
+          <Stack.Screen
+            name="signup"
+            options={{
+              headerShown: false,
+            }}
+            component={SignUp}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="init"
+            options={{
+              headerShown: false,
+            }}
+            component={Init}
+          />
+          <Stack.Screen
+            name="home"
+            options={{
+              headerShown: false,
+            }}
+            component={RootTab}
+          />
+          <Stack.Screen
+            name="building-details"
+            options={{
+              headerShown: false,
+            }}
+            component={BuildingDetails}
+          />
+          <Stack.Screen
+            name="bank-details"
+            options={{
+              headerShown: false,
+            }}
+            component={BankDetails}
+          />
+          {/* Main */}
+
+          <Stack.Screen
+            name="my-property"
+            options={{
+              headerShown: false,
+            }}
+            component={MyProperty}
+          />
+          <Stack.Screen
+            name="add-office"
+            options={{
+              headerShown: false,
+            }}
+            component={AddOffice}
+          />
+          <Stack.Screen
+            name="property-details"
+            options={{
+              headerShown: false,
+            }}
+            component={PropertyDetails}
+          />
+          <Stack.Screen
+            name="create-invoice"
+            options={{
+              headerShown: false,
+            }}
+            component={CreateInvoice}
+          />
+          <Stack.Screen
+            name="list-more"
+            options={{
+              headerShown: false,
+            }}
+            component={ListMore}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
 
-export default RootStack;
+const mapStateToProps = state => {
+  const {userID, access_token} = state.auth;
+
+  return {
+    userID,
+    access_token,
+  };
+};
+
+export default connect(mapStateToProps, null)(RootStack);

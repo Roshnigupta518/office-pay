@@ -7,7 +7,10 @@ import Button from '../../Components/UI/Button';
 
 import {globalStyles} from '../../global/Styles';
 import {styles} from './styles';
-import {getObjPropertyValue} from '../../global/utils/helperFunctions';
+import {
+  getObjPropertyValue,
+  prettyPrint,
+} from '../../global/utils/helperFunctions';
 import {getOffices} from '../../API/Offices';
 import {TopTabs} from '../../Components/UI/TopTabs';
 import {lightTheme} from '../../global/Theme';
@@ -146,11 +149,16 @@ const MyProperty = ({route, navigation}) => {
   // ! only to test office listing
   const noOffice = false;
 
-  const {id} = getObjPropertyValue(property, 'id');
+  const id = getObjPropertyValue(property, 'id');
 
   const offices = useGetOffices(id);
 
-  const goToAddOffice = () => navigation.navigate('add-office');
+  // prettyPrint({property});
+
+  const goToAddOffice = () =>
+    navigation.navigate('add-office', {
+      building: property,
+    });
 
   return (
     <View style={styles.view}>

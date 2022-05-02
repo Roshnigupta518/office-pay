@@ -5,10 +5,16 @@ import CustomStackHeader from '../../Components/Component-Parts/CustomStackHeade
 import Text from '../../Components/UI/Text';
 import Input from '../../Components/UI/Input';
 import Button from '../../Components/UI/Button';
+import ErrorAlert from '../../Components/UI/ErrorAlert';
 
-import {globalStyles} from '../../global/Styles';
 import {styles} from './styles';
+import {globalStyles} from '../../global/Styles';
 import {checkForEmptyObjectProperties} from '../../global/utils/Validations';
+import {
+  getObjPropertyValue,
+  prettyPrint,
+} from '../../global/utils/helperFunctions';
+
 import {addOffice} from '../../API/Offices';
 
 const INITIAL_STATE = {
@@ -17,6 +23,7 @@ const INITIAL_STATE = {
   floorNumber: '',
   officeName: '',
   officeOwnerName: '',
+  officeAddress: '',
   contact: '',
   email: '',
   gst: '',
@@ -101,6 +108,14 @@ const RenderOfficeDetailsform = ({loading, handleAddOffice}) => {
         disabled={loading}
       />
       <Input
+        placeholder="Enter office Address"
+        value={officeDetails.officeAddress}
+        onChangeText={val => handleChange('officeAddress', val)}
+        inputStyle={globalStyles.fontDefault}
+        errorMessage={officeDetailsError.officeAddress}
+        disabled={loading}
+      />
+      <Input
         placeholder="Contact number"
         value={officeDetails.contact}
         onChangeText={val => handleChange('contact', val)}
@@ -140,7 +155,7 @@ const RenderOfficeDetailsform = ({loading, handleAddOffice}) => {
             if (!validateFields()) {
               return;
             }
-            handleAddOffice();
+            handleAddOffice(officeDetails);
           }}
           title={'Save'}
           loading={loading}
@@ -150,24 +165,52 @@ const RenderOfficeDetailsform = ({loading, handleAddOffice}) => {
   );
 };
 
-const AddOffice = ({navigation}) => {
+const AddOffice = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
+  const [addOfficeErr, setAddOfficeErr] = useState(false);
+  const [addOfficeErrText, setAddOfficeErrText] = useState('');
+
+  const building = getObjPropertyValue(route.params, 'building');
 
   const handleAddOffice = async officeDetails => {
     setLoading(true);
 
     let error = false;
 
-    await addOffice(officeDetails).catch(err => {
+    prettyPrint({officeDetails});
+
+    const requestObj = {
+      building_id: building.id,
+      wing: officeDetails.wing,
+      office_number: officeDetails.officeNumber,
+      floor_number: officeDetails.floorNumber,
+      office_name: officeDetails.officeName,
+      office_owner_name: officeDetails.officeOwnerName,
+      office_address: officeDetails.officeAddress,
+      contact_number: officeDetails.contact,
+      email_address: officeDetails.email,
+      gst_number: officeDetails.gst,
+      pan_number: officeDetails.pan,
+    };
+
+    await addOffice(requestObj).catch(err => {
       // Todo: show error to user
       prettyPrint({
         msg: 'Error: in adding office ',
         err,
       });
+
+      setAddOfficeErrText(err);
+      setAddOfficeErr(true);
+
       error = true;
     });
 
     setLoading(false);
+
+    if (!error) {
+      navigation.goBack();
+    }
   };
 
   return (
@@ -182,6 +225,13 @@ const AddOffice = ({navigation}) => {
           handleAddOffice={handleAddOffice}
         />
       </ScrollView>
+      <ErrorAlert
+        alertProps={{
+          showModal: addOfficeErr,
+          setShowModal: setAddOfficeErr,
+        }}
+        errText={addOfficeErrText}
+      />
     </View>
   );
 };

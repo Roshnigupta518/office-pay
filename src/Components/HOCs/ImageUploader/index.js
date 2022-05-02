@@ -82,7 +82,6 @@ const WithImageUpload = (WrappedComponent, uploadImageToServer) => {
         mediaType: 'photo',
         saveToPhotos: storagePermission,
       };
-      setLoading(false);
 
       launchCamera(options, res => {
         if (res.errorCode) {
