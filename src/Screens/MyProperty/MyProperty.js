@@ -8,6 +8,7 @@ import Button from '../../Components/UI/Button';
 import {globalStyles} from '../../global/Styles';
 import {styles} from './styles';
 import {
+  emptyObj,
   getObjPropertyValue,
   prettyPrint,
 } from '../../global/utils/helperFunctions';
@@ -15,14 +16,15 @@ import {getOffices} from '../../API/Offices';
 import {TopTabs} from '../../Components/UI/TopTabs';
 import {lightTheme} from '../../global/Theme';
 import OfficeListing from './OfficeListing';
+import {connect} from 'react-redux';
 
-const useGetOffices = propertyID => {
+const useGetOffices = (propertyID, token) => {
   const [offices, setOffices] = useState(null);
 
   useEffect(() => {
     (async () => {
       setOffices(null);
-      const offices = await getOffices(propertyID);
+      const offices = await getOffices(propertyID, token);
       setOffices(offices);
     })();
   }, []);
@@ -142,18 +144,16 @@ const RenderBody = ({offices, noOffice, onAddOfficeClick, onOfficeClick}) => {
   return <OfficeListing onOfficeClick={onOfficeClick} offices={offices} />;
 };
 
-const MyProperty = ({route, navigation}) => {
+const MyProperty = ({route, navigation, access_token}) => {
   const {property} = getObjPropertyValue(route.params, 'params');
-
-  // const noOffice = property ? !property.occupied_offices : true;
-  // ! only to test office listing
-  const noOffice = false;
 
   const id = getObjPropertyValue(property, 'id');
 
-  const offices = useGetOffices(id);
+  const offices = useGetOffices(id, access_token);
 
-  // prettyPrint({property});
+  const noOffice = emptyObj(offices);
+
+  prettyPrint({noOffice});
 
   const goToAddOffice = () =>
     navigation.navigate('add-office', {
@@ -182,4 +182,12 @@ const MyProperty = ({route, navigation}) => {
   );
 };
 
-export default MyProperty;
+const mapStateToProps = state => {
+  const {access_token} = state.auth;
+
+  return {
+    access_token,
+  };
+};
+
+export default connect(mapStateToProps)(MyProperty);

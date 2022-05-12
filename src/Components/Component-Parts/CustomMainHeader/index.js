@@ -26,7 +26,7 @@ const CustomMainHeader = ({doUserLogout, goToInit, userID, access_token}) => {
         onPress={async () => {
           await doUserLogout({userID, access_token});
 
-          goToInit();
+          // goToInit();
         }}
         style={styles.headerRight}>
         <Icon

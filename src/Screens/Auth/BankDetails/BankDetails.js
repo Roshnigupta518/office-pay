@@ -100,7 +100,7 @@ const BankDetailsForm = ({loading, onNextPress}) => {
     return result;
   };
 
-  handleOnChange = (key, val) => {
+  const handleOnChange = (key, val) => {
     setBankDetails({
       ...bankDetails,
       [key]: val,
@@ -158,8 +158,8 @@ const BankDetailsForm = ({loading, onNextPress}) => {
   );
 };
 
-const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
-  const buildingDetails = getObjPropertyValue(route.params, 'buildingDetails');
+const BankDetails = ({navigation, route, doAddBuildingDetails, buildingDetails}) => {
+  // const buildingDetails = getObjPropertyValue(route.params, 'buildingDetails');
   const fromDash = getObjPropertyValue(route.params, 'fromDash');
 
   const [loading, setLoading] = useState(false);
@@ -245,7 +245,7 @@ const BankDetails = ({navigation, route, doAddBuildingDetails}) => {
 const mapStateToProps = state => {
   const {buildingDetails} = state;
 
-  prettyPrint({buildingDetails});
+  prettyPrint({buildingDetailssss: buildingDetails});
 
   return {
     buildingDetails,

@@ -17,6 +17,15 @@ export const getObjPropertyValue = (obj, property) => {
       null;
 };
 
+export const emptyObj = obj => {
+  if (!obj) {
+    return null;
+  }
+
+  let result = new Boolean(Object.keys(obj).length);
+  return !result;
+};
+
 export const getShadowProperties = (elevation, width, height, radius) => {
   return {
     shadowColor: '#000',
@@ -59,6 +68,14 @@ export const handleAPIErrorResponse = (response, caller) => {
 
   if (status === 200) {
     return;
+  }
+
+  if (status === 404) {
+    throw `error in ${caller}: NOT FOUND`;
+  }
+
+  if (status === 500) {
+    throw `error in ${caller}: SERVER ERROR`;
   }
 
   if (problem === 'CLIENT_ERROR') {

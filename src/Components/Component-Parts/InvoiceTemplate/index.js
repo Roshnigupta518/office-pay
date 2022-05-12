@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Image, TextInput, Pressable} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TextInput,
+  Pressable,
+  TouchableOpacity,
+} from 'react-native';
 
 import Text from '../../UI/Text';
 import Picker from '../../UI/Picker';
@@ -7,16 +14,21 @@ import Picker from '../../UI/Picker';
 import {
   getImageSrc,
   getShadowProperties,
+  prettyPrint,
 } from '../../../global/utils/helperFunctions';
+
+import {getBuildings} from '../../../API/Building';
 
 import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
 import {fonts} from '../../../global/fonts';
 import {dummyProperties} from '../../../assets/dummy_data';
+import {connect} from 'react-redux';
+import {getOffices} from '../../../API/Offices';
+import cache from '../../../global/utils/cache';
+import WithDatePicker from '../../HOCs/DatePicker';
 
-// Todo: make object keys dynamic with actual data format
-// Todo: handle dynamic fields
-// Todo: handle office invoice
+// Todo: fix overflowing inputs
 
 const DUMMY_BUILDING_DATA = [
   {
@@ -24,10 +36,140 @@ const DUMMY_BUILDING_DATA = [
     val: null,
   },
   ...dummyProperties.map(ele => ({
-    label: ele.property_name,
+    label: ele.property_name, // building_name
     val: ele.id,
   })),
 ];
+
+const getDropDownData = (data, label, labelKey, eleIdKey) => {
+  if (!data) {
+    return [
+      {
+        label: label,
+        val: null,
+      },
+    ];
+  }
+
+  return [
+    {
+      label: label,
+      val: null,
+    },
+    ...data.map(ele => ({
+      label: ele[labelKey], // building_name
+      val: ele[eleIdKey],
+    })),
+  ];
+};
+
+const useGetBuildings = () => {
+  const [buildings, setBuildings] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      setBuildings(null);
+      const cache_buildings = await cache.get('buildings');
+      setBuildings(cache_buildings);
+    })();
+  }, []);
+
+  return buildings;
+};
+
+const useGetOffices = (propertyID, token) => {
+  const [offices, setOffices] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      setOffices(null);
+      const offices = await getOffices(propertyID, token).catch(err => {
+        console.log({err});
+        setOffices([]);
+      });
+      setOffices(offices);
+    })();
+  }, [propertyID]);
+
+  return offices;
+};
+
+const useGetOfficeWings = offices => {
+  const [buildingWingDropdownData, setBuildingWingDropdownData] = useState(
+    getDropDownData(null, 'Building Wing', 'wing', 'wing'),
+  );
+
+  useEffect(() => {
+    if (offices) {
+      const officeWings = Object.keys(offices).map(wing => ({wing}));
+
+      setBuildingWingDropdownData(
+        getDropDownData(officeWings, 'Building Wing', 'wing', 'wing'),
+      );
+    }
+  }, [offices]);
+
+  return buildingWingDropdownData;
+};
+
+const useGetFloors = (selectedWing, offices) => {
+  const [floorDropdownData, setFloorDropdownData] = useState(
+    getDropDownData(null, 'Floor Number', 'floor', 'floor'),
+  );
+
+  useEffect(() => {
+    if (selectedWing) {
+      if (!offices) {
+        setFloorDropdownData(
+          getDropDownData(null, 'Floor Number', 'floor', 'floor'),
+        );
+      }
+
+      const wingWiseData = offices[selectedWing];
+
+      const floorData = wingWiseData.map(floorObj => ({floor: floorObj.title}));
+
+      setFloorDropdownData(
+        getDropDownData(floorData, 'Floor Number', 'floor', 'floor'),
+      );
+    }
+  }, [selectedWing, offices]);
+
+  return floorDropdownData;
+};
+
+const useGetFloorWiseOffices = (selectedWing, selectedFloor, offices) => {
+  const [floorWiseOfficesDropdownData, setFloorWiseOfficesDropdownData] =
+    useState(getDropDownData(null, 'Office', 'office', 'office'));
+
+  useEffect(() => {
+    if (selectedWing) {
+      if (!offices) {
+        setFloorWiseOfficesDropdownData(
+          getDropDownData(null, 'Office', 'office', 'office'),
+        );
+      }
+
+      const wingWiseData = offices[selectedWing];
+
+      let OfficeData = null;
+
+      wingWiseData.some(floorObj => {
+        if (floorObj.title === selectedFloor) {
+          OfficeData = floorObj.data;
+          return true;
+        }
+        return false;
+      });
+
+      setFloorWiseOfficesDropdownData(
+        getDropDownData(OfficeData, 'Select Office', 'office_name', 'id'),
+      );
+    }
+  }, [selectedWing, selectedFloor, offices]);
+
+  return floorWiseOfficesDropdownData;
+};
 
 const RenderHeader = ({buildingDetails}) => {
   return (
@@ -62,8 +204,48 @@ const RenderPropertyDetails = ({buildingDetails}) => {
   );
 };
 
-const RenderBillingForm = ({officeDetails}) => {
-  const [building, setBuilding] = useState(null);
+const RenderBillingForm = ({
+  officeDetails,
+  billingFormState,
+  invoiceFormState,
+  handleBuildingDetailsChange,
+  handleInvoiceDetailsChange,
+  buildingDropdownData,
+  wingsDropDownData,
+  floorDropDownData,
+  floorWiseOfficeDropDownData,
+}) => {
+  const InvoiceDateComp = WithDatePicker(
+    ({openPicker}) => (
+      <TouchableOpacity
+        onPress={() => {
+          openPicker();
+        }}>
+        <View style={styles.datePickerValueCont}>
+          <Text style={globalStyles.textSmallSecondary}>
+            {invoiceFormState.invoice_date}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    ),
+    date => handleInvoiceDetailsChange('invoice_date', date),
+  );
+
+  const InvoiceDueDateComp = WithDatePicker(
+    ({openPicker}) => (
+      <TouchableOpacity
+        onPress={() => {
+          openPicker();
+        }}>
+        <View style={styles.datePickerValueCont}>
+          <Text style={globalStyles.textSmallSecondary}>
+            {invoiceFormState.invoice_due_date}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    ),
+    date => handleInvoiceDetailsChange('invoice_due_date', date),
+  );
 
   return (
     <View>
@@ -90,27 +272,35 @@ const RenderBillingForm = ({officeDetails}) => {
           <View style={styles.billToCont}>
             <Picker
               containerStyle={styles.pickerCont}
-              selectedValue={building}
-              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-              pickerData={DUMMY_BUILDING_DATA}
+              selectedValue={billingFormState.building}
+              onValueChange={(itemValue) =>
+                handleBuildingDetailsChange('building', itemValue)
+              }
+              pickerData={buildingDropdownData}
             />
             <Picker
               containerStyle={styles.pickerCont}
-              selectedValue={building}
-              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-              pickerData={DUMMY_BUILDING_DATA}
+              selectedValue={billingFormState.wing}
+              onValueChange={(itemValue) =>
+                handleBuildingDetailsChange('wing', itemValue)
+              }
+              pickerData={wingsDropDownData}
             />
             <Picker
               containerStyle={styles.pickerCont}
-              selectedValue={building}
-              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-              pickerData={DUMMY_BUILDING_DATA}
+              selectedValue={billingFormState.floor}
+              onValueChange={(itemValue) =>
+                handleBuildingDetailsChange('floor', itemValue)
+              }
+              pickerData={floorDropDownData}
             />
             <Picker
               containerStyle={styles.pickerCont}
-              selectedValue={building}
-              onValueChange={(itemValue, itemIndex) => setBuilding(itemValue)}
-              pickerData={DUMMY_BUILDING_DATA}
+              selectedValue={billingFormState.office}
+              onValueChange={(itemValue) =>
+                handleBuildingDetailsChange('office', itemValue)
+              }
+              pickerData={floorWiseOfficeDropDownData}
             />
           </View>
         )}
@@ -123,27 +313,45 @@ const RenderBillingForm = ({officeDetails}) => {
             <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={''}
+              value={invoiceFormState.invoice_number}
+              onChangeText={val =>
+                handleInvoiceDetailsChange('invoice_number', val)
+              }
             />
           </View>
           <View style={styles.fieldsCont}>
             <Text style={styles.billingDetailsfieldHeading}>Invoice Date:</Text>
-            <TextInput
+            {/* <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={''}
-            />
+              value={invoiceFormState.invoice_date}
+              onChangeText={val =>
+                handleInvoiceDetailsChange('invoice_date', val)
+              }
+            /> */}
+            <InvoiceDateComp />
           </View>
           <View style={styles.fieldsCont}>
             <Text style={styles.billingDetailsfieldHeading}>Due Date:</Text>
-            <TextInput
+            {/* <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={''}
-            />
+              value={invoiceFormState.invoice_due_date}
+              onChangeText={val =>
+                handleInvoiceDetailsChange('invoice_due_date', val)
+              }
+            /> */}
+            <InvoiceDueDateComp />
           </View>
           <View style={styles.fieldsCont}>
             <Text style={styles.billingDetailsfieldHeading}>Total Amount:</Text>
             <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={''}
+              value={invoiceFormState.invoice_total}
+              onChangeText={val =>
+                handleInvoiceDetailsChange('invoice_total', val)
+              }
             />
           </View>
         </View>
@@ -152,38 +360,7 @@ const RenderBillingForm = ({officeDetails}) => {
   );
 };
 
-const RenderInvoiceItems = () => {
-  const [numOfItems, setNumOfItems] = useState(1);
-
-  console.log({numOfItems});
-
-  const RenderInvoiceItemFields = () => {
-    return (
-      <View style={globalStyles.flexEnd}>
-        <View style={styles.invoiceItemFieldsCont}>
-          <TextInput
-            style={styles.inputField}
-            multiline={true}
-            numberOfLines={3}
-            placeholder={'Enter Item...'}
-          />
-          <TextInput style={styles.inputField} placeholder={'0'} />
-          <TextInput style={styles.inputField} placeholder={'0'} />
-          <TextInput style={styles.inputField} placeholder={'0'} />
-        </View>
-        {numOfItems > 1 && (
-          <Pressable onPress={() => setNumOfItems(numOfItems - 1)}>
-            <Text style={[globalStyles.anchor, {color: lightTheme.DANGER}]}>
-              Remove
-            </Text>
-          </Pressable>
-        )}
-      </View>
-    );
-  };
-
-  const invoiceItems = new Array(numOfItems).fill(<RenderInvoiceItemFields />);
-
+const RenderInvoiceItems = ({invoiceItemData, invoiceItemMethods}) => {
   return (
     <View style={styles.invoiceItemsCont}>
       <View style={styles.invoiceItemHeader}>
@@ -192,15 +369,71 @@ const RenderInvoiceItems = () => {
         <Text style={styles.invoiceItemHeading}>Rate</Text>
         <Text style={styles.invoiceItemHeading}>Total</Text>
       </View>
-      {invoiceItems}
-      <Pressable onPress={() => setNumOfItems(numOfItems + 1)}>
+      {invoiceItemData.map((item, i) => (
+        <RenderInvoiceItemFields
+          item={item}
+          index={i}
+          handleChangeInItems={invoiceItemMethods.handleChangeInItems}
+          removeItem={invoiceItemMethods.removeItem}
+          numOfItems={invoiceItemData.length}
+        />
+      ))}
+      <Pressable onPress={invoiceItemMethods.addItem}>
         <Text style={globalStyles.anchor}>+ Add an Item</Text>
       </Pressable>
     </View>
   );
 };
 
-const RenderSummary = () => {
+const RenderInvoiceItemFields = ({
+  item,
+  index,
+  handleChangeInItems,
+  removeItem,
+  numOfItems,
+}) => {
+  return (
+    <View style={globalStyles.flexEnd}>
+      <View style={styles.invoiceItemFieldsCont}>
+        <TextInput
+          style={[styles.inputField]}
+          multiline={true}
+          numberOfLines={3}
+          placeholder={'Enter Item...'}
+          value={item.desc}
+          onChangeText={val => handleChangeInItems('desc', val, index)}
+        />
+        <TextInput
+          style={styles.inputField}
+          value={item.qty}
+          placeholder={'0'}
+          onChangeText={val => handleChangeInItems('qty', val, index)}
+        />
+        <TextInput
+          style={styles.inputField}
+          value={item.rate}
+          placeholder={'0'}
+          onChangeText={val => handleChangeInItems('rate', val, index)}
+        />
+        <TextInput
+          style={styles.inputField}
+          value={item.total}
+          placeholder={'0'}
+          onChangeText={val => handleChangeInItems('total', val, index)}
+        />
+      </View>
+      {numOfItems > 1 && (
+        <Pressable onPress={() => removeItem(index)}>
+          <Text style={[globalStyles.anchor, {color: lightTheme.DANGER}]}>
+            Remove
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+};
+
+const RenderSummary = ({bankDetails, handleBankDetailsChange}) => {
   return (
     <View style={styles.summaryCont}>
       <View style={[globalStyles.flexRow, globalStyles.spaceBetween]}>
@@ -215,6 +448,8 @@ const RenderSummary = () => {
             <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={'Enter bank name'}
+              value={bankDetails.bank_name}
+              onChangeText={val => handleBankDetailsChange('bank_name', val)}
             />
           </View>
           <View style={styles.fieldsCont}>
@@ -224,6 +459,8 @@ const RenderSummary = () => {
             <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={'Enter name'}
+              value={bankDetails.holder_name}
+              onChangeText={val => handleBankDetailsChange('holder_name', val)}
             />
           </View>
           <View style={styles.fieldsCont}>
@@ -233,6 +470,8 @@ const RenderSummary = () => {
             <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={'Account Number'}
+              value={bankDetails.acc_num}
+              onChangeText={val => handleBankDetailsChange('acc_num', val)}
             />
           </View>
           <View style={styles.fieldsCont}>
@@ -240,6 +479,8 @@ const RenderSummary = () => {
             <TextInput
               style={[globalStyles.textSmallSecondary, styles.inputField]}
               placeholder={'IFSC Code'}
+              value={bankDetails.ifsc_code}
+              onChangeText={val => handleBankDetailsChange('ifsc_code', val)}
             />
           </View>
         </View>
@@ -248,22 +489,90 @@ const RenderSummary = () => {
   );
 };
 
-const InvoiceTemplate = ({buildingDetails, officeDetails}) => {
+const InvoiceTemplate = ({
+  buildingDetails,
+  officeDetails,
+  invoiceData,
+  invoiceItemMethods,
+  handleBankDetailsChange,
+  handleBuildingDetailsChange,
+  handleInvoiceDetailsChange,
+  // store props
+  access_token,
+}) => {
+  let buildings = useGetBuildings();
+  let offices = useGetOffices(invoiceData.buildDetails.building, access_token);
+
+  // prettyPrint({buildings, offices});
+
+  const buildingDropdownData = getDropDownData(
+    buildings,
+    'Building Name',
+    'building_name',
+    'id',
+  );
+
+  const wingsDropDownData = useGetOfficeWings(offices);
+
+  const floorDropDownData = useGetFloors(
+    invoiceData.buildDetails.wing,
+    offices,
+  );
+
+  const floorWiseOfficeDropDownData = useGetFloorWiseOffices(
+    invoiceData.buildDetails.wing,
+    invoiceData.buildDetails.floor,
+    offices,
+  );
+
+  // prettyPrint({
+  //   buildingDropdownData,
+  //   wingsDropDownData,
+  //   floorDropDownData,
+  //   floorWiseOfficeDropDownData,
+  // });
+
   return (
     <View style={styles.container}>
       <RenderHeader buildingDetails={buildingDetails} />
       <RenderPropertyDetails buildingDetails={buildingDetails} />
       <View style={styles.hr} />
-      <RenderBillingForm officeDetails={officeDetails} />
+      <RenderBillingForm
+        officeDetails={officeDetails}
+        billingFormState={invoiceData.buildDetails}
+        invoiceFormState={invoiceData.invoiceDetails}
+        {...{
+          handleBuildingDetailsChange,
+          handleInvoiceDetailsChange,
+          // drop-down data
+          buildingDropdownData,
+          wingsDropDownData,
+          floorDropDownData,
+          floorWiseOfficeDropDownData,
+        }}
+      />
       <View style={styles.hr} />
-      <RenderInvoiceItems />
+      <RenderInvoiceItems
+        {...{invoiceItemData: invoiceData.invoiceItems, invoiceItemMethods}}
+      />
       <View style={styles.hr} />
-      <RenderSummary />
+      <RenderSummary
+        bankDetails={invoiceData.bankDetails}
+        {...{handleBankDetailsChange}}
+      />
     </View>
   );
 };
 
-export default InvoiceTemplate;
+const mapStateToProps = state => {
+  const {access_token} = state.auth;
+
+  return {
+    access_token,
+  };
+};
+
+export default connect(mapStateToProps)(InvoiceTemplate);
 
 const styles = StyleSheet.create({
   container: {
@@ -356,6 +665,16 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
+    minWidth: 70,
+    paddingHorizontal: 10,
+    marginLeft: 10,
+    padding: 0,
+    borderWidth: 1,
+    borderColor: lightTheme.SECONDARY_TEXT,
+    borderRadius: 2,
+  },
+
+  datePickerValueCont: {
     minWidth: 70,
     paddingHorizontal: 10,
     marginLeft: 10,

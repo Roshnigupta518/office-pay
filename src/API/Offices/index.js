@@ -1,6 +1,7 @@
 import {create} from 'apisauce';
 import {API_BASE_URL} from '../../assets/Constants';
 import {dummyOffices, dummyOfficesDashBoard} from '../../assets/dummy_data';
+import cache from '../../global/utils/cache';
 import {
   getQueryString,
   handleAPIErrorResponse,
@@ -43,22 +44,48 @@ export const addOffice = async (office, addInQuery = false) => {
   // });
 };
 
-export const getOffices = async id => {
+export const getOffices = async (id, token) => {
   console.log(`calling "offices with GET" api with data - ${id}`);
 
-  // Todo: send building in API request
+  // Todo: send building id in API request
 
-  const api = create({baseURL: API_BASE_URL});
-  const response = await api.get('/offices');
+  if (!id) {
+    return null;
+  }
 
-  prettyPrint({response: handleAPISuccessResponse(response)});
+  const api = create({
+    baseURL: API_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const response = await api.get(`/offices-new/${id}`);
+
+  // prettyPrint({response});
 
   if (response.ok) {
-    return formatOfficeResponse(handleAPISuccessResponse(response));
-  } else {
-    console.log('get building error => ', response.status);
-    handleAPIErrorResponse(response, 'get building user');
+    // return formatOfficeResponse(handleAPISuccessResponse(response));
+
+    const data = formatOfficeResponse(handleAPISuccessResponse(response));
+
+    await cache.store('offices', data);
+
+    return data;
   }
+  // else {
+  //   console.log('get office error => ', response.status);
+  //   handleAPIErrorResponse(response, 'get office user');
+  // }
+
+  const cache_data = await cache.get('offices');
+
+  if (cache_data) {
+    console.log('INFO: using cached offices data');
+    return cache_data;
+  }
+
+  console.log('get office error => ', response.status);
+  handleAPIErrorResponse(response, 'get office user');
 
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {

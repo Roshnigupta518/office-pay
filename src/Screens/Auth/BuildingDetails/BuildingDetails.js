@@ -28,6 +28,7 @@ import {
   prettyPrint,
 } from '../../../global/utils/helperFunctions';
 import {addBuilding} from '../../../API/Building';
+import {addBuidlingDetails} from '../../../store/actions/BuildingActions';
 
 const INITIAL_STATE = {
   name: '',
@@ -259,7 +260,13 @@ const UploadPANimageSection = ({setImage}) => {
   );
 };
 
-const BuildingDetails = ({navigation, buildingOwner, route, userID}) => {
+const BuildingDetails = ({
+  navigation,
+  buildingOwner,
+  route,
+  userID,
+  doAddBuilding,
+}) => {
   const [officeImage, setOfficeImage] = useState(null);
   const [panImage, setPanImage] = useState(null);
 
@@ -287,7 +294,7 @@ const BuildingDetails = ({navigation, buildingOwner, route, userID}) => {
       pan_card_image: panImage,
     };
 
-    const buildingData = await addBuilding(requestOptions, true).catch(err => {
+    await doAddBuilding(requestOptions).catch(err => {
       prettyPrint({
         msg: 'Error: in add building details',
         err,
@@ -301,10 +308,9 @@ const BuildingDetails = ({navigation, buildingOwner, route, userID}) => {
 
     setLoading(false);
     if (!error) {
-      console.log(`added building with id ${buildingData.id}`);
+      console.log("added building");
 
       navigation.navigate('bank-details', {
-        buildingDetails: buildingData,
         fromDash,
       });
     }
@@ -399,4 +405,8 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(BuildingDetails);
+const mapDispatchToProps = dispatch => ({
+  doAddBuilding: data => dispatch(addBuidlingDetails(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BuildingDetails);

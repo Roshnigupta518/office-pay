@@ -176,11 +176,11 @@ const Login = ({navigation, doUserLogin, buildingAdded}) => {
           onSubmit={doUserLogin}
           continueToProfileDetails={() => {
             // if a building is already added navigate to home then
-            if (buildingAdded) {
-              navigation.navigate('home');
-              return;
-            }
-            navigation.navigate('building-details');
+            // if (buildingAdded) {
+            //   navigation.navigate('home');
+            //   return;
+            // }
+            // navigation.navigate('building-details');
           }}
         />
         <View style={styles.secondaryMsg}>

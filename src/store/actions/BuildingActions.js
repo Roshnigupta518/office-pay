@@ -1,4 +1,4 @@
-import {addBuidling} from '../../API/Building';
+import {addBuilding} from '../../API/Building';
 import {types} from '../actionTypes';
 
 const {ADD_BUILDING_DETAILS} = types;
@@ -7,11 +7,11 @@ const {ADD_BUILDING_DETAILS} = types;
 export const addBuidlingDetails = buildingData => {
   return async dispatch => {
     // calling API
-    await addBuidling(buildingData);
+    const buildingResp = await addBuilding(buildingData, true);
 
     dispatch({
       type: ADD_BUILDING_DETAILS,
-      buildingData,
+      buildingData: buildingResp,
     });
   };
 };

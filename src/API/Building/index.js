@@ -1,5 +1,5 @@
 import {create} from 'apisauce';
-import {dummyProperties} from '../../assets/dummy_data';
+
 import {
   getQueryString,
   handleAPIErrorResponse,
@@ -8,6 +8,8 @@ import {
 } from '../../global/utils/helperFunctions';
 
 import {API_BASE_URL} from '../../assets/Constants';
+
+import cache from '../../global/utils/cache';
 
 export const addBuilding = async (buildingData, addInQuery = false) => {
   console.log(`calling "buildings" api with data - `);
@@ -38,21 +40,40 @@ export const addBuilding = async (buildingData, addInQuery = false) => {
   // });
 };
 
-export const getBuildings = async () => {
-  // Todo: uncomment below implementation once errors fixed on server side
+export const getBuildings = async token => {
   console.log(`calling "buildings with GET" api with data - `);
 
-  const api = create({baseURL: API_BASE_URL});
+  const api = create({
+    baseURL: API_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   const response = await api.get('/buildings');
 
   // prettyPrint({response});
 
   if (response.ok) {
-    return handleAPISuccessResponse(response);
-  } else {
-    console.log('get building error => ', response.status);
-    handleAPIErrorResponse(response, 'get building user');
+    const data = handleAPISuccessResponse(response);
+
+    await cache.store('buildings', data);
+
+    return data;
   }
+  // else {
+  //   console.log('get building error => ', response.status);
+  //   handleAPIErrorResponse(response, 'get building user');
+  // }
+
+  const cache_data = await cache.get('buildings');
+
+  if (cache_data) {
+    console.log('INFO: using cached buildings data');
+    return cache_data;
+  }
+
+  console.log('get building error => ', response.status);
+  handleAPIErrorResponse(response, 'get building');
 
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {

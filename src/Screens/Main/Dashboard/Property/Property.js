@@ -16,15 +16,19 @@ import {globalStyles} from '../../../../global/Styles';
 
 import {getBuildings} from '../../../../API/Building';
 import {lightTheme} from '../../../../global/Theme';
-import {getOfficesDashboard} from '../../../../API/Offices';
+import {getOffices} from '../../../../API/Offices';
+import {connect} from 'react-redux';
 
-const useGetBuildings = () => {
+const useGetBuildings = token => {
   const [buildings, setBuildings] = useState(null);
 
   useEffect(() => {
     (async () => {
       setBuildings(null);
-      const item = await getBuildings();
+      const item = await getBuildings(token).catch(err => {
+        console.log({err});
+        setBuildings([]);
+      });
       setBuildings(item);
     })();
   }, []);
@@ -32,13 +36,16 @@ const useGetBuildings = () => {
   return buildings;
 };
 
-const useGetOffices = propertyID => {
+const useGetOffices = (propertyID, token) => {
   const [offices, setOffices] = useState(null);
 
   useEffect(() => {
     (async () => {
       setOffices(null);
-      const offices = await getOfficesDashboard(propertyID);
+      const offices = await getOffices(propertyID, token).catch(err => {
+        console.log({err});
+        setOffices([]);
+      });
       setOffices(offices);
     })();
   }, []);
@@ -127,16 +134,17 @@ const Property = ({
   onAddPropertyClick,
   buildingOwner,
   goToListMore,
+  access_token,
 }) => {
   // ! dummy id
   const propertyID = '0';
 
-  const buildings = useGetBuildings();
-  const offices = useGetOffices(propertyID);
+  const buildings = useGetBuildings(access_token);
+  const offices = useGetOffices(propertyID, access_token);
 
   const listingData = buildingOwner ? buildings : offices;
 
-  // prettyPrint({listingData});
+  // prettyPrint({offices});
 
   if (!listingData) {
     return (
@@ -161,7 +169,7 @@ const Property = ({
       </View>
       <View style={styles.listCont}>
         {listingData.map((item, index) => {
-          console.log({index});
+          // console.log({index});
           if (index > 3) {
             return <View key={index} />;
           }
@@ -200,4 +208,12 @@ const Property = ({
   );
 };
 
-export default Property;
+const mapStateToProps = state => {
+  const {access_token} = state.auth;
+
+  return {
+    access_token,
+  };
+};
+
+export default connect(mapStateToProps)(Property);

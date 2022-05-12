@@ -19,7 +19,7 @@ export const login = async loginData => {
   // * in is an office owner / building owner
   // Todo: toggle depending on the login response
   const buildingOwner = true;
-  const userID = 1; // ! static
+  const userID = 2; // ! static
 
   // prettyPrint({response});
 

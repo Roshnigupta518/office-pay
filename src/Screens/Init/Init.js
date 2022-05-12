@@ -6,7 +6,7 @@ import {globalStyles} from '../../global/Styles';
 import {lightTheme} from '../../global/Theme';
 import {getShadowProperties} from '../../global/utils/helperFunctions';
 
-const Init = ({navigation, auth, introComplete}) => {
+const Init = ({navigation, auth, introComplete, buildingAdded}) => {
   const {userLogin} = auth;
 
   const [route, setRoute] = useState('');
@@ -23,12 +23,14 @@ const Init = ({navigation, auth, introComplete}) => {
     (async () => {
       await performTimeConsumingTask();
 
+      console.log({route, introComplete, userLogin, buildingAdded});
+
       if (route === '') {
         let setupRoute = '';
         if (userLogin) {
           console.log('INFO: user already logged in, moving to Dashboard');
 
-          setupRoute = 'home';
+          setupRoute = buildingAdded ? 'home' : 'building-details';
         } else if (!introComplete) {
           console.log(
             "INFO: user haven't walkeded through yet, pushing intro screens",
@@ -81,11 +83,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const {auth, introComplete} = state;
+  const {auth, introComplete, buildingDetails} = state;
 
   return {
     auth,
     introComplete,
+    buildingAdded: Object.keys(buildingDetails).length,
   };
 };
 

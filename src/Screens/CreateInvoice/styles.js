@@ -3,6 +3,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {lightTheme} from '../../global/Theme';
 import {fonts} from '../../global/fonts';
 import {getShadowProperties} from '../../global/utils/helperFunctions';
+import {globalStyles} from '../../global/Styles';
 
 export const styles = StyleSheet.create({
   view: {
@@ -15,12 +16,12 @@ export const styles = StyleSheet.create({
   sendBtnCont: {
     width: '100%',
     position: 'absolute',
-    bottom: 100,
+    bottom: 90,
     // top: Dimensions.get('window').height - 65,
     zIndex: 100,
     backgroundColor: lightTheme.THEME,
     paddingVertical: 20,
-    ...getShadowProperties(10)
+    ...getShadowProperties(10),
   },
   pagetitle: {
     fontFamily: fonts.family.fontBold,
@@ -36,5 +37,29 @@ export const styles = StyleSheet.create({
   sendInvoiceBtnCont: {
     borderRadius: 30,
     marginHorizontal: 20,
+  },
+
+  createInvoiceHeadCont: {
+    ...globalStyles.flexRow,
+    justifyContent: 'space-between',
+    marginVertical: 5,
+  },
+
+  uploadImageBtn: {
+    marginRight: 15,
+    ...globalStyles.flexRow,
+  },
+  uploadImageBtnText: {
+    color: fonts.fontColor.primary,
+    fontFamily: fonts.family.fontSemiBold,
+    fontSize: fonts.fontSize.semiLarge,
+    marginLeft: 10,
+  },
+
+  attachmentText: {
+    color: fonts.fontColor.dark,
+    fontFamily: fonts.family.fontRegular,
+    fontSize: fonts.fontSize.semiLarge,
+    marginLeft: 10,
   },
 });
