@@ -19,6 +19,7 @@ import {dummyInvoiceDashboard} from '../../assets/dummy_data';
 import {connect} from 'react-redux';
 
 const PropertyInvoices = ({buildingOwner, goToListMore}) => {
+
   return (
     <View style={styles.invoiceCont}>
       {dummyInvoiceDashboard.map((invoice, key) => {

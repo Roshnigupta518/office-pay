@@ -10,6 +10,7 @@ import {
 } from '../../global/utils/helperFunctions';
 
 import {dummyInvoiceDashboard} from '../../assets/dummy_data';
+import cache from '../../global/utils/cache';
 
 export const createInvoice = async (token, invoiceData, addInQuery = false) => {
   console.log(`calling "invoice-create" api with data - `);
@@ -30,7 +31,7 @@ export const createInvoice = async (token, invoiceData, addInQuery = false) => {
     response = await api.post('/invoice-create', invoiceData);
   }
 
-  prettyPrint({response});
+  // prettyPrint({response});
 
   if (response.ok) {
     return handleAPISuccessResponse(response);
@@ -40,14 +41,48 @@ export const createInvoice = async (token, invoiceData, addInQuery = false) => {
   }
 };
 
-export const getInvoices = async () => {
+export const getInvoices = async (token) => {
   // Todo: add API call to add building
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log(`Todo: call "invoice with GET" api with data - `);
+  console.log(`calling "invoice with GET" api with data - `);
 
-      resolve(dummyInvoiceDashboard);
-    }, 3000);
+  const api = create({
+    baseURL: API_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
+  const response = await api.get('/invoice-list');
+
+  // prettyPrint({response});
+
+  if (response.ok) {
+    const data = handleAPISuccessResponse(response);
+
+    await cache.store('invoice', data);
+
+    return data;
+  }
+  // else {
+  //   console.log('get building error => ', response.status);
+  //   handleAPIErrorResponse(response, 'get building user');
+  // }
+
+  const cache_data = await cache.get('invoice');
+
+  if (cache_data) {
+    console.log('INFO: using cached invoice data');
+    return cache_data;
+  }
+
+  console.log('get invoice error => ', response.status);
+  handleAPIErrorResponse(response, 'get invoice');
+
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     console.log(`Todo: call "invoice with GET" api with data - `);
+
+  //     resolve(dummyInvoiceDashboard);
+  //   }, 3000);
+  // });
 };

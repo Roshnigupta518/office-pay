@@ -42,58 +42,58 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
   return (
     <View style={styles.itemCont}>
       <View style={styles.row}>
-        <Text style={styles.buildName}>{invoiceDetails.buildingName}</Text>
+        <Text style={styles.buildName}>{invoiceDetails.building_name}</Text>
         <View style={globalStyles.flexRow}>
           <View style={styles.wingCont}>
             <Text style={styles.heading}>Wing</Text>
-            <Text style={styles.value}>{invoiceDetails.officeWing}</Text>
+            <Text style={styles.value}>{invoiceDetails.wing}</Text>
           </View>
           <View style={globalStyles.flexRow}>
             <Text style={styles.heading}>Floor</Text>
-            <Text style={styles.value}>{invoiceDetails.officeFloor}</Text>
+            <Text style={styles.value}>{invoiceDetails.floor_number}</Text>
           </View>
         </View>
       </View>
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
-          <Text style={styles.officeNum}>{invoiceDetails.officeNumber}</Text>
-          <Text style={styles.officeName}>{invoiceDetails.officeName}</Text>
+          <Text style={styles.officeNum}>{invoiceDetails.office_number}</Text>
+          <Text style={styles.officeName}>{invoiceDetails.office_name}</Text>
         </View>
 
         <View style={globalStyles.flexRow}>
           <Text style={styles.heading}>Due Date</Text>
-          <Text style={styles.value}>{invoiceDetails.invoiceDueDate}</Text>
+          <Text style={styles.value}>{invoiceDetails.invoice_due_date}</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
           <Text style={styles.heading}>Invoice Date</Text>
-          <Text style={styles.value}>{invoiceDetails.invoiceDate}</Text>
+          <Text style={styles.value}>{invoiceDetails.invoice_date}</Text>
         </View>
         <View
           style={[
             styles.status,
-            invoiceDetails.invoiceStatus === 0
+            parseInt(invoiceDetails.status, 10) === 0
               ? {backgroundColor: lightTheme.DANGER}
               : {backgroundColor: lightTheme.SUCCESS},
           ]}>
           <Text style={[styles.statusText]}>
-            {invoiceDetails.invoiceStatus === 0 ? 'Overdue' : 'Paid'}
+            {parseInt(invoiceDetails.status, 10) === 0 ? 'Overdue' : 'Paid'}
           </Text>
         </View>
       </View>
       <View style={styles.row}>
         <Text style={[styles.value, styles.invoiceSub]}>
-          {invoiceDetails.invoiceSubject}
+          {invoiceDetails.invoice_dec}
         </Text>
         <Text style={[styles.value, styles.invoiceAmt]}>
-          {invoiceDetails.invoiceAmmount}
+          {invoiceDetails.total}
         </Text>
       </View>
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
           <Text style={styles.heading}>Last Reminder</Text>
-          <Text style={styles.value}>{invoiceDetails.lastReminderDate}</Text>
+          <Text style={styles.value}>{invoiceDetails.lastReminderDate || "N/A"}</Text>
         </View>
         <View style={globalStyles.flexRow}>
           <Icon
@@ -124,7 +124,7 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
             title={'Mark as received'}
           />
         </View>
-      ) : invoiceDetails.invoiceStatus === 0 ? (
+      ) : parseInt(invoiceDetails.status, 10) === 0 ? (
         <WithPay />
       ) : (
         <View />

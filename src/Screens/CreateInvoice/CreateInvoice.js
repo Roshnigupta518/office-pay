@@ -148,34 +148,43 @@ const CreateInvoice = ({navigation, route, access_token}) => {
 
     let error = false;
 
-    // const requestData = new FormData();
+    const requestData = new FormData();
 
-    // requestData.append('building', buildDetails.building);
-    // requestData.append('wing', buildDetails.wing);
-    // requestData.append('floor', buildDetails.floor);
-    // requestData.append('office', buildDetails.office);
+    requestData.append('building', buildDetails.building);
+    requestData.append('wing', buildDetails.wing);
+    requestData.append('floor', buildDetails.floor);
+    requestData.append('office', buildDetails.office);
 
-    // requestData.append('invoice_number', invoiceDetails.invoice_number);
-    // requestData.append('invoice_date', invoiceDetails.invoice_date);
-    // requestData.append('invoice_due_date', invoiceDetails.invoice_due_date);
-    // requestData.append('invoice_total', invoiceDetails.invoice_total);
+    requestData.append('invoice_number', invoiceDetails.invoice_number);
+    requestData.append('invoice_date', invoiceDetails.invoice_date);
+    requestData.append('invoice_due_date', invoiceDetails.invoice_due_date);
+    requestData.append('invoice_total', invoiceDetails.invoice_total);
 
-    // requestData.append('invoice_items', invoiceItems);
+    requestData.append('invoice_items', JSON.stringify(invoiceItems));
 
-    // requestData.append('attachment', attachments);
+    requestData.append('bank_name', bankDetails.bank_name);
+    requestData.append('holder_name', bankDetails.holder_name);
+    requestData.append('acc_num', bankDetails.acc_num);
+    requestData.append('ifsc_code', bankDetails.ifsc_code);
+    
+    requestData.append('invoice_subject', invoiceItems[0].desc);
 
-    const requestObj = {
-      ...buildDetails,
-      ...invoiceDetails,
-      invoice_items: invoiceItems,
-      ...bankDetails,
-      invoice_subject: invoiceItems[0].desc,
-      attachment: attachments,
-    };
+    requestData.append('attachment', attachments);
 
-    prettyPrint({invoiceData: requestObj});
+    // const requestObj = {
+    //   ...buildDetails,
+    //   ...invoiceDetails,
+    //   invoice_items: invoiceItems,
+    //   ...bankDetails,
+    //   invoice_subject: invoiceItems[0].desc,
+    //   attachment: attachments,
+    // };
 
-    await createInvoice(access_token, requestObj).catch(err => {
+    // prettyPrint(requestObj);
+
+    // return;
+
+    await createInvoice(access_token, requestData).catch(err => {
       prettyPrint({
         msg: 'Error: in create invoice ',
         err,
