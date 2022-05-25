@@ -8,14 +8,15 @@ import {globalStyles} from '../../../../global/Styles';
 
 import {getInvoices} from '../../../../API/Invoice';
 import {lightTheme} from '../../../../global/Theme';
+import { useSelector } from 'react-redux';
 
-const useGetInvoices = () => {
+const useGetInvoices = (access_token) => {
   const [invoices, setInvoices] = useState(null);
 
   useEffect(() => {
     (async () => {
       setInvoices(null);
-      const items = await getInvoices();
+      const items = await getInvoices(access_token);
       setInvoices(items);
     })();
   }, []);
@@ -24,7 +25,9 @@ const useGetInvoices = () => {
 };
 
 const Invoice = ({buildingOwner, goToListMore}) => {
-  const invoices = useGetInvoices();
+  const {access_token} = useSelector(state => state.auth);
+
+  const invoices = useGetInvoices(access_token);
 
   if (!invoices) {
     return (

@@ -114,4 +114,10 @@ export const styles = StyleSheet.create({
     height: 40,
     ...globalStyles.placeCenter,
   },
+
+  loaderCont: {
+    ...globalStyles.placeCenter,
+    paddingTop: 40,
+    paddingRight: 30,
+  },
 });

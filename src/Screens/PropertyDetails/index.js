@@ -1,5 +1,11 @@
-import {Image, Pressable, ScrollView, View} from 'react-native';
-import React from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {Icon} from 'react-native-elements';
 
 import CustomStackHeader from '../../Components/Component-Parts/CustomStackHeader';
@@ -10,22 +16,51 @@ import Button from '../../Components/UI/Button';
 import {
   getImageSrc,
   getObjPropertyValue,
+  prettyPrint,
 } from '../../global/utils/helperFunctions';
 
 import {styles} from './styles';
 import {globalStyles} from '../../global/Styles';
 import {lightTheme} from '../../global/Theme';
 import {dummyInvoiceDashboard} from '../../assets/dummy_data';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
+import {getInvoices} from '../../API/Invoice';
 
-const PropertyInvoices = ({buildingOwner, goToListMore}) => {
+const useGetInvoices = (access_token, officeID) => {
+  const [invoices, setInvoices] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      setInvoices(null);
+      const items = await getInvoices(access_token, officeID);
+      setInvoices(items);
+    })();
+  }, []);
+
+  return invoices;
+};
+
+const PropertyInvoices = ({buildingOwner, goToListMore, office}) => {
+  const {access_token} = useSelector(state => state.auth);
+
+  const invoices = useGetInvoices(access_token, office.id);
+
+  if (!invoices) {
+    return (
+      <View style={styles.loaderCont}>
+        <ActivityIndicator color={lightTheme.PRIMARY_COLOR} size={'large'} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.invoiceCont}>
-      {dummyInvoiceDashboard.map((invoice, key) => {
+      {invoices.map((invoice, key) => {
         if (key > 2) {
           return <View key={key} />;
         }
+
+        console.log({officeID: invoice.office_id});
 
         return (
           <InvoiceItem
@@ -39,7 +74,7 @@ const PropertyInvoices = ({buildingOwner, goToListMore}) => {
       <Pressable
         onPress={() =>
           goToListMore({
-            data: dummyInvoiceDashboard,
+            data: invoices,
             renderItem: ({item, index}) => (
               <InvoiceItem
                 key={index}
@@ -64,11 +99,12 @@ const RenderInvoiceDetailsHeader = () => {
   );
 };
 
-const PropertyDetails = ({route, navigation, buildingOwner}) => {
+const PropertyDetails = ({route, navigation}) => {
   // ! in production may be office is fetched through API
   const office = getObjPropertyValue(route.params, 'office');
 
   // prettyPrint({office});
+  const {buildingOwner} = useSelector(state => state.auth);
 
   const goToListMore = props => {
     navigation.navigate('list-more', props);
@@ -133,6 +169,7 @@ const PropertyDetails = ({route, navigation, buildingOwner}) => {
         <PropertyInvoices
           buildingOwner={buildingOwner}
           goToListMore={goToListMore}
+          office={office}
         />
       </ScrollView>
     </View>

@@ -41,9 +41,7 @@ export const createInvoice = async (token, invoiceData, addInQuery = false) => {
   }
 };
 
-export const getInvoices = async (token) => {
-  // Todo: add API call to add building
-
+export const getInvoices = async (token, office_id = false) => {
   console.log(`calling "invoice with GET" api with data - `);
 
   const api = create({
@@ -52,7 +50,9 @@ export const getInvoices = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  const response = await api.get('/invoice-list');
+  const response = await api.post(
+    '/invoice-list' + (office_id ? getQueryString({office_id}) : ''),
+  );
 
   // prettyPrint({response});
 
