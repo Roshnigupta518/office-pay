@@ -102,7 +102,7 @@ const Dashboard = ({navigation, buildingOwner}) => {
   };
 
   const onAddPropertyClick = () => {
-    navigation.navigate('building-details', {
+    navigation.push('building-details', {
       fromDash: true,
     });
   };

@@ -66,7 +66,11 @@ export const getOffices = async (id, token) => {
   if (response.ok) {
     // return formatOfficeResponse(handleAPISuccessResponse(response));
 
-    const data = formatOfficeResponse(handleAPISuccessResponse(response));
+    const rawData = handleAPISuccessResponse(response);
+
+    prettyPrint({rawData});
+
+    const data = rawData && rawData.length ? formatOfficeResponse(rawData) : [];
 
     await cache.store('offices', data);
 

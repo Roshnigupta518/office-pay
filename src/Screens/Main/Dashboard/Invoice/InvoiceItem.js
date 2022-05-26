@@ -93,7 +93,9 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
           <Text style={styles.heading}>Last Reminder</Text>
-          <Text style={styles.value}>{invoiceDetails.lastReminderDate || "N/A"}</Text>
+          <Text style={styles.value}>
+            {invoiceDetails.lastReminderDate || 'N/A'}
+          </Text>
         </View>
         <View style={globalStyles.flexRow}>
           <Icon
@@ -124,9 +126,10 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
             title={'Mark as received'}
           />
         </View>
-      ) : parseInt(invoiceDetails.status, 10) === 0 ? (
-        <WithPay />
       ) : (
+        //  parseInt(invoiceDetails.status, 10) === 0 ? (
+        //   <WithPay />
+        // ) :
         <View />
       )}
     </View>

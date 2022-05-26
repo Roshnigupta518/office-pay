@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingVertical: 20,
-    // paddingTop: 30,
+    paddingTop: 30,
     borderBottomLeftRadius: 20,
     borderBottomEndRadius: 20,
     flexDirection: 'row',

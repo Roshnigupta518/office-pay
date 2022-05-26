@@ -5,6 +5,7 @@ import {
   handleAPIErrorResponse,
   handleAPISuccessResponse,
   prettyPrint,
+  getQueryString,
 } from '../../global/utils/helperFunctions';
 
 export const login = async loginData => {
@@ -60,7 +61,7 @@ export const signUp = async signUpData => {
   prettyPrint({signUpData});
 
   const api = create({baseURL: API_BASE_URL});
-  const response = await api.post('/register', signUpData);
+  const response = await api.post('/register' + getQueryString(signUpData));
 
   if (response.ok) {
     return response.data;

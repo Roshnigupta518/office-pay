@@ -89,7 +89,9 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
           <Text style={styles.heading}>Last Reminder</Text>
-          <Text style={styles.value}>{invoiceDetails.lastReminderDate || "N/A"}</Text>
+          <Text style={styles.value}>
+            {invoiceDetails.lastReminderDate || 'N/A'}
+          </Text>
         </View>
         <DownloadFile />
       </View>
@@ -113,18 +115,19 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
             title={'Mark as received'}
           />
         </View>
-      ) : parseInt(invoiceDetails.status, 10) === 0 ? (
-        <View style={styles.row}>
-          <Button
-            titleStyle={styles.btntitle}
-            containerStyle={styles.btnContFull}
-            onPress={() => {
-              // Todo: handle Pay now
-            }}
-            title={'Pay Now'}
-          />
-        </View>
       ) : (
+        // parseInt(invoiceDetails.status, 10) === 0 ? (
+        //   <View style={styles.row}>
+        //     <Button
+        //       titleStyle={styles.btntitle}
+        //       containerStyle={styles.btnContFull}
+        //       onPress={() => {
+        //         // Todo: handle Pay now
+        //       }}
+        //       title={'Pay Now'}
+        //     />
+        //   </View>
+        // ) :
         <View />
       )}
     </View>

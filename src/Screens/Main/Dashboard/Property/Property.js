@@ -68,7 +68,7 @@ const RenderPropertyItem = ({item, handleItemClick}) => {
       </View>
       <View style={styles.detailsCont}>
         <Text style={styles.propertyName}>{item.building_name}</Text>
-        <Text style={styles.propertyaddress}>{item.address}</Text>
+        <Text numberOfLines={1} style={styles.propertyaddress}>{item.address}</Text>
         <View style={styles.detailsRow}>
           <Text style={[styles.detailsHeadings, globalStyles.textDanger]}>
             Due Invoices
@@ -144,7 +144,7 @@ const Property = ({
 
   const listingData = buildingOwner ? buildings : offices;
 
-  // prettyPrint({offices});
+  // prettyPrint({listingData});
 
   if (!listingData) {
     return (
@@ -158,14 +158,14 @@ const Property = ({
     <View style={styles.conatiner}>
       <View style={styles.sectionHeader}>
         <Text>{`My ${buildingOwner ? 'Property' : 'Office'}`}</Text>
-        {buildingOwner && (
-          <Pressable
-            onPress={() => {
-              onAddPropertyClick();
-            }}>
-            <Text style={styles.addPropertyLink}>+ Add Property</Text>
-          </Pressable>
-        )}
+        <Pressable
+          onPress={() => {
+            onAddPropertyClick();
+          }}>
+          <Text style={styles.addPropertyLink}>{`+ Add ${
+            buildingOwner ? 'Property' : 'Office'
+          }`}</Text>
+        </Pressable>
       </View>
       <View style={styles.listCont}>
         {listingData.map((item, index) => {
@@ -195,15 +195,19 @@ const Property = ({
           );
         })}
       </View>
-      <Pressable
-        onPress={() =>
-          goToListMore({
-            data: listingData,
-            renderItem: buildingOwner ? RenderPropertyItem : RenderOfficeItem,
-          })
-        }>
-        <Text style={styles.addPropertyLink}>Show More</Text>
-      </Pressable>
+      {listingData.length > 4 ? (
+        <Pressable
+          onPress={() =>
+            goToListMore({
+              data: listingData,
+              renderItem: buildingOwner ? RenderPropertyItem : RenderOfficeItem,
+            })
+          }>
+          <Text style={styles.addPropertyLink}>Show More</Text>
+        </Pressable>
+      ) : (
+        <View />
+      )}
     </View>
   );
 };
