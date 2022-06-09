@@ -9,6 +9,8 @@ export const loginUser = loginData => {
   return async dispatch => {
     const {buildingOwner, access_token, userID} = await login(loginData);
 
+    console.log({buildingOwner, userID});
+
     dispatch({
       type: LOGIN_USER,
       data: {

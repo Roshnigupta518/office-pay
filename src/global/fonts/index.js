@@ -6,6 +6,7 @@ export const fonts = {
     fontLight: 'Poppins-Light',
     fontBold: 'Poppins-Bold',
     fontSemiBold: 'Poppins-SemiBold',
+    familyName: 'Poppins', // for web purposes
   },
   fontSize: {
     xsmall: 8,

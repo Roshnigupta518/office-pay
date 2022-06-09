@@ -7,7 +7,7 @@ import {lightTheme} from '../../global/Theme';
 import {getShadowProperties} from '../../global/utils/helperFunctions';
 
 const Init = ({navigation, auth, introComplete, buildingAdded}) => {
-  const {userLogin} = auth;
+  const {userLogin, buildingOwner} = auth;
 
   const [route, setRoute] = useState('');
 
@@ -30,7 +30,8 @@ const Init = ({navigation, auth, introComplete, buildingAdded}) => {
         if (userLogin) {
           console.log('INFO: user already logged in, moving to Dashboard');
 
-          setupRoute = buildingAdded ? 'home' : 'building-details';
+          setupRoute =
+            buildingAdded || !buildingOwner ? 'home' : 'building-details';
         } else if (!introComplete) {
           console.log(
             "INFO: user haven't walkeded through yet, pushing intro screens",

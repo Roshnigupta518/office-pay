@@ -18,14 +18,18 @@ export const login = async loginData => {
 
   // * this value will represent if the user loggin,
   // * in is an office owner / building owner
-  // Todo: toggle depending on the login response
-  const buildingOwner = true;
-  const userID = 2; // ! static
+  const buildingOwner =
+    parseInt(response.data?.login_detils?.role_id, 10) === 1;
+  const userID = response.data?.login_detils?.id;
 
-  // prettyPrint({response});
+  // prettyPrint({response: response.data});
 
   if (response.ok) {
-    return {buildingOwner, access_token: response.data.access_token, userID};
+    return {
+      buildingOwner,
+      access_token: response.data.access_token,
+      userID,
+    };
   } else {
     console.log('login error => ', response.status);
     handleAPIErrorResponse(response, 'login user');
@@ -62,6 +66,8 @@ export const signUp = async signUpData => {
 
   const api = create({baseURL: API_BASE_URL});
   const response = await api.post('/register' + getQueryString(signUpData));
+
+  prettyPrint({data: response.data});
 
   if (response.ok) {
     return response.data;

@@ -13,6 +13,7 @@ import {lightTheme} from '../../../global/Theme';
 import Invoice from './Invoice/Invoice';
 import Notifications from './Notification/Notifications';
 import {connect} from 'react-redux';
+import { prettyPrint } from '../../../global/utils/helperFunctions';
 
 const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
   return (
@@ -143,6 +144,8 @@ const Dashboard = ({navigation, buildingOwner}) => {
 
 const mapStateToProps = state => {
   const {buildingOwner} = state.auth;
+
+  prettyPrint({auth: state.auth});
 
   return {
     buildingOwner,

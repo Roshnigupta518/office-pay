@@ -202,8 +202,6 @@ const Login = ({navigation, doUserLogin, buildingAdded}) => {
 const mapStateToProps = state => {
   const {auth, buildingDetails} = state;
 
-  prettyPrint({auth, buildingDetails});
-
   return {
     auth,
     buildingAdded: Object.keys(buildingDetails).length,

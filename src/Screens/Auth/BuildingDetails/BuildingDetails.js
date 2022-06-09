@@ -265,6 +265,7 @@ const BuildingDetails = ({
   buildingOwner,
   route,
   userID,
+  token,
   doAddBuilding,
 }) => {
   const [officeImage, setOfficeImage] = useState(null);
@@ -294,7 +295,19 @@ const BuildingDetails = ({
       pan_card_image: panImage,
     };
 
-    await doAddBuilding(requestOptions).catch(err => {
+    const requestData = new FormData();
+
+    requestData.append('user_id', userID);
+    requestData.append('email_id', buildingDetails.email);
+    requestData.append('phone_number', buildingDetails.contact);
+    requestData.append('pan_card', buildingDetails.pan);
+    requestData.append('address', buildingDetails.address);
+    requestData.append('city', buildingDetails.city);
+    requestData.append('building_name', buildingDetails.name);
+    requestData.append('building_image', officeImage);
+    // requestData.append('pan_card_image', panImage);
+
+    await doAddBuilding(requestData, token).catch(err => {
       prettyPrint({
         msg: 'Error: in add building details',
         err,
@@ -308,7 +321,7 @@ const BuildingDetails = ({
 
     setLoading(false);
     if (!error) {
-      console.log("added building");
+      console.log('added building');
 
       navigation.navigate('bank-details', {
         fromDash,
@@ -397,16 +410,17 @@ const BuildingDetails = ({
 };
 
 const mapStateToProps = state => {
-  const {buildingOwner, userID} = state.auth;
+  const {buildingOwner, userID, access_token} = state.auth;
 
   return {
+    token: access_token,
     buildingOwner,
     userID,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  doAddBuilding: data => dispatch(addBuidlingDetails(data)),
+  doAddBuilding: (data, token) => dispatch(addBuidlingDetails(data, token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuildingDetails);

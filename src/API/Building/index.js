@@ -11,20 +11,22 @@ import {API_BASE_URL} from '../../assets/Constants';
 
 import cache from '../../global/utils/cache';
 
-export const addBuilding = async (buildingData, addInQuery = false) => {
+export const addBuilding = async (buildingData, token) => {
   console.log(`calling "buildings" api with data - `);
   prettyPrint({buildingData});
 
-  const api = create({baseURL: API_BASE_URL});
-  let response;
+  const api = create({
+    baseURL: API_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // 'Content-Type': 'multipart/form-data',
+    },
+  });
 
-  if (addInQuery) {
-    response = await api.post('/buildings' + getQueryString(buildingData));
-  } else {
-    response = await api.post('/buildings', buildingData);
-  }
+  
+  let response = await api.post('/buildings', buildingData);
 
-  // prettyPrint({response});
+  prettyPrint({response});
 
   if (response.ok) {
     return handleAPISuccessResponse(response);
@@ -51,7 +53,7 @@ export const getBuildings = async token => {
   });
   const response = await api.get('/buildings');
 
-  // prettyPrint({response});
+  prettyPrint({response});
 
   if (response.ok) {
     const data = handleAPISuccessResponse(response);
