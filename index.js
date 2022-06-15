@@ -9,13 +9,16 @@ import {PersistGate} from 'redux-persist/integration/react';
 
 import App from './App';
 import {name as appName} from './app.json';
+import ErrorBoundary from './src/Components/ErrorBoundary';
 
 import {persistor, store} from './src/store/ConfigStore';
 
 const Root = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </PersistGate>
   </Provider>
 );
