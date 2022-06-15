@@ -16,7 +16,9 @@ const DefaultInput = props => (
 );
 
 const styles = StyleSheet.create({
-  input: {},
+  input: {
+    ...globalStyles.fontDefault,
+  },
   inputCont: {
     paddingHorizontal: 10,
   },

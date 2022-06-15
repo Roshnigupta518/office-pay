@@ -20,7 +20,11 @@ import {lightTheme} from '../../../global/Theme';
 import {prettyPrint} from '../../../global/utils/helperFunctions';
 import {ValidateMail, ValueEmpty} from '../../../global/utils/Validations';
 
-const LoginForm = ({onSubmit, continueToProfileDetails}) => {
+const LoginForm = ({
+  onSubmit,
+  continueToProfileDetails,
+  navigateToForgetPwd,
+}) => {
   const [secure, setSecure] = useState(true);
   const [email, setEmail] = useState('');
   const [emailErr, setEmailErr] = useState('');
@@ -140,9 +144,9 @@ const LoginForm = ({onSubmit, continueToProfileDetails}) => {
           </Pressable>
         }
       />
-      <View style={styles.forgotPwdCont}>
+      <Pressable onPress={navigateToForgetPwd} style={styles.forgotPwdCont}>
         <Text style={styles.forgotPwd}>Forgot Password?</Text>
-      </View>
+      </Pressable>
       <View style={styles.loginBtnCont}>
         <Button
           titleStyle={styles.loginBtn}
@@ -182,6 +186,7 @@ const Login = ({navigation, doUserLogin, buildingAdded}) => {
             // }
             // navigation.navigate('building-details');
           }}
+          navigateToForgetPwd={() => navigation.navigate('forget-pwd')}
         />
         <View style={styles.secondaryMsg}>
           <Text>Don’t have an account?</Text>

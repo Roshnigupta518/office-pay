@@ -16,6 +16,8 @@ import SelectLanguage from '../../../Screens/SelectLanguage/SelectLanguage';
 import RootTab from '../../Tabs/rootTab';
 import Init from '../../../Screens/Init/Init';
 import ListMore from '../../../Screens/ListMore/ListMore';
+import ResetPwd from '../../../Screens/Auth/ResetPwd/ResetPwd';
+import ForgetPwd from '../../../Screens/Auth/ForgetPwd/ForgetPwd';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +62,20 @@ const RootStack = ({access_token}) => {
               headerShown: false,
             }}
             component={SignUp}
+          />
+          <Stack.Screen
+            name="forget-pwd"
+            options={{
+              headerShown: false,
+            }}
+            component={ForgetPwd}
+          />
+          <Stack.Screen
+            name="reset-pwd"
+            options={{
+              headerShown: false,
+            }}
+            component={ResetPwd}
           />
         </>
       ) : (
