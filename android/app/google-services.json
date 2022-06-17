@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "916421249742",
-    "project_id": "office-pay",
-    "storage_bucket": "office-pay.appspot.com"
+    "project_number": "737777592251",
+    "project_id": "goinvoicy",
+    "storage_bucket": "goinvoicy.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:916421249742:android:f39cf02354b23822b85e9f",
+        "mobilesdk_app_id": "1:737777592251:android:2037fb7e5b4f3f07fc069e",
         "android_client_info": {
-          "package_name": "com.officepay"
+          "package_name": "com.goinvoicy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "916421249742-eksucj0i2l21abm8ajdnplb0729c46u1.apps.googleusercontent.com",
+          "client_id": "737777592251-b8mr505qm0cug1qkvbuuosiko7b79a2i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.officepay",
-            "certificate_hash": "82e873af44ea3f51d7ace056875e802537594831"
+            "package_name": "com.goinvoicy",
+            "certificate_hash": "8fbec37c1ac37e4bc68b7a1efbd3a958fb48f3a6"
           }
         },
         {
-          "client_id": "916421249742-390b1et6tcq0q143nnpl61vjflhodrdn.apps.googleusercontent.com",
+          "client_id": "737777592251-fl4tpkjcvj15pgbu240a9eqea46hbrhl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAX7fZjwWzxoyvjwosMoSPSGUK1lwoNv8g"
+          "current_key": "AIzaSyCvxpEz8bBCDF72inRJ67FL11UhrIYzQHE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "916421249742-390b1et6tcq0q143nnpl61vjflhodrdn.apps.googleusercontent.com",
+              "client_id": "737777592251-fl4tpkjcvj15pgbu240a9eqea46hbrhl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

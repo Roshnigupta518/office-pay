@@ -17,7 +17,7 @@ import messaging from '@react-native-firebase/messaging';
 import RootStack from './src/Navigation/Stack/rootStack/rootStack';
 import {lightTheme} from './src/global/Theme';
 
-export const handlePushNotification = notification => {
+const handlePushNotification = notification => {
   if (notification && notification.data && notification.data.url) {
     const item = {
       url: notification.data.url,
