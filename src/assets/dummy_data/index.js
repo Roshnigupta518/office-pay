@@ -312,5 +312,5 @@ export const dummyBuidlingDetails = {
   address: '816, shekher center, palasia Square, Indore, India 452018',
   gst: 'GST no. 22AAAAA0000A10J2H',
   mobile: '+91-9990581540',
-  email: 'invoice@officepay.com',
+  email: 'invoice@goinvoicy.com',
 };

@@ -467,14 +467,14 @@ export const getInvoiceHTMLTemplate = (
 //       address: '816, shekher center, palasia Square, Indore, India 452018',
 //       gst: '22AAAAA0000A10J2H',
 //       mobile: '+91-9990581540',
-//       email: 'invoice@officepay.com',
+//       email: 'invoice@goinvoicy.com',
 //     },
 //     {
 //       office_name: 'Codervita',
 //       office_address: '101, Shekher Center, A.B. Road, Indore, (M.P.) 452018',
 //       gst_number: '22AAAAA0000A10J2H',
 //       contact_number: '+91-9990581540',
-//       email_address: 'invoice@officepay.com',
+//       email_address: 'invoice@goinvoicy.com',
 //     },
 //     {
 //       number: 'J-003',

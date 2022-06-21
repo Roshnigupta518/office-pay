@@ -39,7 +39,7 @@
           <action android:name="android.intent.action.VIEW"/>
           <category android:name="android.intent.category.DEFAULT"/>
           <category android:name="android.intent.category.BROWSABLE"/>
-          <data android:scheme="officepay"/>
+          <data android:scheme="goinvoicy"/>
         </intent-filter>
 
         <intent-filter>
@@ -48,7 +48,7 @@
           <category android:name="android.intent.category.BROWSABLE"/>
           <data android:scheme="http" />
           <data android:scheme="https" />
-          <data android:host="app.officepay.com"/>
+          <data android:host="app.goinvoicy.com"/>
         </intent-filter>
 
       </activity>

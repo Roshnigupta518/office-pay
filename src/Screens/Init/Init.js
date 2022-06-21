@@ -55,8 +55,8 @@ const Init = ({navigation, auth, introComplete, buildingAdded}) => {
       <AuthBgImage />
       <View style={styles.contain}>
         <Image
-          style={{resizeMode: 'contain', width: 200, height: 200}}
-          source={require('../../assets/images/imgpsh_fullsize_anim.png')}
+          style={{resizeMode: 'contain', width: 180, height: 200}}
+          source={require('../../assets/images/imgpsh_fullsize_anim1.png')}
         />
       </View>
     </View>

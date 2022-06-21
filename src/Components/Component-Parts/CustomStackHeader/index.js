@@ -21,10 +21,10 @@ const CustomStackHeader = ({goBack}) => {
       </View>
       <View style={styles.headerCenter}>
         {/* Todo: replace text with logo */}
-        {/* <Text style={globalStyles.accentHeading}>OfficePay</Text> */}
+        {/* <Text style={globalStyles.accentHeading}>GoInvoicy</Text> */}
         <Image
           source={getImageSrc(
-            require('../../../assets/images/placeholders/imgpsh.png'),
+            require('../../../assets/images/placeholders/imgpsh1.png'),
           )}
           style={styles.logo}
         />

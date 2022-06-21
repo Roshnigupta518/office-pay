@@ -65,7 +65,7 @@ const App = () => {
   };
 
   const linking = {
-    prefixes: ['officepay://', 'https://app.officepay.com'],
+    prefixes: ['goinvoicy://', 'https://app.goinvoicy.com'],
     config: config,
     async getInitialURL() {
       // Check if app was opened from a deep link

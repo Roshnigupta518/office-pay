@@ -17,7 +17,7 @@ const CustomMainHeader = ({doUserLogout, goToInit, userID, access_token}) => {
       <View style={styles.headerCenter}>
         <Image
           source={getImageSrc(
-            require('../../../assets/images/placeholders/imgpsh.png'),
+            require('../../../assets/images/placeholders/imgpsh1.png'),
           )}
           style={styles.logo}
         />
