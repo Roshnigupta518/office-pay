@@ -12,41 +12,41 @@ const NotifItem = ({notifItem}) => {
         <Text style={[styles.invoiceNoBlockText, styles.textlight]}>
           Invoice No
         </Text>
-        <Text style={styles.invoiceNoBlockText}>{notifItem.invoiceNo}</Text>
+        <Text style={styles.invoiceNoBlockText}>{notifItem.invoice_number}</Text>
       </View>
       <View style={styles.middle}>
         <Text
           numberOfLines={1}
           style={
             globalStyles.heading
-          }>{`${notifItem.wing}, ${notifItem.officeNo}, ${notifItem.propertyName}`}</Text>
+          }>{`${notifItem.wing}, ${notifItem.office_number || "N/A"}, ${notifItem.building_name || "N/A"}`}</Text>
         <Text numberOfLines={1} style={globalStyles.textDefault}>
-          {notifItem.OfficeName}
+          {notifItem.office_name || "N/A"}
         </Text>
         <Text
           numberOfLines={1}
           style={[globalStyles.textDefault, styles.invSub]}>
-          {notifItem.invoiceSubject}
+          {notifItem.invoice_dec}
         </Text>
         <Text
           numberOfLines={1}
           style={[
             globalStyles.textDefault,
             styles.invSub,
-          ]}>{`Invoice Amount ₹ ${notifItem.invoiceAmt}`}</Text>
+          ]}>{`Invoice Amount ₹ ${notifItem.total}`}</Text>
       </View>
       <View style={styles.rightSection}>
         <View
           style={[
             styles.statusCont,
             {
-              backgroundColor: notifItem.invoiceStatus
+              backgroundColor: notifItem.invoice_status
                 ? lightTheme.SUCCESS
                 : lightTheme.DANGER,
             },
           ]}>
           <Text style={styles.statusText}>
-            {notifItem.invoiceStatus ? 'Paid' : 'Overdue'}
+            {notifItem.invoice_status ? 'Paid' : 'Overdue'}
           </Text>
         </View>
       </View>

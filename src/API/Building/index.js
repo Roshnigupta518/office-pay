@@ -53,7 +53,7 @@ export const getBuildings = async token => {
   });
   const response = await api.get('/buildings');
 
-  prettyPrint({response});
+  // prettyPrint({response});
 
   if (response.ok) {
     const data = handleAPISuccessResponse(response);

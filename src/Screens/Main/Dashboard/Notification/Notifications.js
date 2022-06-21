@@ -8,14 +8,15 @@ import {globalStyles} from '../../../../global/Styles';
 
 import {getNotifications} from '../../../../API/Notifications';
 import {lightTheme} from '../../../../global/Theme';
+import {useSelector} from 'react-redux';
 
-const useGetNotifs = () => {
+const useGetNotifs = token => {
   const [notifs, setNotifs] = useState(null);
 
   useEffect(() => {
     (async () => {
       setNotifs(null);
-      const items = await getNotifications();
+      const items = await getNotifications(token);
       setNotifs(items);
     })();
   }, []);
@@ -24,7 +25,11 @@ const useGetNotifs = () => {
 };
 
 const Notifications = ({goToListMore}) => {
-  const notifs = useGetNotifs();
+  const {access_token} = useSelector(state => state.auth);
+
+  const notifs = useGetNotifs(access_token);
+
+  // console.log({notifs});
 
   if (!notifs) {
     return (
@@ -42,17 +47,21 @@ const Notifications = ({goToListMore}) => {
         }
         return <NotifItem key={index} notifItem={notif} />;
       })}
-      <Pressable
-        onPress={() =>
-          goToListMore({
-            data: notifs,
-            renderItem: ({item, index}) => (
-              <NotifItem key={index} notifItem={item} />
-            ),
-          })
-        }>
-        <Text style={styles.showMore}>Show More</Text>
-      </Pressable>
+      {notifs.length > 4 ? (
+        <Pressable
+          onPress={() =>
+            goToListMore({
+              data: notifs,
+              renderItem: ({item, index}) => (
+                <NotifItem key={index} notifItem={item} />
+              ),
+            })
+          }>
+          <Text style={styles.showMore}>Show More</Text>
+        </Pressable>
+      ) : (
+        <View />
+      )}
     </View>
   );
 };
