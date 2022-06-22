@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
+
 import AuthBgImage from '../../Components/Component-Parts/AuthBGImage';
 import {globalStyles} from '../../global/Styles';
 import {lightTheme} from '../../global/Theme';
@@ -11,6 +14,8 @@ const Init = ({navigation, auth, introComplete, buildingAdded}) => {
 
   const [route, setRoute] = useState('');
 
+  const {i18n} = useTranslation();
+
   const performTimeConsumingTask = async () => {
     return new Promise(resolve =>
       setTimeout(() => {
@@ -18,6 +23,18 @@ const Init = ({navigation, auth, introComplete, buildingAdded}) => {
       }, 2000),
     );
   };
+
+  useEffect(() => {
+    const syncAppLang = async () => {
+      let lang = await AsyncStorage.getItem('goInvoicy-selectedLang');
+
+      i18n.changeLanguage(lang).then(() => {
+        console.log(`Language synced - ${lang}`);
+      });
+    };
+
+    syncAppLang();
+  }, []);
 
   useEffect(() => {
     (async () => {

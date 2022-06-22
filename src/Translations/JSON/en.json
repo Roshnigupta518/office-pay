@@ -1,0 +1,10 @@
+{
+  "login_title": "Log In",
+  "login_desc": "Please Sign In to your Account to Continue with App.",
+  "login_placeholder_email" : "Enter Email",
+  "login_placeholder_pwd" : "Enter Password",
+  "login_forgot_pwd" : "Forgot Password ?",
+  "login_btn_title" : "Login",
+  "login_sign_up_alternate" : "Don’t have an account?",
+  "login_sign_up_alternate_btn_title" : "SIGN UP"
+}

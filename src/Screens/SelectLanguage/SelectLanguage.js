@@ -1,17 +1,48 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import {Pressable, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import AuthBgImage from '../../Components/Component-Parts/AuthBGImage';
 import Button from '../../Components/UI/Button';
+import Text from '../../Components/UI/Text';
 
 import {fonts} from '../../global/fonts';
 import {lightTheme} from '../../global/Theme';
 import {globalStyles} from '../../global/Styles';
 
-const LANGUAGES = ['English', 'हिंदी', 'मराठी', 'বাংলা', 'தமிழ்'];
+const LANGUAGES = [
+  {
+    label: 'English',
+    code: 'en',
+  },
+  {
+    label: 'हिंदी',
+    code: 'hi',
+  },
+];
 
 const SelectLanguage = ({navigation}) => {
-  const [selectedLang, setSelectedLang] = useState(LANGUAGES[0]);
+  const [selectedLang, setSelectedLang] = useState('en');
+
+  const {i18n} = useTranslation();
+
+  const updateLangInStorage = async lang => {
+    try {
+      await AsyncStorage.setItem('goInvoicy-selectedLang', lang);
+    } catch (e) {
+      console.error('Error in saving language preference - ', e);
+    }
+  };
+
+  useEffect(() => {
+    i18n.changeLanguage(selectedLang).then(() => {
+      updateLangInStorage(selectedLang);
+      console.log(`Language changed - ${selectedLang}`);
+    });
+
+    return () => {};
+  }, [selectedLang]);
 
   return (
     <View style={styles.view}>
@@ -26,21 +57,25 @@ const SelectLanguage = ({navigation}) => {
         <Text style={styles.slideTextMain}>Select your preferred Language</Text>
         <View style={styles.langCont}>
           {LANGUAGES.map(lang => (
-            <View
-              style={[
-                styles.lang,
-                selectedLang === lang
-                  ? {backgroundColor: lightTheme.PRIMARY_COLOR}
-                  : {},
-              ]}>
-              <Text
+            <Pressable onPress={() => setSelectedLang(lang.code)}>
+              <View
                 style={[
-                  styles.langText,
-                  selectedLang === lang ? {color: lightTheme.THEME} : {},
+                  styles.lang,
+                  selectedLang === lang.code
+                    ? {borderColor: lightTheme.PRIMARY_COLOR}
+                    : {},
                 ]}>
-                {lang}
-              </Text>
-            </View>
+                <Text
+                  style={[
+                    styles.langText,
+                    selectedLang === lang.code
+                      ? {color: lightTheme.PRIMARY_COLOR}
+                      : {},
+                  ]}>
+                  {lang.label}
+                </Text>
+              </View>
+            </Pressable>
           ))}
         </View>
       </View>
@@ -92,24 +127,28 @@ const styles = StyleSheet.create({
   },
 
   langCont: {
-    ...globalStyles.flexRow,
-    width: '80%',
+    width: '90%',
     alignSelf: 'center',
-    flexWrap: 'wrap',
     justifyContent: 'center',
     marginVertical: 100,
+    ...globalStyles.flexRow,
   },
 
   lang: {
-    width: 80,
-    padding: 5,
-    borderWidth: 1,
-    borderColor: lightTheme.SECONDARY_TEXT,
+    width: 160,
+    padding: 15,
+    paddingVertical: 10,
     elevation: 5,
-    borderRadius: 15,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: lightTheme.THEME,
     backgroundColor: lightTheme.THEME,
     marginBottom: 10,
     marginRight: 15,
     ...globalStyles.placeCenter,
+  },
+  langText: {
+    marginBottom: -5,
+    fontFamily: fonts.family.fontSemiBold,
   },
 });

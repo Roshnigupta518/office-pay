@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Pressable, ScrollView, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
 
@@ -168,13 +169,20 @@ const LoginForm = ({
 };
 
 const Login = ({navigation, doUserLogin, buildingAdded}) => {
+
+  const {t} = useTranslation();
+
   return (
     <>
       <AuthBgImage />
       <ScrollView style={styles.cont}>
-        <AuthPageTitle
+        {/* <AuthPageTitle
           title={'Log In'}
           desc={'Please Sign In to your Account to Continue with App.'}
+        /> */}
+        <AuthPageTitle
+          title={t('login_title')}
+          desc={t('login_desc')}
         />
         <LoginForm
           onSubmit={doUserLogin}
