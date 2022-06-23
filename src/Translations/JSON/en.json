@@ -6,5 +6,18 @@
   "login_forgot_pwd" : "Forgot Password ?",
   "login_btn_title" : "Login",
   "login_sign_up_alternate" : "Don’t have an account?",
-  "login_sign_up_alternate_btn_title" : "SIGN UP"
+  "login_sign_up_alternate_btn_title" : "SIGN UP",
+
+  "signup_title" : "Sign Up",
+  "signup_desc": "Please Sign Up to your Account to Continue with App.",
+  "signup_Building": "Building",
+  "signup_Office": "Office",
+  "signup_placeholder_email" : "Enter Email",
+  "signup_placeholder_pwd" : "Enter Password",
+  "signup_placeholder_confirm_pwd" : "Confirm Password",
+  "signup_btn_title" : "Sign Up",
+  "signup_login_alternate" : "Already have an account?",
+  "signup_login_alternate_btn_title" : "Login",
+  "signup_sign_up_alternate" : "Or Sign Up with",
+  "signup_sign_up_alternate_btn_title" : "Sign Up with Google"
 }

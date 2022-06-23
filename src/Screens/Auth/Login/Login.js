@@ -3,9 +3,9 @@ import {Pressable, ScrollView, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
-
 import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
 import Button from '../../../Components/UI/Button';
@@ -90,7 +90,7 @@ const LoginForm = ({
   return (
     <View style={styles.form}>
       <Input
-        placeholder="Email"
+        placeholder={t("login_placeholder_email")}
         value={email}
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
@@ -107,7 +107,7 @@ const LoginForm = ({
         }
       />
       <Input
-        placeholder="Enter Password"
+        placeholder={t("login_placeholder_pwd")}
         value={password}
         onChangeText={setPassword}
         inputStyle={globalStyles.fontDefault}
@@ -146,13 +146,13 @@ const LoginForm = ({
         }
       />
       <Pressable onPress={navigateToForgetPwd} style={styles.forgotPwdCont}>
-        <Text style={styles.forgotPwd}>Forgot Password?</Text>
+        <Text style={styles.forgotPwd}>{t('login_forgot_pwd')}</Text>
       </Pressable>
       <View style={styles.loginBtnCont}>
         <Button
           titleStyle={styles.loginBtn}
           onPress={handleLogin}
-          title={'Login'}
+          title={t('login_btn_title')}
           loading={loading}
           loadingProps={{size: 'large'}}
         />
@@ -197,13 +197,13 @@ const Login = ({navigation, doUserLogin, buildingAdded}) => {
           navigateToForgetPwd={() => navigation.navigate('forget-pwd')}
         />
         <View style={styles.secondaryMsg}>
-          <Text>Don’t have an account?</Text>
+          <Text>{t('login_sign_up_alternate')}</Text>
           <View style={globalStyles.leftSeperator}>
             <Pressable
               onPress={() => {
                 navigation.navigate('signup');
               }}>
-              <Text style={globalStyles.anchor}>SIGN UP</Text>
+              <Text style={globalStyles.anchor}>{t('login_sign_up_alternate_btn_title')}</Text>
             </Pressable>
           </View>
         </View>
