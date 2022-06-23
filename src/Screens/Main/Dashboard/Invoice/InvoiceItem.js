@@ -1,15 +1,18 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
+import {Icon} from 'react-native-elements';
+import {connect, useSelector} from 'react-redux';
 
 import Text from '../../../../Components/UI/Text';
-import {lightTheme} from '../../../../global/Theme';
-import {getShadowProperties} from '../../../../global/utils/helperFunctions';
-import {globalStyles} from '../../../../global/Styles';
-import {fonts} from '../../../../global/fonts';
-import {Icon} from 'react-native-elements';
 import Button from '../../../../Components/UI/Button';
 import WithPaymentPerformer from '../../../../Components/HOCs/PaymentPerformer';
-import {connect} from 'react-redux';
+
+import {globalStyles} from '../../../../global/Styles';
+import {fonts} from '../../../../global/fonts';
+import {getShadowProperties} from '../../../../global/utils/helperFunctions';
+import {lightTheme} from '../../../../global/Theme';
+
+import {markInvoiceReceived} from '../../../../API/Invoice';
 
 const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
   // payment HOC
@@ -38,6 +41,16 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
     () => console.log('INFO: payment error'),
     auth,
   );
+
+  console.log({status: invoiceDetails.status});
+
+  const {access_token} = useSelector(state => state.auth);
+
+  const markReceived = async () => {
+    await markInvoiceReceived(access_token, invoiceDetails.id).catch(e =>
+      console.error(e),
+    );
+  };
 
   return (
     <View style={styles.itemCont}>
@@ -78,7 +91,11 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
               : {backgroundColor: lightTheme.SUCCESS},
           ]}>
           <Text style={[styles.statusText]}>
-            {parseInt(invoiceDetails.status, 10) === 0 ? 'Overdue' : 'Paid'}
+            {invoiceDetails.status.toLowerCase() === 'due'
+              ? 'Overdue'
+              : invoiceDetails.status.toLowerCase() === 'pending'
+              ? 'Pending'
+              : 'Paid'}
           </Text>
         </View>
       </View>
@@ -120,9 +137,7 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
             titleStyle={styles.btntitleOutline}
             containerStyle={styles.btnCont}
             btnStyle={styles.btnOutline}
-            onPress={() => {
-              // Todo: handle send reminder
-            }}
+            onPress={markReceived}
             title={'Mark as received'}
           />
         </View>

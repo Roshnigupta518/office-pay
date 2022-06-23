@@ -86,3 +86,49 @@ export const getInvoices = async (token, office_id = false) => {
   //   }, 3000);
   // });
 };
+
+export const markInvoiceReceived = async (token, invoice_id = false) => {
+  console.log(`calling "update-invoice-payment-status" api with invoice id - ${invoice_id}`);
+
+  const api = create({
+    baseURL: API_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const response = await api.get(
+    '/update-invoice-payment-status' + (invoice_id ? `/${invoice_id}` : ''),
+  );
+
+  prettyPrint({response: response.data});
+
+  if (response.ok) {
+    const data = handleAPISuccessResponse(response);
+
+    await cache.store('invoice', data);
+
+    return data;
+  }
+  // else {
+  //   console.log('get building error => ', response.status);
+  //   handleAPIErrorResponse(response, 'get building user');
+  // }
+
+  const cache_data = await cache.get('invoice');
+
+  if (cache_data) {
+    console.log('INFO: using cached invoice data');
+    return cache_data;
+  }
+
+  console.log('get invoice error => ', response.status);
+  handleAPIErrorResponse(response, 'get invoice');
+
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     console.log(`Todo: call "invoice with GET" api with data - `);
+
+  //     resolve(dummyInvoiceDashboard);
+  //   }, 3000);
+  // });
+};

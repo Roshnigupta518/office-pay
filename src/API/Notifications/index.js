@@ -22,7 +22,7 @@ export const getNotifications = async token => {
   const response = await api.get('/invoice-notification');
   // const response = await api.get('https://new.fjsplant.com/api/userList');
 
-  prettyPrint({response: response.data});
+  // prettyPrint({response: response.data});
 
   if (response.ok) {
     // const data = handleAPISuccessResponse(response.data);
