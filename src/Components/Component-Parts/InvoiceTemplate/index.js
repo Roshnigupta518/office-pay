@@ -273,7 +273,7 @@ const RenderBillingForm = ({
             <Picker
               containerStyle={styles.pickerCont}
               selectedValue={billingFormState.building}
-              onValueChange={(itemValue) =>
+              onValueChange={itemValue =>
                 handleBuildingDetailsChange('building', itemValue)
               }
               pickerData={buildingDropdownData}
@@ -281,7 +281,7 @@ const RenderBillingForm = ({
             <Picker
               containerStyle={styles.pickerCont}
               selectedValue={billingFormState.wing}
-              onValueChange={(itemValue) =>
+              onValueChange={itemValue =>
                 handleBuildingDetailsChange('wing', itemValue)
               }
               pickerData={wingsDropDownData}
@@ -289,7 +289,7 @@ const RenderBillingForm = ({
             <Picker
               containerStyle={styles.pickerCont}
               selectedValue={billingFormState.floor}
-              onValueChange={(itemValue) =>
+              onValueChange={itemValue =>
                 handleBuildingDetailsChange('floor', itemValue)
               }
               pickerData={floorDropDownData}
@@ -297,7 +297,7 @@ const RenderBillingForm = ({
             <Picker
               containerStyle={styles.pickerCont}
               selectedValue={billingFormState.office}
-              onValueChange={(itemValue) =>
+              onValueChange={itemValue =>
                 handleBuildingDetailsChange('office', itemValue)
               }
               pickerData={floorWiseOfficeDropDownData}
@@ -371,6 +371,7 @@ const RenderInvoiceItems = ({invoiceItemData, invoiceItemMethods}) => {
       </View>
       {invoiceItemData.map((item, i) => (
         <RenderInvoiceItemFields
+          key={i}
           item={item}
           index={i}
           handleChangeInItems={invoiceItemMethods.handleChangeInItems}
@@ -392,6 +393,16 @@ const RenderInvoiceItemFields = ({
   removeItem,
   numOfItems,
 }) => {
+  const getTotal = () => {
+    if (item.qty && item.rate) {
+      const total = (parseInt(item.qty, 10) * parseFloat(item.rate))
+        .toFixed(2)
+        .toString();
+
+      handleChangeInItems('total', total, index);
+    }
+  };
+
   return (
     <View style={globalStyles.flexEnd}>
       <View style={styles.invoiceItemFieldsCont}>
@@ -413,12 +424,15 @@ const RenderInvoiceItemFields = ({
           style={styles.inputField}
           value={item.rate}
           placeholder={'0'}
-          onChangeText={val => handleChangeInItems('rate', val, index)}
+          onChangeText={val => {
+            handleChangeInItems('rate', val, index);
+          }}
         />
         <TextInput
           style={styles.inputField}
           value={item.total}
           placeholder={'0'}
+          onFocus={() => getTotal()}
           onChangeText={val => handleChangeInItems('total', val, index)}
         />
       </View>
@@ -433,12 +447,16 @@ const RenderInvoiceItemFields = ({
   );
 };
 
-const RenderSummary = ({bankDetails, handleBankDetailsChange}) => {
+const RenderSummary = ({
+  bankDetails,
+  invoiceTotal,
+  handleBankDetailsChange,
+}) => {
   return (
     <View style={styles.summaryCont}>
       <View style={[globalStyles.flexRow, globalStyles.spaceBetween]}>
         <Text style={globalStyles.heading}>Total Amount</Text>
-        <Text style={globalStyles.heading}>₹ 0</Text>
+        <Text style={globalStyles.heading}>₹ {invoiceTotal}</Text>
       </View>
       <View style={styles.summaryBankDetails}>
         <Text>Bank Details</Text>
@@ -525,6 +543,23 @@ const InvoiceTemplate = ({
     offices,
   );
 
+  const getInvoiceTotal = () => {
+    const initialValue = 0;
+
+    const total = invoiceData.invoiceItems.reduce(
+      (previousValue, currentValue) => {
+
+        if (currentValue.total) {
+          return previousValue + parseFloat(currentValue.total);
+        }
+        return previousValue + 0;
+      },
+      initialValue,
+    );
+
+    return total;
+  };
+
   // prettyPrint({
   //   buildingDropdownData,
   //   wingsDropDownData,
@@ -557,6 +592,7 @@ const InvoiceTemplate = ({
       />
       <View style={styles.hr} />
       <RenderSummary
+        invoiceTotal={getInvoiceTotal()}
         bankDetails={invoiceData.bankDetails}
         {...{handleBankDetailsChange}}
       />

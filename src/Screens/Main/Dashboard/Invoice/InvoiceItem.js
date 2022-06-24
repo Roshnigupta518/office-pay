@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect, useSelector} from 'react-redux';
 
@@ -15,6 +15,8 @@ import {lightTheme} from '../../../../global/Theme';
 import {markInvoiceReceived} from '../../../../API/Invoice';
 
 const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
+  const [loading, setLoading] = useState(false);
+
   // payment HOC
   const WithPay = WithPaymentPerformer(
     ({handlePay}) => (
@@ -42,14 +44,21 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
     auth,
   );
 
-  console.log({status: invoiceDetails.status});
-
   const {access_token} = useSelector(state => state.auth);
 
   const markReceived = async () => {
     await markInvoiceReceived(access_token, invoiceDetails.id).catch(e =>
       console.error(e),
     );
+  };
+
+  const downloadInvoice = async () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      console.log('download invoice...');
+      setLoading(false);
+    }, 2000);
   };
 
   return (
@@ -89,13 +98,18 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
             parseInt(invoiceDetails.status, 10) === 0
               ? {backgroundColor: lightTheme.DANGER}
               : {backgroundColor: lightTheme.SUCCESS},
+            invoiceDetails.status.toLowerCase() === 'due'
+              ? {backgroundColor: lightTheme.DANGER}
+              : invoiceDetails.status.toLowerCase() === 'recived'
+              ? {backgroundColor: lightTheme.SUCCESS}
+              : {backgroundColor: lightTheme.WARNING},
           ]}>
           <Text style={[styles.statusText]}>
             {invoiceDetails.status.toLowerCase() === 'due'
               ? 'Overdue'
-              : invoiceDetails.status.toLowerCase() === 'pending'
-              ? 'Pending'
-              : 'Paid'}
+              : invoiceDetails.status.toLowerCase() === 'recived'
+              ? 'Paid'
+              : 'Pending'}
           </Text>
         </View>
       </View>
@@ -104,7 +118,7 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
           {invoiceDetails.invoice_dec}
         </Text>
         <Text style={[styles.value, styles.invoiceAmt]}>
-          {invoiceDetails.total}
+        ₹{invoiceDetails.total}
         </Text>
       </View>
       <View style={styles.row}>
@@ -114,14 +128,22 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
             {invoiceDetails.lastReminderDate || 'N/A'}
           </Text>
         </View>
-        <View style={globalStyles.flexRow}>
-          <Icon
-            type="ionicon"
-            name={'ios-document-text-outline'}
-            color={lightTheme.PRIMARY_COLOR}
-          />
+
+        <Pressable onPress={downloadInvoice} style={globalStyles.flexRow}>
+          {loading ? (
+            <ActivityIndicator
+              size={'small'}
+              color={lightTheme.PRIMARY_COLOR}
+            />
+          ) : (
+            <Icon
+              type="ionicon"
+              name={'ios-document-text-outline'}
+              color={lightTheme.PRIMARY_COLOR}
+            />
+          )}
           <Text style={styles.download}>Download</Text>
-        </View>
+        </Pressable>
       </View>
       {buildingOwner ? (
         <View style={styles.row}>
