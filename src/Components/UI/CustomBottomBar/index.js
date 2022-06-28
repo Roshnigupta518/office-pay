@@ -1,19 +1,19 @@
 import React from 'react';
-import {View, TouchableOpacity, useColorScheme, StyleSheet} from 'react-native';
+import {View, TouchableOpacity,StyleSheet} from 'react-native';
 import {Icon, Avatar} from 'react-native-elements';
+
 import {fonts} from '../../../global/fonts';
 import {lightTheme} from '../../../global/Theme';
 
 import Text from '../Text';
 
-export const CustomTabBar = ({state, descriptors, navigation}) => {
+export const CustomTabBar = ({state, descriptors, navigation, t}) => {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   if (focusedOptions.tabBarVisible === false) {
     return null;
   }
 
-  // const isDarkMode = useColorScheme() === 'dark';
   const theme = lightTheme;
 
   return (
@@ -54,13 +54,13 @@ export const CustomTabBar = ({state, descriptors, navigation}) => {
               return {
                 name: 'home',
                 pack: 'feather',
-                title: 'Dashboard',
+                title: t('navigation.tabs.dashboard'),
               };
             case 'create-invoice':
               return {
                 name: 'copy1',
                 pack: 'antdesign',
-                title: 'Create Invoice',
+                title: t('navigation.tabs.createInvoice'),
               };
           }
         };

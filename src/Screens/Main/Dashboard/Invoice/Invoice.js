@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import InvoiceItem from './InvoiceItem';
 import Text from '../../../../Components/UI/Text';
@@ -8,9 +9,9 @@ import {globalStyles} from '../../../../global/Styles';
 
 import {getInvoices} from '../../../../API/Invoice';
 import {lightTheme} from '../../../../global/Theme';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
-const useGetInvoices = (access_token) => {
+const useGetInvoices = access_token => {
   const [invoices, setInvoices] = useState(null);
 
   useEffect(() => {
@@ -29,6 +30,8 @@ const Invoice = ({buildingOwner, goToListMore}) => {
 
   const invoices = useGetInvoices(access_token);
 
+  const {t} = useTranslation();
+
   if (!invoices) {
     return (
       <View style={styles.loaderCont}>
@@ -39,14 +42,18 @@ const Invoice = ({buildingOwner, goToListMore}) => {
 
   return (
     <View style={styles.view}>
-      <Text style={globalStyles.heading}>Due Invoice</Text>
+      <Text style={globalStyles.heading}>{t('dashboard.invoices.title')}</Text>
       {invoices.map((invoice, index) => {
         if (index > 2) {
           return <View key={index} />;
         }
 
         return (
-          <InvoiceItem buildingOwner={buildingOwner} invoiceDetails={invoice} />
+          <InvoiceItem
+            t={t}
+            buildingOwner={buildingOwner}
+            invoiceDetails={invoice}
+          />
         );
       })}
       <Pressable
@@ -55,13 +62,14 @@ const Invoice = ({buildingOwner, goToListMore}) => {
             data: invoices,
             renderItem: ({item}) => (
               <InvoiceItem
+                t={t}
                 buildingOwner={buildingOwner}
                 invoiceDetails={item}
               />
             ),
           })
         }>
-        <Text style={styles.showMore}>Show More</Text>
+        <Text style={styles.showMore}>{t('show_more')}</Text>
       </Pressable>
     </View>
   );

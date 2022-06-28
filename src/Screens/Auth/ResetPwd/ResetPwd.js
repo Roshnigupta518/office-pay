@@ -10,6 +10,7 @@ import Button from '../../../Components/UI/Button';
 import {styles} from './styles';
 import {lightTheme} from '../../../global/Theme';
 import {globalStyles} from '../../../global/Styles';
+import { useTranslation } from 'react-i18next';
 
 const ResetPwd = ({navigation}) => {
   const [password, setPassword] = useState('');
@@ -21,6 +22,8 @@ const ResetPwd = ({navigation}) => {
   const [secureConfirm, setSecureConfirm] = useState(true);
 
   const [loading, setLoading] = useState(false);
+
+  const {t} = useTranslation();
 
   const handleSave = () => {
     // Todo: handle API call to reset pwd
@@ -34,12 +37,12 @@ const ResetPwd = ({navigation}) => {
       <AuthBgImage />
       <ScrollView contentContainerStyle={styles.cont}>
         <AuthPageTitle
-          title={'Reset your Password'}
-          desc={'Please enter your new password and Keep Manage your Invocies.'}
+          title={t('reset_password_title')}
+          desc={t('reset_password_desc')}
         />
         <View style={styles.inputCont}>
           <Input
-            placeholder="Enter Password"
+            placeholder={t('reset_password_enter_pwd')}
             value={password}
             onChangeText={setPassword}
             inputStyle={globalStyles.fontDefault}
@@ -78,7 +81,7 @@ const ResetPwd = ({navigation}) => {
             }
           />
           <Input
-            placeholder="Confirm Password"
+            placeholder={t('reset_password_confirm_pwd')}
             value={confirm}
             onChangeText={setConfirm}
             inputStyle={globalStyles.fontDefault}
@@ -122,7 +125,7 @@ const ResetPwd = ({navigation}) => {
           <Button
             titleStyle={styles.savePwdBtnTitle}
             onPress={handleSave}
-            title={'Save Password'}
+            title={t('reset_password_btn')}
             loading={loading}
             loadingProps={{size: 'large'}}
           />

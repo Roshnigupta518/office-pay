@@ -29,6 +29,8 @@ import {
 } from '../../../global/utils/helperFunctions';
 import {addBuilding} from '../../../API/Building';
 import {addBuidlingDetails} from '../../../store/actions/BuildingActions';
+import {useTranslation} from 'react-i18next';
+import { t } from 'i18next';
 
 const INITIAL_STATE = {
   name: '',
@@ -159,7 +161,7 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('name', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.name}
-        placeholder={'Building Name'}
+        placeholder={t('add_building_name')}
         disabled={loading}
       />
       <Input
@@ -167,7 +169,7 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('address', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.address}
-        placeholder={'Address'}
+        placeholder={t('add_building_address')}
         disabled={loading}
       />
       <Input
@@ -175,7 +177,7 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('email', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.email}
-        placeholder={'Email Id'}
+        placeholder={t('add_building_email')}
         disabled={loading}
       />
       <Input
@@ -183,7 +185,7 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('gst', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.gst}
-        placeholder={'GST number'}
+        placeholder={t('add_building_gst')}
         disabled={loading}
       />
       <Input
@@ -191,7 +193,7 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('contact', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.contact}
-        placeholder={'Contact Number'}
+        placeholder={t('add_building_contact')}
         disabled={loading}
       />
       <Input
@@ -199,7 +201,7 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('city', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.city}
-        placeholder={'City'}
+        placeholder={t('add_building_city')}
         disabled={loading}
       />
       <Input
@@ -207,13 +209,13 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
         onChangeText={value => handleOnChange('pan', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.pan}
-        placeholder={'Enter your PAN Card number'}
+        placeholder={t('add_building_pan')}
         disabled={loading}
       />
       <Button
         titleStyle={globalStyles.headingWhite}
         onPress={onNextPress}
-        title={'Next'}
+        title={t('add_building_next_btn')}
         loading={loading}
         loadingProps={{size: 'large'}}
       />
@@ -222,6 +224,9 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
 };
 
 const UploadPANimageSection = ({setImage}) => {
+
+  const {t} = useTranslation();
+
   const uploadPANToServer = res => {
     console.log('handle PAN upload to server');
 
@@ -245,7 +250,7 @@ const UploadPANimageSection = ({setImage}) => {
           color={lightTheme.PRIMARY_COLOR}
         />
         <Text style={styles.uploadImageBtnText}>
-          Upload your PAN card Image
+          {t('add_building_pan_image')}
         </Text>
       </TouchableOpacity>
     ),
@@ -276,6 +281,8 @@ const BuildingDetails = ({
   const [addBuildingErrText, setAddBuildingErrText] = useState('');
 
   const fromDash = getObjPropertyValue(route.params, 'fromDash');
+
+  const {t} = useTranslation();
 
   const handleNextPress = async buildingDetails => {
     console.log('INFO: initializing add building details...');
@@ -363,16 +370,16 @@ const BuildingDetails = ({
           <>
             <View style={styles.header}>
               <Pressable style={styles.headerLeft} onPress={goToDashboard}>
-                <Text>Skip</Text>
+                <Text>{t('Skip')}</Text>
               </Pressable>
               <View style={styles.headerMid}>
-                <Text>1 to 2 Step</Text>
+                <Text>{t('step_1')}</Text>
               </View>
               <View style={styles.headerRight} />
             </View>
             <View style={styles.pageTitle}>
               <Text style={globalStyles.heading}>
-                Complete your Building Details
+                {t('add_building_title')}
               </Text>
             </View>
           </>
@@ -385,9 +392,9 @@ const BuildingDetails = ({
             src={getObjPropertyValue(officeImage, 'uri')}
             setAvatar={img => setOfficeImage(img)}
           />
-          <Text style={globalStyles.heading}>{`Add ${
-            buildingOwner ? 'Building' : 'Office'
-          } Image`}</Text>
+          <Text style={globalStyles.heading}>
+            {t(`add_${buildingOwner ? 'building' : 'office'}_avatar`)}
+          </Text>
         </View>
         <BuildingDetailsForm
           loading={loading}

@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 import React, {useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
@@ -62,6 +63,8 @@ const CreateInvoice = ({navigation, route, access_token}) => {
   const [loading, setLoading] = useState(false);
   const [createInvoiceErr, setCreateInvoiceErr] = useState(false);
   const [errorText, setErrorText] = useState('');
+
+  const {t} = useTranslation();
 
   const {officeDetails} = getObjPropertyValue(route, 'params') || {
     officeDetails: null,
@@ -229,7 +232,7 @@ const CreateInvoice = ({navigation, route, access_token}) => {
           style={[
             !attachments ? styles.uploadImageBtnText : styles.attachmentText,
           ]}>
-          {!attachments ? 'Attachment' : attachments.file}
+          {!attachments ? t('createInvoice.attachment') : attachments.file}
         </Text>
       </TouchableOpacity>
     ),
@@ -250,7 +253,7 @@ const CreateInvoice = ({navigation, route, access_token}) => {
       )}
       <ScrollView contentContainerStyle={styles.scrollview}>
         <View style={styles.createInvoiceHeadCont}>
-          <Text style={styles.pagetitle}>Create Invoice</Text>
+          <Text style={styles.pagetitle}>{t('createInvoice.title')}</Text>
           <AttachmentWithPicker />
         </View>
         <InvoiceTemplate
@@ -276,7 +279,7 @@ const CreateInvoice = ({navigation, route, access_token}) => {
           titleStyle={styles.sendInvoiceBtnTitle}
           btnStyle={styles.sendInvoiceBtnCont}
           onPress={onSendInvoice}
-          title={'Send Invoice'}
+          title={t('createInvoice.send.btn.title')}
         />
       </View>
       <ErrorAlert

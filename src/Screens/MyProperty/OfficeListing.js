@@ -3,7 +3,7 @@ import {Dimensions, FlatList, Pressable, StyleSheet, View} from 'react-native';
 
 import Text from '../../Components/UI/Text';
 
-import {isJSObj} from '../../global/utils/helperFunctions';
+import {isJSObj, prettyPrint} from '../../global/utils/helperFunctions';
 import {globalStyles} from '../../global/Styles';
 import {lightTheme} from '../../global/Theme';
 import {fonts} from '../../global/fonts';

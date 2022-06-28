@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import {Pressable, ScrollView, Text, View} from 'react-native';
+import {Pressable, ScrollView, View} from 'react-native';
 import {Icon} from 'react-native-elements';
+import { useTranslation } from 'react-i18next';
 
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
 import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
 import Button from '../../../Components/UI/Button';
+import Text from '../../../Components/UI/Text';
 import Input from '../../../Components/UI/Input';
 
 import {styles} from './styles';
@@ -15,6 +17,8 @@ const ForgetPwd = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [emailErr, setEmailErr] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const {t} = useTranslation();
 
   const handleSend = () => {
     // Todo: handle API call to send email to server
@@ -28,10 +32,8 @@ const ForgetPwd = ({navigation}) => {
       <AuthBgImage />
       <ScrollView contentContainerStyle={styles.cont}>
         <AuthPageTitle
-          title={'Forgot Password'}
-          desc={
-            'Please enter the email address you’d like your password reset information sent to'
-          }
+          title={t('forgot_password_title')}
+          desc={t('forgot_password_desc')}
         />
         <View style={styles.inputCont}>
           <Input
@@ -57,7 +59,7 @@ const ForgetPwd = ({navigation}) => {
           <Button
             titleStyle={styles.sendLinkBtnTitle}
             onPress={handleSend}
-            title={'Send Link'}
+            title={t('forgot_password_btn_title')}
             loading={loading}
             loadingProps={{size: 'large'}}
           />
@@ -70,13 +72,15 @@ const ForgetPwd = ({navigation}) => {
             size={20}
             style={styles.arrowIcon}
           />
-          <Text>Back to</Text>
+          <Text>{t('forgot_password_back')}</Text>
           <View style={globalStyles.leftSeperator}>
             <Pressable
               onPress={() => {
                 navigation.goBack();
               }}>
-              <Text style={[globalStyles.anchor, styles.anchor]}>Login</Text>
+              <Text style={[globalStyles.anchor, styles.anchor]}>
+                {t('forgot_password_login')}
+              </Text>
             </Pressable>
           </View>
         </View>

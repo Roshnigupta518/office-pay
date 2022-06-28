@@ -25,6 +25,7 @@ import {lightTheme} from '../../global/Theme';
 import {dummyInvoiceDashboard} from '../../assets/dummy_data';
 import {connect, useSelector} from 'react-redux';
 import {getInvoices} from '../../API/Invoice';
+import {useTranslation} from 'react-i18next';
 
 const useGetInvoices = (access_token, officeID) => {
   const [invoices, setInvoices] = useState(null);
@@ -40,7 +41,7 @@ const useGetInvoices = (access_token, officeID) => {
   return invoices;
 };
 
-const PropertyInvoices = ({buildingOwner, goToListMore, office}) => {
+const PropertyInvoices = ({buildingOwner, goToListMore, office, t}) => {
   const {access_token} = useSelector(state => state.auth);
 
   const invoices = useGetInvoices(access_token, office.id);
@@ -68,6 +69,7 @@ const PropertyInvoices = ({buildingOwner, goToListMore, office}) => {
             buildingOwner={buildingOwner}
             invoiceDetails={invoice}
             dontShowProperty
+            t={t}
           />
         );
       })}
@@ -81,20 +83,23 @@ const PropertyInvoices = ({buildingOwner, goToListMore, office}) => {
                 buildingOwner={buildingOwner}
                 invoiceDetails={item}
                 dontShowProperty
+                t={t}
               />
             ),
           })
         }>
-        <Text style={styles.showMore}>Show More</Text>
+        <Text style={styles.showMore}>{t('show_more')}</Text>
       </Pressable>
     </View>
   );
 };
 
-const RenderInvoiceDetailsHeader = () => {
+const RenderInvoiceDetailsHeader = ({t}) => {
   return (
     <View style={styles.invoiceHeaderCont}>
-      <Text style={globalStyles.heading}>Invoice Details</Text>
+      <Text style={globalStyles.heading}>
+        {t('officeDetails.invoices.header.title')}
+      </Text>
     </View>
   );
 };
@@ -105,6 +110,8 @@ const PropertyDetails = ({route, navigation}) => {
 
   // prettyPrint({office});
   const {buildingOwner} = useSelector(state => state.auth);
+
+  const {t} = useTranslation();
 
   const goToListMore = props => {
     navigation.navigate('list-more', props);
@@ -136,7 +143,7 @@ const PropertyDetails = ({route, navigation}) => {
                   style={styles.editIcon}
                 />
                 <Text style={[globalStyles.anchor, styles.editText]}>
-                  Edit Details
+                  {t('officeDetails.edit')}
                 </Text>
               </View>
             )}
@@ -147,10 +154,14 @@ const PropertyDetails = ({route, navigation}) => {
           </View>
           <View style={styles.paymentDetailsCont}>
             <View style={globalStyles.flexRow}>
-              <Text style={styles.pendingAmtHead}>Pending Amount: ₹ </Text>
+              <Text style={styles.pendingAmtHead}>
+                {t('officeDetails.pending')}: ₹{' '}
+              </Text>
               <Text style={styles.pendingAmt}>3500</Text>
             </View>
-            <Text style={styles.invoiceAmt}>Invoice Amount: ₹ 60,000</Text>
+            <Text style={styles.invoiceAmt}>
+              {t('officeDetails.invoiceAmt')}: ₹ 60,000
+            </Text>
           </View>
           {buildingOwner && (
             <Button
@@ -161,15 +172,16 @@ const PropertyDetails = ({route, navigation}) => {
                   officeDetails: office,
                 });
               }}
-              title={'Create Invoice'}
+              title={t('officeDetails.createInvoice.btn.title')}
             />
           )}
         </View>
-        <RenderInvoiceDetailsHeader />
+        <RenderInvoiceDetailsHeader t={t} />
         <PropertyInvoices
           buildingOwner={buildingOwner}
           goToListMore={goToListMore}
           office={office}
+          t={t}
         />
       </ScrollView>
     </View>

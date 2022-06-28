@@ -1,35 +1,39 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import {connect} from 'react-redux';
+
 import CustomMainHeader from '../../../Components/Component-Parts/CustomMainHeader';
-
-import Property from './Property/Property';
-
 import Text from '../../../Components/UI/Text';
 import {TopTabs} from '../../../Components/UI/TopTabs';
+
+import Property from './Property/Property';
+import Invoice from './Invoice/Invoice';
+import Notifications from './Notification/Notifications';
 
 import {styles} from './styles';
 
 import {lightTheme} from '../../../global/Theme';
-import Invoice from './Invoice/Invoice';
-import Notifications from './Notification/Notifications';
-import {connect} from 'react-redux';
 import { prettyPrint } from '../../../global/utils/helperFunctions';
 
 const RenderOverview = ({totalReceived, totalPending, totalOverdue}) => {
+
+  const {t} = useTranslation();
+
   return (
     <View style={styles.overviewCont}>
       <View style={[styles.overviewTile, styles.receivedTile]}>
         <Text style={styles.overviewText}>
-          Total Amount Received this month
+          {t('dashboard.overview.received')}
         </Text>
         <Text style={[styles.overviewAmount]}>₹ {totalReceived}</Text>
       </View>
       <View style={[styles.overviewTile, styles.pendingTile]}>
-        <Text style={styles.overviewText}>Total Amount pending this month</Text>
+        <Text style={styles.overviewText}>{t('dashboard.overview.pending')}</Text>
         <Text style={styles.overviewAmount}>₹ {totalPending}</Text>
       </View>
       <View style={[styles.overviewTile, styles.overdueTile]}>
-        <Text style={styles.overviewText}>Total Overdue Amount</Text>
+        <Text style={styles.overviewText}>{t('dashboard.overview.overdue')}</Text>
         <Text style={styles.overviewAmount}>₹ {totalOverdue}</Text>
       </View>
     </View>
@@ -43,10 +47,13 @@ const RenderDashboardTabs = ({
   buildingOwner,
   goToListMore,
 }) => {
+
+  const {t} = useTranslation();
+
   const tabConfigs = {
     tabItems: [
       {
-        title: `My ${buildingOwner ? 'Properties' : 'Office'}`,
+        title: t(`dashboard.tabs.${buildingOwner ? 'myproperty' : 'myoffices'}`),
         icon: {
           name: 'building-o',
           type: 'font-awesome',
@@ -55,7 +62,7 @@ const RenderDashboardTabs = ({
         },
       },
       {
-        title: 'Due Invoice',
+        title: t('dashboard.tabs.due'),
         icon: {
           name: 'file-text',
           type: 'feather',
@@ -64,7 +71,7 @@ const RenderDashboardTabs = ({
         },
       },
       {
-        title: 'Notification',
+        title: t('dashboard.tabs.notif'),
         icon: {
           name: 'bell',
           type: 'feather',
@@ -90,6 +97,9 @@ const RenderDashboardTabs = ({
 };
 
 const Dashboard = ({navigation, buildingOwner}) => {
+
+  const {t} = useTranslation();
+
   const onPropertyItemClick = property => {
     navigation.navigate('my-property', {
       params: {property},
@@ -122,7 +132,7 @@ const Dashboard = ({navigation, buildingOwner}) => {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.greetingCont}>
-            <Text style={styles.greeting}>Hello,</Text>
+            <Text style={styles.greeting}>{t('dashboard_hello')},</Text>
           </View>
         </View>
         <RenderOverview

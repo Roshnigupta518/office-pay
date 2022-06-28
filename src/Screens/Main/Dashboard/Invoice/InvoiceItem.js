@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect, useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 
 import Text from '../../../../Components/UI/Text';
 import Button from '../../../../Components/UI/Button';
@@ -14,10 +15,11 @@ import {lightTheme} from '../../../../global/Theme';
 
 import {markInvoiceReceived} from '../../../../API/Invoice';
 
-const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
+const InvoiceItem = ({invoiceDetails, buildingOwner, auth, t}) => {
   const [loading, setLoading] = useState(false);
 
-  // payment HOC
+
+  // payment HOC - unused
   const WithPay = WithPaymentPerformer(
     ({handlePay}) => (
       <View style={styles.row}>
@@ -67,11 +69,15 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
         <Text style={styles.buildName}>{invoiceDetails.building_name}</Text>
         <View style={globalStyles.flexRow}>
           <View style={styles.wingCont}>
-            <Text style={styles.heading}>Wing</Text>
+            <Text style={styles.heading}>
+              {t('dashboard.invoices.item.wing')}
+            </Text>
             <Text style={styles.value}>{invoiceDetails.wing}</Text>
           </View>
           <View style={globalStyles.flexRow}>
-            <Text style={styles.heading}>Floor</Text>
+            <Text style={styles.heading}>
+              {t('dashboard.invoices.item.floor')}
+            </Text>
             <Text style={styles.value}>{invoiceDetails.floor_number}</Text>
           </View>
         </View>
@@ -83,13 +89,17 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
         </View>
 
         <View style={globalStyles.flexRow}>
-          <Text style={styles.heading}>Due Date</Text>
+          <Text style={styles.heading}>
+            {t('dashboard.invoices.item.dueDate')}
+          </Text>
           <Text style={styles.value}>{invoiceDetails.invoice_due_date}</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
-          <Text style={styles.heading}>Invoice Date</Text>
+          <Text style={styles.heading}>
+            {t('dashboard.invoices.item.invoiceDate')}
+          </Text>
           <Text style={styles.value}>{invoiceDetails.invoice_date}</Text>
         </View>
         <View
@@ -118,12 +128,14 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
           {invoiceDetails.invoice_dec}
         </Text>
         <Text style={[styles.value, styles.invoiceAmt]}>
-        ₹{invoiceDetails.total}
+          ₹{invoiceDetails.total}
         </Text>
       </View>
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
-          <Text style={styles.heading}>Last Reminder</Text>
+          <Text style={styles.heading}>
+            {t('dashboard.invoices.item.reminder')}
+          </Text>
           <Text style={styles.value}>
             {invoiceDetails.lastReminderDate || 'N/A'}
           </Text>
@@ -142,7 +154,9 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
               color={lightTheme.PRIMARY_COLOR}
             />
           )}
-          <Text style={styles.download}>Download</Text>
+          <Text style={styles.download}>
+            {t('dashboard.invoices.item.download')}
+          </Text>
         </Pressable>
       </View>
       {buildingOwner ? (
@@ -153,14 +167,14 @@ const InvoiceItem = ({invoiceDetails, buildingOwner, auth}) => {
             onPress={() => {
               // Todo: handle send reminder
             }}
-            title={'Send reminder'}
+            title={t('dashboard.invoices.item.sendReminder')}
           />
           <Button
             titleStyle={styles.btntitleOutline}
             containerStyle={styles.btnCont}
             btnStyle={styles.btnOutline}
             onPress={markReceived}
-            title={'Mark as received'}
+            title={t('dashboard.invoices.item.markReceived')}
           />
         </View>
       ) : (

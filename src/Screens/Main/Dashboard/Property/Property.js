@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
 import {Image} from 'react-native-elements';
-import {dummyProperties} from '../../../../assets/dummy_data';
+import {connect} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 
 import Text from '../../../../Components/UI/Text';
 import Card from '../../../../Components/UI/Card';
@@ -13,11 +14,10 @@ import {
   prettyPrint,
 } from '../../../../global/utils/helperFunctions';
 import {globalStyles} from '../../../../global/Styles';
+import {lightTheme} from '../../../../global/Theme';
 
 import {getBuildings} from '../../../../API/Building';
-import {lightTheme} from '../../../../global/Theme';
 import {getOffices} from '../../../../API/Offices';
-import {connect} from 'react-redux';
 
 const useGetBuildings = token => {
   const [buildings, setBuildings] = useState(null);
@@ -53,7 +53,9 @@ const useGetOffices = (propertyID, token) => {
   return offices;
 };
 
-const RenderPropertyItem = ({item, handleItemClick}) => {
+const RenderPropertyItem = ({item, handleItemClick, t}) => {
+  // const {t} = useTranslation();
+
   return (
     <Card style={styles.propertyItemCont} onPress={() => handleItemClick(item)}>
       <View style={styles.imgCont}>
@@ -68,19 +70,25 @@ const RenderPropertyItem = ({item, handleItemClick}) => {
       </View>
       <View style={styles.detailsCont}>
         <Text style={styles.propertyName}>{item.building_name}</Text>
-        <Text numberOfLines={1} style={styles.propertyaddress}>{item.address}</Text>
+        <Text numberOfLines={1} style={styles.propertyaddress}>
+          {item.address}
+        </Text>
         <View style={styles.detailsRow}>
           <Text style={[styles.detailsHeadings, globalStyles.textDanger]}>
-            Due Invoices
+            {t('dashboard.myproperty.item.noOfdue')}
           </Text>
           <Text style={styles.detailsValue}>{item.due_invoices}</Text>
         </View>
         <View style={styles.detailsRow}>
-          <Text style={styles.detailsHeadings}>Occupied Offices</Text>
+          <Text style={styles.detailsHeadings}>
+            {t('dashboard.myproperty.item.occupied')}
+          </Text>
           <Text style={styles.detailsValue}>{item.occupied_offices}</Text>
         </View>
         <View style={styles.detailsRow}>
-          <Text style={styles.detailsHeadings}>Vacant Offices</Text>
+          <Text style={styles.detailsHeadings}>
+            {t('dashboard.myproperty.item.vacant')}
+          </Text>
           <Text style={styles.detailsValue}>{item.vacant_offices}</Text>
         </View>
       </View>
@@ -88,8 +96,10 @@ const RenderPropertyItem = ({item, handleItemClick}) => {
   );
 };
 
-const RenderOfficeItem = ({item, handleItemClick}) => {
+const RenderOfficeItem = ({item, handleItemClick, t}) => {
   // prettyPrint({item});
+
+  // const {t} = useTranslation();
 
   return (
     <Card style={styles.propertyItemCont} onPress={() => handleItemClick(item)}>
@@ -146,6 +156,8 @@ const Property = ({
 
   // prettyPrint({listingData});
 
+  const {t} = useTranslation();
+
   if (!listingData) {
     return (
       <View style={styles.loaderCont}>
@@ -157,14 +169,16 @@ const Property = ({
   return (
     <View style={styles.conatiner}>
       <View style={styles.sectionHeader}>
-        <Text>{`My ${buildingOwner ? 'Property' : 'Office'}`}</Text>
+        <Text>
+          {t(`dashboard.${buildingOwner ? 'myproperty' : 'myoffices'}.title`)}
+        </Text>
         <Pressable
           onPress={() => {
             onAddPropertyClick();
           }}>
-          <Text style={styles.addPropertyLink}>{`+ Add ${
-            buildingOwner ? 'Property' : 'Office'
-          }`}</Text>
+          <Text style={styles.addPropertyLink}>
+            + {t(`dashboard.${buildingOwner ? 'myproperty' : 'myoffices'}.add`)}
+          </Text>
         </Pressable>
       </View>
       <View style={styles.listCont}>
@@ -181,6 +195,7 @@ const Property = ({
                 key={index}
                 item={item}
                 index={index}
+                t={t}
               />
             );
           }
@@ -191,6 +206,7 @@ const Property = ({
               key={index}
               item={item}
               index={index}
+              t={t}
             />
           );
         })}
@@ -200,10 +216,24 @@ const Property = ({
           onPress={() =>
             goToListMore({
               data: listingData,
-              renderItem: buildingOwner ? RenderPropertyItem : RenderOfficeItem,
+              renderItem: buildingOwner
+                ? props => (
+                    <RenderPropertyItem
+                      {...props}
+                      t={t}
+                      handleItemClick={onPropertyItemClick}
+                    />
+                  )
+                : props => (
+                    <RenderOfficeItem
+                      {...props}
+                      t={t}
+                      handleItemClick={onOfficeItemClick}
+                    />
+                  ),
             })
           }>
-          <Text style={styles.addPropertyLink}>Show More</Text>
+          <Text style={styles.addPropertyLink}>{t('show_more')}</Text>
         </Pressable>
       ) : (
         <View />

@@ -1,9 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
+import {connect} from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import CustomStackHeader from '../../Components/Component-Parts/CustomStackHeader';
 import Text from '../../Components/UI/Text';
 import Button from '../../Components/UI/Button';
+import {TopTabs} from '../../Components/UI/TopTabs';
+
+import OfficeListing from './OfficeListing';
 
 import {globalStyles} from '../../global/Styles';
 import {styles} from './styles';
@@ -12,11 +17,9 @@ import {
   getObjPropertyValue,
   prettyPrint,
 } from '../../global/utils/helperFunctions';
-import {getOffices} from '../../API/Offices';
-import {TopTabs} from '../../Components/UI/TopTabs';
 import {lightTheme} from '../../global/Theme';
-import OfficeListing from './OfficeListing';
-import {connect} from 'react-redux';
+
+import {getOffices} from '../../API/Offices';
 
 const useGetOffices = (propertyID, token) => {
   const [offices, setOffices] = useState(null);
@@ -64,6 +67,9 @@ const RenderTitleHeader = ({property, noOffice, addOffice}) => {
       </View>
     );
   }
+
+  const {t} = useTranslation();
+
   return (
     <View style={styles.headerCont}>
       <View>
@@ -71,16 +77,16 @@ const RenderTitleHeader = ({property, noOffice, addOffice}) => {
         <View style={globalStyles.flexRow}>
           <View style={styles.markerItem}>
             <View style={[styles.marker, styles.markerOccpied]} />
-            <Text style={styles.markerText}>Occupied</Text>
+            <Text style={styles.markerText}>{t('myproperty.header.occupied')}</Text>
           </View>
           <View style={styles.markerItem}>
             <View style={[styles.marker]} />
-            <Text style={styles.markerText}>Vacant</Text>
+            <Text style={styles.markerText}>{t('myproperty.header.vacant')}</Text>
           </View>
         </View>
       </View>
       <Pressable onPress={addOffice}>
-        <Text style={styles.addPropertyLink}>+ Add Office</Text>
+        <Text style={styles.addPropertyLink}>+ {t('myproperty.header.addOffice')}</Text>
       </Pressable>
     </View>
   );
@@ -153,7 +159,7 @@ const MyProperty = ({route, navigation, access_token}) => {
 
   const noOffice = emptyObj(offices);
 
-  prettyPrint({noOffice});
+  // prettyPrint({offices});
 
   const goToAddOffice = () =>
     navigation.navigate('add-office', {

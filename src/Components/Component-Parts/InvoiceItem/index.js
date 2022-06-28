@@ -11,7 +11,7 @@ import {globalStyles} from '../../../global/Styles';
 import {fonts} from '../../../global/fonts';
 import WithFileDownloader from '../../HOCs/FileDownloader';
 
-const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
+const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner, t}) => {
   const DownloadFile = WithFileDownloader(({handleDownload}) => (
     <Pressable
       onPress={() =>
@@ -26,7 +26,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
         name={'ios-document-text-outline'}
         color={lightTheme.PRIMARY_COLOR}
       />
-      <Text style={styles.download}>Download</Text>
+      <Text style={styles.download}>{t('officeDetails.invoices.item.download')}</Text>
     </Pressable>
   ));
 
@@ -37,11 +37,11 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
           <Text style={styles.buildName}>{invoiceDetails.building_name}</Text>
           <View style={globalStyles.flexRow}>
             <View style={styles.wingCont}>
-              <Text style={styles.heading}>Wing</Text>
+              <Text style={styles.heading}>{t('officeDetails.invoices.item.wing')}</Text>
               <Text style={styles.value}>{invoiceDetails.wing}</Text>
             </View>
             <View style={globalStyles.flexRow}>
-              <Text style={styles.heading}>Floor</Text>
+              <Text style={styles.heading}>{t('officeDetails.invoices.item.floor')}</Text>
               <Text style={styles.value}>{invoiceDetails.floor_number}</Text>
             </View>
           </View>
@@ -55,7 +55,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
           </View>
 
           <View style={globalStyles.flexRow}>
-            <Text style={styles.heading}>Due Date</Text>
+            <Text style={styles.heading}>{t('officeDetails.invoices.item.dueDate')}</Text>
             <Text style={styles.value}>{invoiceDetails.invoice_due_date}</Text>
           </View>
         </View>
@@ -63,7 +63,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
 
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
-          <Text style={styles.heading}>Invoice Date</Text>
+          <Text style={styles.heading}>{t('officeDetails.invoices.item.invoiceDate')}</Text>
           <Text style={styles.value}>{invoiceDetails.invoice_date}</Text>
         </View>
         <View
@@ -88,7 +88,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
       </View>
       <View style={styles.row}>
         <View style={globalStyles.flexRow}>
-          <Text style={styles.heading}>Last Reminder</Text>
+          <Text style={styles.heading}>{t('officeDetails.invoices.item.reminder')}</Text>
           <Text style={styles.value}>
             {invoiceDetails.lastReminderDate || 'N/A'}
           </Text>
@@ -103,7 +103,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
             onPress={() => {
               // Todo: handle send reminder
             }}
-            title={'Send reminder'}
+            title={t('officeDetails.invoices.item.sendReminder')}
           />
           <Button
             titleStyle={styles.btntitleOutline}
@@ -112,7 +112,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner}) => {
             onPress={() => {
               // Todo: handle send reminder
             }}
-            title={'Mark as received'}
+            title={t('officeDetails.invoices.item.markReceived')}
           />
         </View>
       ) : (

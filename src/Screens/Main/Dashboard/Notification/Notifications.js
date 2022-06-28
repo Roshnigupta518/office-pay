@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import NotifItem from './NotifItem';
 import Text from '../../../../Components/UI/Text';
@@ -29,6 +30,8 @@ const Notifications = ({goToListMore}) => {
 
   const notifs = useGetNotifs(access_token);
 
+  const {t} = useTranslation();
+
   // console.log({notifs});
 
   if (!notifs) {
@@ -45,7 +48,7 @@ const Notifications = ({goToListMore}) => {
         if (index > 2) {
           return <View key={index} />;
         }
-        return <NotifItem key={index} notifItem={notif} />;
+        return <NotifItem t={t} key={index} notifItem={notif} />;
       })}
       {notifs.length > 4 ? (
         <Pressable
@@ -53,11 +56,11 @@ const Notifications = ({goToListMore}) => {
             goToListMore({
               data: notifs,
               renderItem: ({item, index}) => (
-                <NotifItem key={index} notifItem={item} />
+                <NotifItem t={t} key={index} notifItem={item} />
               ),
             })
           }>
-          <Text style={styles.showMore}>Show More</Text>
+          <Text style={styles.showMore}>{t('show_more')}</Text>
         </Pressable>
       ) : (
         <View />

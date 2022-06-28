@@ -1,4 +1,14 @@
 {
+
+  "Skip" : "छोड़ें",
+  "step_1": "1 से 2 कदम",
+  "step_2": "2 से 2 कदम",
+  "show_more": "और देखे",
+
+
+  "navigation.tabs.dashboard": "डैशबोर्ड",
+  "navigation.tabs.createInvoice": "इनवॉयस बनाएँ",
+
   "login_title": "लॉग इन करें",
   "login_desc": "ऐप के साथ जारी रखने के लिए कृपया अपने खाते में साइन इन करें।",
   "login_placeholder_email" : "ईमेल दर्ज करें",
@@ -19,8 +29,82 @@
   "signup_login_alternate" : "खाता मौजूद है?",
   "signup_login_alternate_btn_title" : "लॉग इन करें",
   "signup_sign_up_alternate" : "या इसके साथ साइन अप करें",
-  "signup_sign_up_alternate_btn_title" : "Google के साथ साइन अप करें"
-  
+  "signup_sign_up_alternate_btn_title" : "Google के साथ साइन अप करें",
 
+  "forgot_password_title": "पासवर्ड भूल गए",
+  "forgot_password_desc": "कृपया वह ईमेल पता दर्ज करें जिस पर आप अपनी पासवर्ड रीसेट जानकारी भेजना चाहते हैं",
+  "forgot_password_btn_title": "लिंक भेजें",
+  "forgot_password_back": "वापस",
+  "forgot_password_login": "लॉग इन करें",
 
+  "reset_password_title": "अपना पासवर्ड रीसेट करें",
+  "reset_password_desc": "कृपया अपना नया पासवर्ड दर्ज करें और अपने चालानों को प्रबंधित करते रहें।",
+  "reset_password_enter_pwd": "पास वर्ड दर्ज करें",
+  "reset_password_confirm_pwd": "पासवर्ड की पुष्टि कीजिये",
+  "reset_password_btn": "पासवर्ड सहेजें",
+
+  "add_building_title": "अपना भवन विवरण पूरा करें",
+  "add_building_avatar": "बिल्डिंग इमेज जोड़ें",
+  "add_office_avatar": "कार्यालय इमेज जोड़ें",
+  "add_building_name": "इमारत का नाम",
+  "add_building_address": "पता",
+  "add_building_email": "ईमेल",
+  "add_building_gst": "GST नंबर",
+  "add_building_contact": "संपर्क Number",
+  "add_building_city": "शहर",
+  "add_building_pan": "अपना पैन कार्ड नंबर दर्ज करें",
+  "add_building_next_btn": "अगला",
+  "add_building_pan_image": "अपना पैन कार्ड इमेज अपलोड करें",
+
+  "dashboard_hello" : "नमस्ते",
+  "dashboard.overview.received" : "इस माह प्राप्त कुल राशि",
+  "dashboard.overview.pending" : "इस माह लम्बित कुल राशि",
+  "dashboard.overview.overdue" : "कुल अतिदेय राशि",
+  "dashboard.tabs.myproperty" : "मेरी प्रॉपर्टीज",
+  "dashboard.tabs.myoffices" : "मेरे ऑफसिज़",
+  "dashboard.tabs.due" : "देय चालान",
+  "dashboard.tabs.notif" : "अधिसूचना",
+  "dashboard.myproperty.title" : "मेरी प्रॉपर्टी",
+  "dashboard.myoffices.title" : "मेरे ऑफसिज़",
+  "dashboard.myproperty.add" : "नया प्रॉपर्टी",
+  "dashboard.myoffices.add" : "नया ऑफिस",
+  "dashboard.myproperty.item.noOfdue": "देय चालान",
+  "dashboard.myproperty.item.occupied": "अधिकृत ऑफसिज़",
+  "dashboard.myproperty.item.vacant": "खाली ऑफसिज़",
+
+  "dashboard.invoices.title": "देय चालान",
+  "dashboard.invoices.item.wing": "विंग",
+  "dashboard.invoices.item.floor": "मंजिल",
+  "dashboard.invoices.item.dueDate": "नियत तारीख",
+  "dashboard.invoices.item.invoiceDate": "चालान की तारीख",
+  "dashboard.invoices.item.reminder": "आखिरी अनुस्मारक",
+  "dashboard.invoices.item.download": "डाउनलोड",
+  "dashboard.invoices.item.sendReminder": "याद दिलये",
+  "dashboard.invoices.item.markReceived": "प्राप्त के रूप में चिह्नित",
+
+  "dashboard.notif.item.invoiceNo": "चालान नंबर",
+  "dashboard.notif.item.invoiceAmt": "चालान राशि",
+
+  "myproperty.header.occupied": "अधिकृत",
+  "myproperty.header.vacant": "खाली",
+  "myproperty.header.addOffice": "ऑफिस जोड़ें",
+
+  "officeDetails.edit": "विवरण संपादित करें",
+  "officeDetails.pending": "बकाया राशि",
+  "officeDetails.invoiceAmt": "बीजक राशि",
+  "officeDetails.createInvoice.btn.title": "इनवॉयस बनाएँ",
+  "officeDetails.invoices.header.title": "चालान विवरण",
+
+  "officeDetails.invoices.item.wing": "विंग",
+  "officeDetails.invoices.item.floor": "मंजिल",
+  "officeDetails.invoices.item.dueDate": "नियत तारीख",
+  "officeDetails.invoices.item.invoiceDate": "चालान की तारीख",
+  "officeDetails.invoices.item.reminder": "आखिरी अनुस्मारक",
+  "officeDetails.invoices.item.download": "डाउनलोड",
+  "officeDetails.invoices.item.sendReminder": "याद दिलये",
+  "officeDetails.invoices.item.markReceived": "प्राप्त के रूप में चिह्नित",
+
+  "createInvoice.title": "इनवॉयस बनाएँ",
+  "createInvoice.attachment": "अनुरक्ति",
+  "createInvoice.send.btn.title": "चालान भेजें"
 }
