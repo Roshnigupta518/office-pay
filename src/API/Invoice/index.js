@@ -105,8 +105,6 @@ export const markInvoiceReceived = async (token, invoice_id = false) => {
   if (response.ok) {
     const data = handleAPISuccessResponse(response);
 
-    await cache.store('invoice', data);
-
     return data;
   }
   // else {
@@ -114,21 +112,5 @@ export const markInvoiceReceived = async (token, invoice_id = false) => {
   //   handleAPIErrorResponse(response, 'get building user');
   // }
 
-  const cache_data = await cache.get('invoice');
-
-  if (cache_data) {
-    console.log('INFO: using cached invoice data');
-    return cache_data;
-  }
-
-  console.log('get invoice error => ', response.status);
-  handleAPIErrorResponse(response, 'get invoice');
-
-  // return new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     console.log(`Todo: call "invoice with GET" api with data - `);
-
-  //     resolve(dummyInvoiceDashboard);
-  //   }, 3000);
-  // });
+  handleAPIErrorResponse(response, 'update invoice status');
 };

@@ -56,7 +56,8 @@ export const getBuildings = async token => {
   // prettyPrint({response});
 
   if (response.ok) {
-    const data = handleAPISuccessResponse(response);
+    // const data = handleAPISuccessResponse(response);
+    const data = response.data.data;
 
     await cache.store('buildings', data);
 
