@@ -42,9 +42,11 @@
   "reset_password_btn": "Save Password",
 
   "add_building_title": "Complete your Building Details",
+  "add_office_title": "Complete your Profile Details",
   "add_building_avatar": "Add Building Image",
   "add_office_avatar": "Add Office Image",
   "add_building_name": "Building Name",
+  "add_office_name": "Office Name",
   "add_building_address": "Address",
   "add_building_email": "Email ID",
   "add_building_gst": "GST Number",
@@ -104,7 +106,9 @@
 
   "createInvoice.title": "Create Invoice",
   "createInvoice.attachment": "Attachment",
-  "createInvoice.send.btn.title": "Send Invoice"
+  "createInvoice.send.btn.title": "Send Invoice",
 
-
+  "office_number" : "Office Number",
+  "floor_number" : "Floor Number",
+  "office_owner_name" : "Office Owner Name"
 }

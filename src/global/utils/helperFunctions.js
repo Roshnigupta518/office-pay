@@ -96,6 +96,10 @@ export const handleAPISuccessResponse = response => {
     return false;
   }
 
+  if (status == 201) {
+    return data;
+  }
+
   let actualData = null;
 
   if (Array.isArray(data)) {

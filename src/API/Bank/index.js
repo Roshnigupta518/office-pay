@@ -14,7 +14,7 @@ export const addBank = async bankData => {
   prettyPrint({bankData});
 
   const api = create({baseURL: API_BASE_URL});
-  const response = await api.post('/banks', bankData);
+  const response = await api.post('/addBank', bankData);
 
   prettyPrint({response});
 

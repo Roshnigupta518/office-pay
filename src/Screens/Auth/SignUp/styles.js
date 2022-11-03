@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   scrollView: {
     height: Dimensions.get('window').height - 90,
     backgroundColor: lightTheme.THEME,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   cont: {
     // paddingVertical: 50,
@@ -61,8 +61,8 @@ export const styles = StyleSheet.create({
   footer: {
     width: '100%',
     alignItems: 'center',
-    position: 'absolute',
-    top: -50,
+    // position: 'absolute',
+    // top: -50,
   },
   footerTextCont: {
     // width: '100%',
@@ -85,8 +85,8 @@ export const styles = StyleSheet.create({
     backgroundColor: lightTheme.PRIMARY_COLOR,
     position: 'relative',
     alignItems: 'center',
-    // position: 'absolute',
-    // bottom: 0,
+    position: 'absolute',
+    bottom: 0,
   },
   footerRelativeCont: {
     width: '100%',

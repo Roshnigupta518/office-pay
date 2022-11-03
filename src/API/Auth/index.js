@@ -10,7 +10,7 @@ import {
 
 export const login = async loginData => {
   console.log(
-    `calling "login" api with data - ${loginData.email}, ${loginData.password}`,
+    `calling "login" api with data - ${loginData.email}, ${loginData.password}, ${loginData.role_id}`,
   );
 
   const api = create({baseURL: API_BASE_URL});
@@ -18,11 +18,14 @@ export const login = async loginData => {
 
   // * this value will represent if the user loggin,
   // * in is an office owner / building owner
+  // const buildingOwner =
+  //   parseInt(response.data?.login_detils?.role_id, 10) === 1;
+
   const buildingOwner =
-    parseInt(response.data?.login_detils?.role_id, 10) === 1;
+    response.data?.login_detils?.role_id == 'Building' ? true : false;
   const userID = response.data?.login_detils?.id;
 
-  // prettyPrint({response: response.data});
+  prettyPrint({response: response.data});
 
   if (response.ok) {
     return {
@@ -65,7 +68,10 @@ export const signUp = async signUpData => {
   prettyPrint({signUpData});
 
   const api = create({baseURL: API_BASE_URL});
-  const response = await api.post('/register' + getQueryString(signUpData));
+  console.log({api});
+  const response = await api.post(
+    '/createAccount' + getQueryString(signUpData),
+  );
 
   prettyPrint({data: response.data});
 

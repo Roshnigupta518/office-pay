@@ -53,4 +53,11 @@ export const styles = StyleSheet.create({
   placeholderView: {
     marginBottom: 30,
   },
+  pickerCont: {
+    width: '100%',
+  },
+  pickersty: {
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
 });

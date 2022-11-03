@@ -8,13 +8,18 @@ export const styles = StyleSheet.create({
   cont: {
     flex: 1,
     backgroundColor: lightTheme.THEME,
-    paddingVertical: 50,
-    paddingTop: 80,
+    // paddingVertical: 50,
+    // paddingTop: 80,
     paddingHorizontal: 15,
   },
   title: {
     color: lightTheme.PRIMARY_TEXT,
     fontSize: 22,
+  },
+  radios: {
+    ...globalStyles.flexRow,
+    justifyContent: 'space-around',
+    // marginVertical: 20,
   },
   form: {
     marginVertical: 50,
@@ -39,6 +44,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     ...globalStyles.flexRow,
     ...globalStyles.placeCenter,
+    flex:1
   },
   forgotPwdCont: {
     alignItems: 'flex-end',

@@ -48,7 +48,7 @@ const Init = ({navigation, auth, introComplete, buildingAdded}) => {
           console.log('INFO: user already logged in, moving to Dashboard');
 
           setupRoute =
-            buildingAdded || !buildingOwner ? 'home' : 'building-details';
+            buildingAdded || !buildingOwner ? 'building-details' : 'building-details';
         } else if (!introComplete) {
           console.log(
             "INFO: user haven't walkeded through yet, pushing intro screens",

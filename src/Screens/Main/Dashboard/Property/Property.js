@@ -166,6 +166,8 @@ const Property = ({
     );
   }
 
+  console.log({buildingOwner})
+
   return (
     <View style={styles.conatiner}>
       <View style={styles.sectionHeader}>

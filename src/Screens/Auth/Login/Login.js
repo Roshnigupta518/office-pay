@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {Pressable, ScrollView, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { t } from 'i18next';
+import {useTranslation} from 'react-i18next';
+import {t} from 'i18next';
 
 import AuthPageTitle from '../../../Components/Component-Parts/AuthPageTitle';
 import Text from '../../../Components/UI/Text';
@@ -11,6 +11,7 @@ import Input from '../../../Components/UI/Input';
 import Button from '../../../Components/UI/Button';
 import ErrorAlert from '../../../Components/UI/ErrorAlert';
 import AuthBgImage from '../../../Components/Component-Parts/AuthBGImage';
+import CheckBox from '../../../Components/UI/Checkbox';
 
 import {styles} from './styles';
 
@@ -35,6 +36,8 @@ const LoginForm = ({
 
   const [loginErr, setLoginErr] = useState(false);
   const [loginErrText, setLoginErrText] = useState('');
+
+  const [building, setBuilding] = useState(true);
 
   const validateLoginData = () => {
     let result = true;
@@ -68,8 +71,9 @@ const LoginForm = ({
     setLoading(true);
 
     let error = false;
+    const role_id  = building ? 'Building' : 'Office'
 
-    await onSubmit({email, password}).catch(err => {
+    await onSubmit({email, password, role_id}).catch(err => {
       prettyPrint({
         msg: 'Error: in login user',
         err,
@@ -89,8 +93,54 @@ const LoginForm = ({
 
   return (
     <View style={styles.form}>
+       <View style={styles.radios}>
+        <CheckBox
+          title={t('signup_Building')}
+          checked={building}
+          checkedIcon={
+            <Icon
+              color={lightTheme.PRIMARY_COLOR}
+              name={'radio-button-on'}
+              type={'ionicon'}
+              size={25}
+            />
+          }
+          uncheckedIcon={
+            <Icon
+              color={lightTheme.SECONDARY_TEXT}
+              name={'radio-button-off'}
+              type={'ionicon'}
+              size={25}
+            />
+          }
+          style={styles.checkBox}
+          onPress={() => setBuilding(true)}
+        />
+        <CheckBox
+          title={t('signup_Office')}
+          checkedIcon={
+            <Icon
+              color={lightTheme.PRIMARY_COLOR}
+              name={'radio-button-on'}
+              type={'ionicon'}
+              size={25}
+            />
+          }
+          uncheckedIcon={
+            <Icon
+              color={lightTheme.SECONDARY_TEXT}
+              name={'radio-button-off'}
+              type={'ionicon'}
+              size={25}
+            />
+          }
+          checked={!building}
+          style={styles.checkBox}
+          onPress={() => setBuilding(false)}
+        />
+      </View>
       <Input
-        placeholder={t("login_placeholder_email")}
+        placeholder={t('login_placeholder_email')}
         value={email}
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
@@ -107,7 +157,7 @@ const LoginForm = ({
         }
       />
       <Input
-        placeholder={t("login_placeholder_pwd")}
+        placeholder={t('login_placeholder_pwd')}
         value={password}
         onChangeText={setPassword}
         inputStyle={globalStyles.fontDefault}
@@ -169,9 +219,7 @@ const LoginForm = ({
 };
 
 const Login = ({navigation, doUserLogin, buildingAdded}) => {
-
   const {t} = useTranslation();
-
   return (
     <>
       <AuthBgImage />
@@ -180,19 +228,16 @@ const Login = ({navigation, doUserLogin, buildingAdded}) => {
           title={'Log In'}
           desc={'Please Sign In to your Account to Continue with App.'}
         /> */}
-        <AuthPageTitle
-          title={t('login_title')}
-          desc={t('login_desc')}
-        />
+        <AuthPageTitle title={t('login_title')} desc={t('login_desc')} />
         <LoginForm
           onSubmit={doUserLogin}
           continueToProfileDetails={() => {
             // if a building is already added navigate to home then
-            // if (buildingAdded) {
-            //   navigation.navigate('home');
-            //   return;
-            // }
-            // navigation.navigate('building-details');
+            if (buildingAdded) {
+              navigation.navigate('home');
+              return;
+            }
+            navigation.navigate('building-details');
           }}
           navigateToForgetPwd={() => navigation.navigate('forget-pwd')}
         />
@@ -203,7 +248,9 @@ const Login = ({navigation, doUserLogin, buildingAdded}) => {
               onPress={() => {
                 navigation.navigate('signup');
               }}>
-              <Text style={globalStyles.anchor}>{t('login_sign_up_alternate_btn_title')}</Text>
+              <Text style={globalStyles.anchor}>
+                {t('login_sign_up_alternate_btn_title')}
+              </Text>
             </Pressable>
           </View>
         </View>

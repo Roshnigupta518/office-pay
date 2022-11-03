@@ -5,12 +5,11 @@ import {fonts} from '../../../global/fonts';
 import {lightTheme} from '../../../global/Theme';
 
 const DefaultPicker = ({pickerData, containerStyle,...props}) => {
-  // console.log({pickerData});
 
   return (
     <View style={[styles.pickerCont, containerStyle]}>
       <Picker {...props}>
-        {pickerData.map(ele => {
+        {pickerData?.map(ele => {
           return (
             <Picker.Item
               style={styles.itemStyle}

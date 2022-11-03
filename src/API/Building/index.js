@@ -11,7 +11,7 @@ import {API_BASE_URL} from '../../assets/Constants';
 
 import cache from '../../global/utils/cache';
 
-export const addBuilding = async (buildingData, token) => {
+export const addBuilding = async (buildingData, token, buildingOwner) => {
   console.log(`calling "buildings" api with data - `);
   prettyPrint({buildingData});
 
@@ -19,17 +19,18 @@ export const addBuilding = async (buildingData, token) => {
     baseURL: API_BASE_URL,
     headers: {
       Authorization: `Bearer ${token}`,
-      // 'Content-Type': 'multipart/form-data',
+      'Content-Type': 'multipart/form-data',
     },
   });
 
   
-  let response = await api.post('/buildings', buildingData);
+  let response = await api.post(buildingOwner?`/addBuilding`: `/addOffice`, buildingData);
 
   prettyPrint({response});
 
   if (response.ok) {
-    return handleAPISuccessResponse(response);
+    // return handleAPISuccessResponse(response);
+    return response.data
   } else {
     console.log('add building error => ', response.status);
     handleAPIErrorResponse(response, 'add building user');
@@ -51,7 +52,7 @@ export const getBuildings = async token => {
       Authorization: `Bearer ${token}`,
     },
   });
-  const response = await api.get('/buildings');
+  const response = await api.get('/getBuildingList');
 
   // prettyPrint({response});
 

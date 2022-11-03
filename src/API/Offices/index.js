@@ -59,7 +59,7 @@ export const getOffices = async (id, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  const response = await api.get(`/offices-new/${id}`);
+  const response = await api.get(`/getOfficeList/${id}`);
 
   // prettyPrint({response});
 

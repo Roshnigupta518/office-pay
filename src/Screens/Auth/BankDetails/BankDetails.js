@@ -158,7 +158,13 @@ const BankDetailsForm = ({loading, onNextPress}) => {
   );
 };
 
-const BankDetails = ({navigation, route, doAddBuildingDetails, buildingDetails}) => {
+const BankDetails = ({
+  navigation,
+  route,
+  doAddBuildingDetails,
+  buildingDetails,
+  buildingOwner,
+}) => {
   // const buildingDetails = getObjPropertyValue(route.params, 'buildingDetails');
   const fromDash = getObjPropertyValue(route.params, 'fromDash');
 
@@ -170,9 +176,11 @@ const BankDetails = ({navigation, route, doAddBuildingDetails, buildingDetails})
     setLoading(true);
 
     let error = false;
-
+    // console.log({buildingDetails})
     const requestOptions = {
-      building_id: buildingDetails.id,
+      building_id: buildingOwner
+        ? buildingDetails?.building?.id
+        : buildingDetails?.office?.building_id,
       account_holder: bankDetails.accHolderName,
       account_number: bankDetails.accNumber,
       ifsc_code: bankDetails.ifsc,
@@ -192,8 +200,10 @@ const BankDetails = ({navigation, route, doAddBuildingDetails, buildingDetails})
     setLoading(false);
     if (!error) {
       const route = fromDash ? 'dashboard' : 'home';
-      
-      console.log(`added bank details with account no:  ${bankData.account_number}`);
+
+      console.log(
+        `added bank details with account no:  ${bankData.account_number}`,
+      );
 
       navigation.navigate(route);
     }
@@ -244,11 +254,13 @@ const BankDetails = ({navigation, route, doAddBuildingDetails, buildingDetails})
 
 const mapStateToProps = state => {
   const {buildingDetails} = state;
+  const {buildingOwner} = state.auth;
 
   prettyPrint({buildingDetailssss: buildingDetails});
 
   return {
     buildingDetails,
+    buildingOwner,
   };
 };
 

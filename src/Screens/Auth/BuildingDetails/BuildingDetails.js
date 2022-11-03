@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Pressable, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
@@ -27,10 +27,12 @@ import {
   getPickerImageResp,
   prettyPrint,
 } from '../../../global/utils/helperFunctions';
-import {addBuilding} from '../../../API/Building';
+import {addBuilding, getBuildings} from '../../../API/Building';
 import {addBuidlingDetails} from '../../../store/actions/BuildingActions';
 import {useTranslation} from 'react-i18next';
-import { t } from 'i18next';
+import {t} from 'i18next';
+import Picker from '../../../Components/UI/Picker';
+import {rest} from 'lodash';
 
 const INITIAL_STATE = {
   name: '',
@@ -40,12 +42,37 @@ const INITIAL_STATE = {
   contact: '',
   pan: '',
   city: '',
+  buildingId: '',
+  officeNumber: '',
+  floorNumber: '',
+  officeOwnerName: '',
 };
 
-const BuildingDetailsForm = ({loading, pushNextScreen}) => {
+const BuildingDetailsForm = ({
+  loading,
+  pushNextScreen,
+  buildingOwner,
+  token,
+}) => {
   const [buildingDetails, setBuildingDetails] = useState(INITIAL_STATE);
-
+  const [buildings, setBuildings] = useState([]);
   const [buildingDetailsErr, setBuildingDetailsErr] = useState(INITIAL_STATE);
+
+  useEffect(() => {
+    (async () => {
+      setBuildings(null);
+      const data = await getBuildings(token).catch(err => {
+        console.log({err});
+        setBuildings([]);
+      });
+      var result = data.map(({building_name: label, id: val, ...rest}) => ({
+        label,
+        val,
+        ...rest,
+      }));
+      setBuildings(result);
+    })();
+  }, []);
 
   const validateFields = () => {
     let result = true;
@@ -58,6 +85,11 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
     const panError = ValueEmpty(buildingDetails.pan);
     const cityError = ValueEmpty(buildingDetails.city);
 
+    const buildingIdError = ValueEmpty(buildingDetails.buildingId);
+    const officeError = ValueEmpty(buildingDetails.officeNumber);
+    const floorError = ValueEmpty(buildingDetails.floorNumber);
+    const ownerError = ValueEmpty(buildingDetails.officeOwnerName);
+
     console.log({
       nameError,
       addressError,
@@ -66,15 +98,41 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
       mobileError,
       panError,
       cityError,
+      buildingIdError,
+      officeError,
+      floorError,
+      ownerError,
     });
 
     let errorObj = {
       ...buildingDetailsErr,
     };
 
+    if (!buildingOwner) {
+      if (officeError) {
+        result = false;
+        errorObj['officeNumber'] = '*Required';
+      } else {
+        errorObj['officeNumber'] = '';
+      }
+
+      if (floorError) {
+        result = false;
+        errorObj['floorNumber'] = '*Required';
+      } else {
+        errorObj['floorNumber'] = '';
+      }
+
+      if (ownerError) {
+        result = false;
+        errorObj['officeOwnerName'] = '*Required';
+      } else {
+        errorObj['officeOwnerName'] = '';
+      }
+    }
+
     if (nameError) {
       result = false;
-
       errorObj['name'] = '*Required';
     } else {
       errorObj['name'] = '';
@@ -127,7 +185,6 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
     } else {
       errorObj['city'] = '';
     }
-
     if (result) {
       setBuildingDetailsErr(INITIAL_STATE);
     } else {
@@ -150,20 +207,64 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
     }
 
     pushNextScreen(buildingDetails);
-    setBuildingDetails(INITIAL_STATE);
+    // setBuildingDetails(INITIAL_STATE);
     setBuildingDetailsErr(INITIAL_STATE);
   };
 
   return (
     <View>
+      {!buildingOwner && (
+        <View>
+          <View style={styles.pickersty}>
+            <Picker
+              containerStyle={styles.pickerCont}
+              selectedValue={buildingDetails.buildingId}
+              onValueChange={itemValue => {
+                console.log({itemValue});
+                handleOnChange('buildingId', itemValue);
+              }}
+              pickerData={buildings}
+            />
+          </View>
+
+          <Input
+            value={buildingDetails.officeNumber}
+            onChangeText={value => handleOnChange('officeNumber', value)}
+            style={globalStyles.textDefault}
+            errorMessage={buildingDetailsErr.officeNumber}
+            placeholder={t('office_number')}
+            disabled={loading}
+          />
+
+          <Input
+            value={buildingDetails.floorNumber}
+            onChangeText={value => handleOnChange('floorNumber', value)}
+            style={globalStyles.textDefault}
+            errorMessage={buildingDetailsErr.floorNumber}
+            placeholder={t('floor_number')}
+            disabled={loading}
+          />
+
+          <Input
+            value={buildingDetails.officeOwnerName}
+            onChangeText={value => handleOnChange('officeOwnerName', value)}
+            style={globalStyles.textDefault}
+            errorMessage={buildingDetailsErr.officeOwnerName}
+            placeholder={t('office_owner_name')}
+            disabled={loading}
+          />
+        </View>
+      )}
+
       <Input
         value={buildingDetails.name}
         onChangeText={value => handleOnChange('name', value)}
         style={globalStyles.textDefault}
         errorMessage={buildingDetailsErr.name}
-        placeholder={t('add_building_name')}
+        placeholder={t(buildingOwner ? 'add_building_name' : 'add_office_name')}
         disabled={loading}
       />
+
       <Input
         value={buildingDetails.address}
         onChangeText={value => handleOnChange('address', value)}
@@ -224,7 +325,6 @@ const BuildingDetailsForm = ({loading, pushNextScreen}) => {
 };
 
 const UploadPANimageSection = ({setImage}) => {
-
   const {t} = useTranslation();
 
   const uploadPANToServer = res => {
@@ -290,49 +390,62 @@ const BuildingDetails = ({
 
     let error = false;
 
-    const requestOptions = {
-      user_id: userID,
-      email_id: buildingDetails.email,
-      phone_number: buildingDetails.contact,
-      pan_card: buildingDetails.pan,
-      address: buildingDetails.address,
-      city: buildingDetails.city,
-      building_name: buildingDetails.name,
-      building_image: officeImage,
-      pan_card_image: panImage,
-    };
-
     const requestData = new FormData();
 
-    requestData.append('user_id', userID);
-    requestData.append('email_id', buildingDetails.email);
-    requestData.append('phone_number', buildingDetails.contact);
-    requestData.append('pan_card', buildingDetails.pan);
-    requestData.append('address', buildingDetails.address);
     requestData.append('city', buildingDetails.city);
-    requestData.append('building_name', buildingDetails.name);
-    requestData.append('building_image', officeImage);
-    // requestData.append('pan_card_image', panImage);
+    requestData.append('gst_number', buildingDetails.gst);
+    if (panImage) requestData.append('pan_card_image', panImage);
 
-    await doAddBuilding(requestData, token).catch(err => {
-      prettyPrint({
-        msg: 'Error: in add building details',
-        err,
-      });
+    if (buildingOwner) {
+      if (officeImage) requestData.append('building_image', officeImage);
+      requestData.append('user_id', userID);
+      requestData.append('email_id', buildingDetails.email);
+      requestData.append('phone_number', buildingDetails.contact);
+      requestData.append('pan_card', buildingDetails.pan);
+      requestData.append('address', buildingDetails.address);
+      requestData.append('building_name', buildingDetails.name);
+    }else{
+      requestData.append('email_address', buildingDetails.email);
+      requestData.append('building_id', buildingDetails.buildingId);
+      requestData.append('office_number', buildingDetails.officeNumber);
+      requestData.append('floor_number', buildingDetails.floorNumber);
+      requestData.append('office_owner_name', buildingDetails.officeOwnerName);
+      requestData.append('contact_number', buildingDetails.contact);
+      requestData.append('pan_number', buildingDetails.pan);
+      requestData.append('office_address', buildingDetails.address);
+      requestData.append('office_name', buildingDetails.name);
+      if (officeImage) requestData.append('office_image', officeImage);
+    }
 
-      setAddBuildingErrText(err);
-      setAddBuildingErr(true);
+    if (officeImage) {
+      if (panImage) {
+        await doAddBuilding(requestData, token, buildingOwner).catch(err => {
+          prettyPrint({
+            msg: 'Error: in add building details',
+            err,
+          });
 
-      error = true;
-    });
+          setAddBuildingErrText(err);
+          setAddBuildingErr(true);
 
-    setLoading(false);
-    if (!error) {
-      console.log('added building');
+          error = true;
+        });
 
-      navigation.navigate('bank-details', {
-        fromDash,
-      });
+        setLoading(false);
+        if (!error) {
+          console.log('added building');
+
+          navigation.navigate('bank-details', {
+            fromDash,
+          });
+        }
+      } else {
+        setLoading(false);
+        alert('Please add Pancard image');
+      }
+    } else {
+      setLoading(false);
+      alert('Please add office image');
     }
   };
 
@@ -379,7 +492,7 @@ const BuildingDetails = ({
             </View>
             <View style={styles.pageTitle}>
               <Text style={globalStyles.heading}>
-                {t('add_building_title')}
+                {t(`add_${buildingOwner ? 'building' : 'office'}_title`)}
               </Text>
             </View>
           </>
@@ -399,6 +512,8 @@ const BuildingDetails = ({
         <BuildingDetailsForm
           loading={loading}
           pushNextScreen={handleNextPress}
+          buildingOwner={buildingOwner}
+          token={token}
         />
         <UploadPANimageSection
           src={panImage}
@@ -427,7 +542,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  doAddBuilding: (data, token) => dispatch(addBuidlingDetails(data, token)),
+  doAddBuilding: (data, token, buildingOwner) =>
+    dispatch(addBuidlingDetails(data, token, buildingOwner)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuildingDetails);

@@ -27,7 +27,7 @@ import {
 
 import {GOOGLE_WEB_CLIENT_ID} from '../../../assets/Constants';
 import {prettyPrint} from '../../../global/utils/helperFunctions';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 GoogleSignin.configure({
   webClientId: GOOGLE_WEB_CLIENT_ID,
@@ -108,7 +108,7 @@ const SignUpForm = ({continueSignup}) => {
       email,
       password,
       password_confirmation: confirmPassword,
-      role_id: building ? 1 : 0, // * assuming 1 is for building...do confirm
+      role_id: building ? 'Building' : 'Office', 
     };
 
     let error = false;
@@ -190,7 +190,7 @@ const SignUpForm = ({continueSignup}) => {
         />
       </View>
       <Input
-        placeholder={t("signup_placeholder_email")}
+        placeholder={t('signup_placeholder_email')}
         value={email}
         onChangeText={setEmail}
         inputStyle={globalStyles.fontDefault}
@@ -207,7 +207,7 @@ const SignUpForm = ({continueSignup}) => {
         }
       />
       <Input
-        placeholder={t("signup_placeholder_pwd")}
+        placeholder={t('signup_placeholder_pwd')}
         value={password}
         onChangeText={handlePwdChange}
         inputStyle={globalStyles.fontDefault}
@@ -225,7 +225,7 @@ const SignUpForm = ({continueSignup}) => {
         }
       />
       <Input
-        placeholder={t("signup_placeholder_confirm_pwd")}
+        placeholder={t('signup_placeholder_confirm_pwd')}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         inputStyle={globalStyles.fontDefault}
@@ -251,7 +251,7 @@ const SignUpForm = ({continueSignup}) => {
           }}
           loading={loading}
           loadingProps={{size: 'large'}}
-          title={t("signup_btn_title")}
+          title={t('signup_btn_title')}
         />
       </View>
     </View>
@@ -260,7 +260,7 @@ const SignUpForm = ({continueSignup}) => {
 
 const RenderSocialSignUp = () => {
   const {t} = useTranslation();
-  
+
   const onGoogleButtonPress = async () => {
     const googleUserInfo = await handleSignUpWithGoogle();
 
@@ -268,24 +268,28 @@ const RenderSocialSignUp = () => {
   };
 
   return (
-    <View style={styles.footerBg}>
+    <View
+    // style={styles.footerBg}
+    >
       <View style={styles.footerRelativeCont}>
         <View style={styles.footer}>
           <View style={styles.footerTextCont}>
             <View style={styles.footerLine} />
-            <Text style={styles.footerText}>{t('signup_sign_up_alternate')}</Text>
+            <Text style={styles.footerText}>
+              {t('signup_sign_up_alternate')}
+            </Text>
             <View style={styles.footerLine} />
           </View>
           <View style={styles.footerIconsContInner}>
-              <SocialIcon
-                underlayColor={lightTheme.PRIMARY_COLOR}
-                raised
-                button
-                type="google"
-                title={t('signup_sign_up_alternate_btn_title')}
-                onPress={onGoogleButtonPress}
-              />
-              {/* <SocialIcon
+            <SocialIcon
+              underlayColor={lightTheme.PRIMARY_COLOR}
+              raised
+              button
+              type="google"
+              title={t('signup_sign_up_alternate_btn_title')}
+              onPress={onGoogleButtonPress}
+            />
+            {/* <SocialIcon
                 underlayColor={lightTheme.PRIMARY_COLOR}
                 raised
                 type="facebook"
@@ -295,7 +299,7 @@ const RenderSocialSignUp = () => {
                 raised
                 type="linkedin"
               /> */}
-            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -303,18 +307,17 @@ const RenderSocialSignUp = () => {
 };
 
 const SignUp = ({navigation}) => {
-
   const {t} = useTranslation();
 
   return (
     <View style={styles.view}>
       <AuthBgImage />
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        // contentContainerStyle={styles.scrollView}
+      >
         <View style={styles.cont}>
-          <AuthPageTitle
-            title={t("signup_title")}
-            desc={t("signup_desc")}
-          />
+          <AuthPageTitle title={t('signup_title')} desc={t('signup_desc')} />
           <SignUpForm
             continueSignup={() => {
               navigation.navigate('login');
@@ -327,12 +330,14 @@ const SignUp = ({navigation}) => {
                 onPress={() => {
                   navigation.navigate('login');
                 }}>
-                <Text style={globalStyles.anchor}>{t('signup_login_alternate_btn_title')}</Text>
+                <Text style={globalStyles.anchor}>
+                  {t('signup_login_alternate_btn_title')}
+                </Text>
               </Pressable>
             </View>
           </View>
+          <RenderSocialSignUp />
         </View>
-        <RenderSocialSignUp />
       </ScrollView>
     </View>
   );

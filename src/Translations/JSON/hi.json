@@ -44,9 +44,12 @@
   "reset_password_btn": "पासवर्ड सहेजें",
 
   "add_building_title": "अपना भवन विवरण पूरा करें",
+  "add_office_title": "अपना प्रोफ़ाइल विवरण पूरा करें",
+
   "add_building_avatar": "बिल्डिंग इमेज जोड़ें",
   "add_office_avatar": "कार्यालय इमेज जोड़ें",
   "add_building_name": "इमारत का नाम",
+  "add_office_name": "कार्यालय का नाम",
   "add_building_address": "पता",
   "add_building_email": "ईमेल",
   "add_building_gst": "GST नंबर",
@@ -106,5 +109,9 @@
 
   "createInvoice.title": "इनवॉयस बनाएँ",
   "createInvoice.attachment": "अनुरक्ति",
-  "createInvoice.send.btn.title": "चालान भेजें"
+  "createInvoice.send.btn.title": "चालान भेजें",
+
+  "office_number" : "कार्यालय का नम्बर",
+  "floor_number" : "मंजिल संख्या",
+  "office_owner_name" : "कार्यालय के मालिक का नाम"
 }
