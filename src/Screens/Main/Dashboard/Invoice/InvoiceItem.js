@@ -18,7 +18,6 @@ import {markInvoiceReceived} from '../../../../API/Invoice';
 const InvoiceItem = ({invoiceDetails, buildingOwner, auth, t}) => {
   const [loading, setLoading] = useState(false);
 
-
   // payment HOC - unused
   const WithPay = WithPaymentPerformer(
     ({handlePay}) => (

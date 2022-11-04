@@ -199,12 +199,13 @@ const BankDetails = ({
 
     setLoading(false);
     if (!error) {
-      const route = fromDash ? 'dashboard' : 'home';
+      // const route = fromDash ? 'dashboard' : 'home';
+      const route = fromDash ? 'home' : 'home';
 
       console.log(
         `added bank details with account no:  ${bankData.account_number}`,
       );
-
+      console.log({route})
       navigation.navigate(route);
     }
   };

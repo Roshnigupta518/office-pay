@@ -50,11 +50,11 @@ export const getInvoices = async (token, office_id = false) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  const response = await api.post(
+  const response = await api.get(
     '/invoice-list' + (office_id ? getQueryString({office_id}) : ''),
   );
 
-  // prettyPrint({response});
+  prettyPrint({response});
 
   if (response.ok) {
     const data = handleAPISuccessResponse(response);

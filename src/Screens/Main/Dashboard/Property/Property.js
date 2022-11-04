@@ -112,7 +112,7 @@ const RenderOfficeItem = ({item, handleItemClick, t}) => {
       <View style={styles.detailsCont}>
         <Text style={styles.propertyName}>{item.office_name}</Text>
         <Text style={styles.propertyaddress}>{item.office_address}</Text>
-        <Text style={styles.detailsValue}>{`WING ${item.wing}`}</Text>
+        {/* <Text style={styles.detailsValue}>{`WING ${item.wing}`}</Text> */}
         <Text
           style={
             styles.detailsValue
@@ -154,7 +154,7 @@ const Property = ({
 
   const listingData = buildingOwner ? buildings : offices;
 
-  // prettyPrint({listingData});
+  prettyPrint({listingData});
 
   const {t} = useTranslation();
 
@@ -184,7 +184,7 @@ const Property = ({
         </Pressable>
       </View>
       <View style={styles.listCont}>
-        {listingData.map((item, index) => {
+        {listingData?.map((item, index) => {
           // console.log({index});
           if (index > 3) {
             return <View key={index} />;
@@ -213,7 +213,7 @@ const Property = ({
           );
         })}
       </View>
-      {listingData.length > 4 ? (
+      {listingData?.length > 4 ? (
         <Pressable
           onPress={() =>
             goToListMore({

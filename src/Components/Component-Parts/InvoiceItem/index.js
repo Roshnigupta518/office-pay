@@ -17,7 +17,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner, t}) => {
       onPress={() =>
         handleDownload(
           invoiceDetails.invoiceURL,
-          `invoice_${invoiceDetails.officeNumber}_${invoiceDetails.invoiceSubject}_${invoiceDetails.id}.jpg`, // ! change ext to pdf
+          `invoice_${invoiceDetails.office_number}_${invoiceDetails.invoiceSubject}_${invoiceDetails.id}.jpg`, // ! change ext to pdf
         )
       }
       style={globalStyles.flexRow}>
@@ -29,7 +29,7 @@ const InvoiceItem = ({invoiceDetails, dontShowProperty, buildingOwner, t}) => {
       <Text style={styles.download}>{t('officeDetails.invoices.item.download')}</Text>
     </Pressable>
   ));
-
+//  console.log('------------------------ibt--',parseInt('Due', 10) === 0 ? 'Overdue' : 'Paid')
   return (
     <View style={styles.itemCont}>
       {!dontShowProperty && (

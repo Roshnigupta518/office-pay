@@ -59,7 +59,8 @@ export const getOffices = async (id, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  const response = await api.get(`/getOfficeList/${id}`);
+  // const response = await api.get(`/getOfficeList/${id}`);
+  const response = await api.get(`/getOffices`);
 
   // prettyPrint({response});
 
@@ -71,11 +72,11 @@ export const getOffices = async (id, token) => {
 
     prettyPrint({rawData});
 
-    const data = rawData && rawData.length ? formatOfficeResponse(rawData) : [];
+    // const data = rawData && rawData.length ? formatOfficeResponse(rawData) : [];
 
-    await cache.store('offices', data);
+    // await cache.store('offices', data);
 
-    return data;
+    return rawData;
   }
   // else {
   //   console.log('get office error => ', response.status);

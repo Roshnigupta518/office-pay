@@ -61,8 +61,8 @@ const WithFileDownloader = WrappedComponent => {
     };
 
     const handleDownload = async (url, filename) => {
-      console.log('initializing download...');
-
+      console.log('initializing download...', url, filename);
+    
       if (!url || typeof url !== 'string') {
         console.warn('download URL is invalid');
         return;
